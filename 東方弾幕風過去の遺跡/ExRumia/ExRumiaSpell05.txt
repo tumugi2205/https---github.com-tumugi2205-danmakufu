@@ -1,0 +1,174 @@
+#東方弾幕風
+#Title[隠符「フィビドゥンインシャドウズ」]
+#Text[Exルーミア：隠符「フィビドゥンインシャドウズ」]
+#Image[.\img\ExRumia(隠符「フィビドゥンインシャドウズ」).png]
+#BackGround[Default]
+#Player[FREE]
+#ScriptVersion[2]
+
+script_enemy_main
+{
+	let count=0;
+	let cx=GetCenterX();//STGシーンの中心x座標を取得;
+	let imgExRumia=GetCurrentScriptDirectory~"img\ExRumia.png";
+	let imgExRumiaBack=GetCurrentScriptDirectory~"img\ExRumiaBack.png";
+	let step=1;
+	let bDraw=1;
+	@Initialize
+	{
+		SetScore(50000);//スペルカードボーナスを50000に設定
+		SetLife(100);//ライフを100に設定
+		SetDamageRate(10,10);//披ダメージを10%に設定
+		SetTimer(89);//時間制限を89秒に設定
+
+		SetGraphicRect(1,1,64,64);//描画元矩形を設定
+		SetInvincibility(1000);//敵を1000フレーム無敵にする
+		LoadGraphic(imgExRumia);//画像「img\ExRumia.png」を読みこむ		
+		LoadGraphic(imgExRumiaBack);
+		
+		SetMovePosition02(cx,200,60);//座標(200,60)へ60フレームかけて移動する
+		Concentration01(150);
+		CutIn(YOUMU,"隠符「フィビドゥンインシャドウズ」",0,0,0,0,0);//スペルカード名表示
+		SetDurableSpellCard();	
+	}
+	
+	@MainLoop
+	{
+		let sec=count/60;
+		if(count==120)
+		{
+			bDraw=0;
+			Explosion01(GetX(),GetY(),1/60*255,0.3,60);
+		}
+		if(count==150)
+		{
+			let i=0;
+			while(i<3)
+			{
+				let laser=0;
+				CreateLaserB(laser,500,30,PURPLE01,150);
+				SetShotKillTime(laser,60*90);
+				SetLaserDataB(laser,0,0,150,0,60+120*i,0.6,210+120*i,0.6);
+				SetLaserDataB(laser,50*60,0,NULL,1,NULL,0.6,NULL,0.6);
+				SetLaserDataB(laser,50*60+90,0,NULL,-0.1,NULL,0.6,NULL,0.6);
+				FireShot(laser);
+				i++;
+			}	
+			
+			i=0;
+			while(i<3)
+			{
+				let laser=0;
+				CreateLaserB(laser,500,30,AQUA01,150);
+				SetShotKillTime(laser,60*90);
+				SetLaserDataB(laser,0,0,150,0,60+120*i,-0.6,210+120*i,-0.6);
+				SetLaserDataB(laser,50*60,0,NULL,1,NULL,-0.6,NULL,-0.6);
+				SetLaserDataB(laser,50*60+90,0,NULL,-0.1,NULL,-0.6,NULL,-0.6);
+				FireShot(laser);
+				i++;
+			}	
+		}
+		if(sec>=5&&sec<40&&count%10==0)
+		{
+			let x=rand(0,384)+GetClipMinX();
+			let y=GetClipMinY();
+			CreateShot01(x,y,1.5,90,BLUE04,10);
+		}
+		if(sec>=10&&sec<40&&count%10==0)
+		{
+			if(count==10*60){SetMovePosition02(cx-150,200,5*60);}
+			let x=rand(0,384)+GetClipMinX();
+			let y=GetClipMaxY();
+			CreateShot01(x,y,1.5,270,RED04,10);
+		}
+		if(sec>=20&&sec<40&&count%10==0)
+		{
+			if(count==20*60){SetMovePosition02(cx+150,100,5*60);}
+			let x=GetClipMinX();
+			let y=rand(0,448)+GetClipMinY();
+			CreateShot01(x,y,1.5,0,YELLOW04,10);
+		}
+		if(sec>=30&&sec<40&&count%10==0)
+		{
+			if(count==30*60){SetMovePosition02(cx+100,300,5*60);}
+			let x=GetClipMaxX();
+			let y=rand(0,448)+GetClipMinY();
+			CreateShot01(x,y,1.5,180,GREEN04,10);
+		}
+		if(sec>=40&&sec<75&&count%5==0)
+		{
+			if(count==40*60){SetMovePosition02(cx,240,5*60);}
+			if(sec>45)
+			{
+				let tAng=(count-40*60);
+				let x=GetX()+200*cos(tAng);
+				let y=GetY()+200*sin(tAng);
+				CreateShot01(x,y,1.5,tAng-180,BLUE04,10);
+			}
+		}
+		if(sec>=50&&sec<75&&count%5==0)
+		{
+			let tAng=(count-40*60);
+			let x=GetX()-200*cos(tAng);
+			let y=GetY()-200*sin(tAng);
+			CreateShot01(x,y,1.5,tAng,RED04,10);
+		}
+		if(sec>=60&&sec<90&&count%5==0)
+		{
+			let tAng=(count-60*60);
+			let x=GetX()+200*cos(-tAng);
+			let y=GetY()+200*sin(-tAng);
+			CreateShot01(x,y,1.5,tAng-180,YELLOW04,10);
+		}
+		if(sec>=70&&sec<90&&count%5==0)
+		{
+			let tAng=(count-70*60);
+			let x=GetX()-200*cos(-tAng);
+			let y=GetY()-200*sin(-tAng);
+			CreateShot01(x,y,1.5,tAng,GREEN04,10);
+		}
+		if(sec>=80&&sec<90&&count%5==0)
+		{
+			let tAng=(count-80*60);
+			let x=GetX()+150*cos(-tAng);
+			let y=GetY()+150*sin(-tAng);
+			CreateShot01(x,y,1.5,tAng-180,BLUE04,10);
+		}
+		if(sec>=85&&sec<90&&count%5==0)
+		{
+			let tAng=(count-85*60);
+			let x=GetX()-150*cos(-tAng);
+			let y=GetY()-150*sin(-tAng);
+			CreateShot01(x,y,1.5,tAng,RED04,10);
+		}	
+			
+		if(bDraw==1){SetCollisionA(GetX(),GetY(),32);}
+		count++;
+	}
+	
+	@Finalize
+	{//読みこんだファイルを削除
+		DeleteGraphic(imgExRumia);	
+		DeleteGraphic(imgExRumiaBack);
+		loop(8)
+		{
+			CreateItem(ITEM_SCORE,cx+rand(-100,100),rand(20,100));
+		}
+	}
+	
+	@DrawLoop
+	{
+		SetColor(255,255,255);
+		//Exルーミア描画		
+		if(bDraw==1)
+		{
+			SetRenderState(ALPHA);
+			SetAlpha(255);
+			SetTexture(imgExRumia);
+			if(int(GetSpeedX())==0){SetGraphicRect(64,1,127,64);}
+			else if(GetSpeedX()>0){SetGraphicRect(192,1,255,64);}
+			else if(GetSpeedX()<0){SetGraphicRect(128,1,191,64);}	
+			DrawGraphic(GetX(),GetY());
+		}
+	}
+}

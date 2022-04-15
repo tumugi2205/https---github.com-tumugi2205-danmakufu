@@ -1,0 +1,18 @@
+#東方弾幕風[Plural]
+#Title[二面]
+#Text[血塗られた過去に
+君はいったい何を眼にするだろう]
+#ScriptVersion[2]
+#BGM[bgm\bgm.wav\魔理沙は大変なものを盗んでいきました.mp3]
+
+
+#ScriptPathData
+   #ScriptPath[\script\東方楽生記\二面\2めん中ボス通常1.txt]
+   #ScriptPath[\script\東方楽生記\二面\2めん中ボススペカ1.txt.txt]
+   #ScriptPath[\script\東方楽生記\二面\みえちゃん通常1.txt.txt]
+   #ScriptPath[\script\東方楽生記\二面\みえたんスペカ1.txt]
+   #ScriptPath[\script\東方楽生記\二面\みえたん通常2.txt]
+   #ScriptPath[\script\東方楽生記\二面\みえたんスペカ2.txt]
+   #ScriptPath[\script\東方楽生記\二面\みえたん通常3.txt]
+   #ScriptPath[\script\東方楽生記\二面\みえたんスペカ3.txt]
+#EndScriptPathData

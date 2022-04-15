@@ -1,0 +1,160 @@
+#東方弾幕風
+#Title[中通常]
+#Text[1通常]
+#PlayLevel[1面中ボス]
+#Image[.\img\study009.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia =  "script\img\きょーこ.png";
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+                SetTimer(30);
+
+		mainTask;
+		mainTask2;/*
+		mainTask3;*/
+               TMove;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {        
+        LoadUserShotData("script\東方楽生記\二面\新しいフォルダ\tamade-ta.txt");
+		loop(60) {yield;}
+
+		loop {
+			let speed = 0.5;
+			let angle = 90-10 ;
+			let t = 0 ;
+			loop(999) {
+             CreateShotA("S1",GetX + 60*cos(36*t + 10),GetY+ 60*sin(36*t + 10),0);
+          SetShotDataA("S1",0,0,0,60,0,0,1);
+SetShotDirectionType(PLAYER);
+          SetShotDataA("S1",90,2,-1,0.02,0,5,RED01);
+SetShotDirectionType(ABSOLUTE);
+          FireShot("S1");
+            t++;
+					angle += 11;
+				speed += 0.3;
+				loop(4) {yield;}
+			}
+			loop(60) {yield;}
+		}
+	}
+
+	task mainTask2 {
+	
+		loop(3) {yield;}
+		loop {
+			let t = 0 ;
+			loop(12) {
+				CreateLaserA("L1",GetX + 60*cos(36*t + 10),GetY+ 60*sin(36*t + 10),500,3,RED03, 50);
+SetShotDirectionType(PLAYER);
+				SetLaserDataA("L1", 0, 0, 0, 0, 0, 0);
+				SetLaserDataA("L1", 90, NULL, 0, 0, 5, 0);
+SetShotDirectionType(ABSOLUTE);
+				FireShot("L1");
+            t++;
+			}
+			loop(120) {yield;}
+		}
+	}
+
+	task mainTask3 {
+		loop(60) {yield;}
+		loop {let angle = 0;
+			loop(24) {
+				CreateShotA("stop1", GetCenterX, GetClipMinY + 60, 0);
+				SetShotDataA("stop1", 0, 6, angle, 0, -0.1, 0, BLUE01);
+				SetShotDataA("stop1", 60,2, 90, 0,0, 8, RED01);
+				FireShot("stop1");
+				angle += 360/24;
+			}
+			loop(120) {yield;}
+		}
+	}
+
+// キャラを移動させるタスク
+    task TMove {
+        yield;
+
+        loop {
+            loop(120) { yield; }
+            moveToPlayer(rand(40, 100), rand(-60, 60), 30,
+                         GetClipMinX + 60, GetClipMinY + 20,
+                         GetClipMaxX - 60, GetClipMinY + 200);
+        }
+    }
+    // なるべくプレイヤーの方向に移動
+    //   xMove  : x 方向の移動量（正の数）
+    //   yAdd   : y 方向の移動量
+    //   frame  : 移動に要するフレーム数
+    //   left   : 以下、可動範囲
+    //   top    :
+    //   right  :
+    //   bottom :
+    function moveToPlayer(xMove, yAdd, frame, left, top, right, bottom) {
+        let x;
+        let y;
+
+        if(GetPlayerX < GetX) {
+            // プレイヤーより右に敵がいれば、敵は左に動きます。
+            x = GetX - xMove;
+
+            // 但し、敵が可動領域の左端よりも左にいくようなら、右に動きます。
+            if(x < left) {
+                x = GetX + xMove;
+            }
+        } else {
+            // さもなくば、敵は右に動きます。
+            x = GetX + xMove;
+
+            // 但し、敵が可動領域の右端よりも右にいくようなら、左に動きます。
+            if(right < x) {
+                x = GetX - xMove;
+            }
+        }
+
+        // 可動領域の外に行く場合は、端っこで止めます。
+        y = GetY + yAdd;
+        if(y < top) {
+            y = top;
+        } else if(bottom < y) {
+            y = bottom;
+        }
+
+        SetMovePosition02(x, y, frame);
+
+
+    }
+
+}

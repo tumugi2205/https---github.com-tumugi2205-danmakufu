@@ -1,0 +1,17 @@
+#東方弾幕風[Plural]
+#Title[紅の陽炎]
+#Text[血塗られた過去に
+君はいったい何を眼にするだろう]
+#ScriptVersion[2]
+#BGM[bgm\bgm.wav\【オリジナルMV】ラクガキスト【GUMI】.wav]
+
+
+#ScriptPathData
+   #ScriptPath[\script\杏子\対マミ戦闘練習.txt]
+     #ScriptPath[\script\杏子\鎖縛結界.txt]
+     #ScriptPath[\script\杏子\ロッソ・ファンタズマ.txt]
+     #ScriptPath[\script\杏子\最後の審判.txt]
+     #ScriptPath[\script\杏子\同志殲滅の意思.txt]
+     #ScriptPath[\script\杏子\ﾊﾞｰｽﾄﾋﾞｼﾞｮﾝ.txt]
+     #ScriptPath[\script\杏子\スペルブレイカー.txt]
+#EndScriptPathData

@@ -1,0 +1,323 @@
+<html>
+<head>
+<title>空間から弾を出す</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０１４回　空間から弾を出す<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回はちょっと派手な弾幕を作るわ。<br>
+もう一工夫すればスペルカードとしても成り立つかもね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そんな派手な弾幕なんですか～<br>
+それだとスクリプトが複雑になってそうで難しそうです･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それがそうでもなかったりするわ。<br>
+シンプルなスクリプトでも思いの外派手な弾幕を作れたりするものよ。<br>
+ではスクリプトを見てみよう。<br>
+今回は『study014.txt』ね。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {
+      CreateShot01(<font color="red">rand(GetClipMinX, GetClipMaxX), rand(GetClipMinY,</font> GetCenterY), 2, 90+rand(-15, 15), WHITE01, <font color="red">30</font>);
+      loop(5) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+随分シンプルなスクリプトですね～<br>
+というか、これはstudy003とstudy011とそっくりですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだな。<br>
+ループの形はその２つ全く同じだし、待つ時間が違うくらいか。<br>
+ただ今回はCreateShot01の引数が今回は大分違うぞ。<br>
+その違いを１つずつ見ていこう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+弾出現場所のX軸を決める第１引数が随分長いですね。<br>
+rand(GetClipMinX, GetClipMaxX) ってなってます。<br>
+rand関数は前に習ったけど、残り２つは初めて出た関数ですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういえば、第１回の講座ではCreateShot01で引数の説明を<br>
+後回しにしていた箇所があったね。<br>
+まずはそこの説明からにしましょう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+CreateShot01の第１，２，６引数はこれまでずっと決まった引数でしたもんね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+第１，２引数は『弾が発生する場所を設定する』んだ。<br>
+第１引数では弾が発生する場所のX座標を、<br>
+第２引数では弾が発生する場所のY座標を指定する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+エックス座標とワイ座標ってなんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+X座標は画面の横軸のどの位置にいるのかを示す数値だ。<br>
+同様にY座標は画面の縦軸の位置を示す数値なんだ。<br>
+ゲーム画面のような平面では横と縦の位置を定めることで、<br>
+ある一点の位置を特定することができる。<br>
+CreateShot01でも同様に、X座標とY座標の２つの情報を与えることで<br>
+弾が発生する一点を決めるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そのX座標とY座標を指定する引数には、<br>
+これまでGetX, GetYというものを使ってきましたが･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+このGetX, GetYも実は関数なんだ。<br>
+引数を使わないタイプの関数だな。<br>
+そしてGetXは『自分のいる位置のX座標の値を取得する』関数だ。<br>
+ここでいう自分とはボスのことを指す。<br>
+そしてGetYは『自分のいる位置のY座標の値を取得する』ことができる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ああ！<br>
+これでボスのいる位置から弾を出すことができるんですね！<br>
+今までのスクリプトは全部ボスの中心から弾を撃っていましたけど、<br>
+こういう原理だったんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうこと。<br>
+これまで基本的な弾幕しか作ってこなかったけれど、<br>
+そういう弾幕は普通ボスの中心から弾を出すものだからね。<br>
+だからCreateShot01の第１，２引数の詳しい説明をしてもあまり意味が無いから、<br>
+最低限の情報だけ覚えられるように後回しにしたのよ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そういうことだったんですね。<br>
+それで今回のスクリプトではCreateShot01の第１引数に<br>
+rand関数と新しい関数を使っていますけれど。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+新しく登場した関数は画面のある位置を取得する、引数要らずの関数だ。<br>
+GetClipMinXはシューティング画面の左端の位置を示す数値を取得する関数で、<br>
+GetClipMaxXは同じく右端の位置を示す数値を取得する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ということは今回のスクリプトだと『画面左端から右端までのランダムな範囲で<br>
+弾が出現する場所の横軸を決めている』ってことになるんですね～<br>
+今までと違ってボスの位置に関係なく弾を出すことになりますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ちなみにこの２つの関数は常に同じ数字を出す関数なんだ。<br>
+だから数字をそのまま書いても大丈夫なワケだ。<br>
+今回の場合だとrand(32, 416)と書いても実は全く同じ意味になる。<br>
+が、数字だけ素っ気無く書かれても何を意味しているのかわからないからな。<br>
+書くのが面倒でもGetClipMinXなど関数を使った書き方の方が読みやすい。<br>
+他人に見てもらう可能性があるのなら尚更書くべきだな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+わかりました～！<br>
+第２引数も同じ要領で弾の発射場所の縦軸を決めるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだ。<br>
+こちらはrand(GetClipMinY, GetCenterY)となっている。<br>
+GetClipMinYは画面の上端、GetCenterYは丁度中央の高さの位置を取得する関数だ。<br>
+そうそう、横軸 (X軸) を示す数値は左側ほど小さく、右側ほど大きい。<br>
+同様に縦軸 (Y軸) を示す数値は上側ほど小さく、下側ほど大きい。<br>
+どっちがどっちなのか混乱しないよう憶えておこう。<br>
+特に縦軸は下に行くほど数値が増えるという点に注意だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+第３引数の弾速は２だからこれは普通で･･････<br>
+第４引数の角度が90+rand(-15, 15)となってますね。<br>
+これは単にrand(75, 105)ってやっても良いんじゃないですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+確かにその通りだ。<br>
+だがこの書き方なら真下 (９０°) 方向に±１５°の誤差で撃つことが<br>
+より明確になるのではないかと思ってな。<br>
+まあこの程度だったら好きな方で書いていいレベルだな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+弾の種類を決める第５引数が･･････あっ、何気にREDからWHITEになってますね。<br>
+そして最後の引数はこれまで０だったのが、今回３０になっていますね。<br>
+この第６引数は何を設定するんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+第６引数では弾の遅延時間の設定をするんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen06.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ちえん？
+私のことですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうボケはいらないからね、橙。<br>
+要するに弾を撃つと決めてから、ある程度間を置いてから弾が具現化するようになるの。<br>
+ちょっと見栄えに凝りたいときに使うといいわね。<br>
+普通の弾幕を撃つなら基本的に０のままでいいんだけど･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+何故今回になって遅延時間を０でなくしたんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+遅延時間を設定すると実際に弾が具現化するまで光のようなエフェクトが発生するわ。<br>
+今回はそれを使うとより映える弾幕になるかと思ってね。<br>
+ただ処理が重くなりがちなようで、多用し過ぎると処理落ちが発生したりするけど。<br>
+あと弾の色を白にしたのは、ただ弾幕が雪っぽく見えるかなってことで<br>
+変えただけだから特に深い意味は無いわ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そして実際に『空間から弾を出す』のスクリプトを選ぶと･･････<br>
+おお～！<br>
+随分インパクトのある弾幕になりますね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+空間から弾を出すというのはインパクトが大きいけど、<br>
+その分プレイヤー側の配慮もしなくてはいけないわ。<br>
+今回の例のように画面半分より下からは弾が出ないようにしたり、<br>
+遅延時間を設定して唐突に弾が出ないようにするなどの工夫が必要よ。<br>
+綺麗な弾幕や難しい弾幕を作るのは弾幕作成者の自由だけれど、<br>
+基本的にプレイヤー側の腕前や都合なども考えなくてはね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+弾幕を作る側も色々大変なんですね。<br>
+それではまた次回の講座で会いましょう！
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

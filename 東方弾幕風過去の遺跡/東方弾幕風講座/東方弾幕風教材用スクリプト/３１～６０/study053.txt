@@ -1,0 +1,92 @@
+#“Œ•û’e–‹•—
+#Title[‚T‚RFƒŒ[ƒU[ (ƒ{ƒXŠî€Œ^)]
+#Text[]
+#PlayLevel[’e–‹•—‹³Þ—p]
+#Image[.\img\study053.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 100, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		loop(60) {yield;}
+
+		CreateLaserB("laser", 500, 20, PURPLE11, 30);
+		SetLaserDataB("laser", 0, 0, 0, 0, 0, 0, 90, -3);
+		SetShotKillTime("laser", 120);
+		FireShot("laser");
+		loop(180) {yield;}
+
+		CreateLaserB("laser", 500, 20, PURPLE11, 30);
+		SetLaserDataB("laser", 0, 0, 30, 0, 90, 3, 90, 3);
+		SetShotKillTime("laser", 120);
+
+		CreateShotA(1, 0, 0, 0);
+		SetShotDataA(1, 0, 3, 90, 0, 0, 0, PURPLE01);
+		AddShot(90, "laser", 1, 100);
+
+		FireShot("laser");
+		loop(180) {yield;}
+
+		SetMovePosition02(GetCenterX, GetCenterY, 60);
+		loop(60) {yield;}
+
+		let angle = 0;
+		loop(8) {
+			CreateLaserB("laser", 500, 20, PURPLE11, 60);
+			SetLaserDataB("laser", 0, 0, 50, 0, angle, -1, angle, 0.3);
+
+			let time = 180;
+			while(time < 6000) {
+				let distance = 30;
+				while(distance < 500) {
+					CreateShotA(1, 0, 0, 0);
+					SetShotDirectionType(SEQUENCE);
+					SetShotDataA(1, 0, 0.5+distance/60, -180, 0, 0, 0, PURPLE01);
+					SetShotDirectionType(ABSOLUTE);
+					AddShot(time, "laser", 1, distance);
+					distance += 30;
+				}
+				time += 240;
+			}
+			FireShot("laser");
+			angle += 360/8;
+		}
+	}
+}

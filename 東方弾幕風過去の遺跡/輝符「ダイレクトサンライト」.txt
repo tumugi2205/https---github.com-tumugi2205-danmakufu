@@ -1,0 +1,176 @@
+#東方弾幕風
+#Title[輝符「ダイレクトサンライト」]
+#Text[テストスクリプト]
+#ScriptVersion[2]
+
+script_enemy_main {
+       let imgBoss   = "script\img\杏子.png";
+    @Initialize {
+        SetX(GetCenterX);
+        SetY(GetClipMinY + 120);
+        SetLife(2000);
+
+        LoadGraphic(imgBoss);
+        SetTexture(imgBoss);
+        SetGraphicRect(0, 0, 63, 63);
+        SetScore(3500);
+        SetDamageRate(60,50);
+        CutIn(YOUMU,"輝符「ダイレクトサンライト」",0,0,0,0,0);//スペルカード名表示
+        TNway;
+        TNway2;
+        TNway3;
+        TNway4;
+        TMove; 
+    }
+
+    @MainLoop {
+        SetCollisionA(GetX, GetY, 24);
+        SetCollisionB(GetX, GetY, 24);
+
+        yield;
+    }
+
+    @DrawLoop {
+        DrawGraphic(GetX, GetY);
+    }
+
+    @Finalize {
+        DeleteGraphic(imgBoss);
+    }
+
+    // レーザー弾を撃つタスク
+    task TNway {
+        let angleBase = 90;
+        yield;
+
+        loop {
+
+            loop(30) { yield; }
+                    CreateLaser01(GetX-50,GetY,10,GetAngleToPlayer,400,20,RED02,30);
+        }
+    }
+
+    task TNway2 {
+        let angleBase = 90;
+        yield;
+
+        loop {
+
+            loop(30) { yield; }
+                    CreateLaser01(GetX+50,GetY,10,GetAngleToPlayer,400,20,RED02,30);
+        }
+    }
+
+    // n-way 弾を撃つタスク
+    task TNway3 {
+        let angleBase = 90;
+        yield;
+
+        loop {
+            loop(30) { yield; }
+                    nway(rand(0,360), 6, 60, AQUA23);
+        }
+    }
+
+   task TNway4 {
+        let angleBase = 90;
+        yield;
+
+        loop {
+            loop(1){yield;}
+            nway(GetAngleToPlayer,5,10,YELLOW32);
+            angleBase += 8;
+       }
+
+            loop(30){yield;}
+            nway(angleBase,5,5,AQUA03);
+            angleBase += -120;
+       }
+
+
+    // キャラを移動させるタスク
+    task TMove {
+        yield;
+
+        loop {
+            loop(120) { yield; }
+            moveToPlayer(rand(40, 80), rand(-40, 40), 60,
+                         GetClipMinX + 32, GetClipMinY + 32,
+                         GetClipMaxX - 32, GetClipMinY + 160);
+        }
+    }
+
+    // n-way 弾を撃つ関数
+    //   dir   : 弾を撃つ方向
+    //   way   : 弾の数
+    //   span  : 弾の間隔（角度）
+    //   color : 弾の色と種類
+    function nway(dir, way, span, color) {
+        // 中心から発射位置をずらす距離
+        let radius = 32;
+
+        // 発射角
+        let angle  = dir - (way - 1) / 2 * span;
+
+        loop(way) {
+            // 発射地点
+            let x = GetX + offsetX(radius, angle);
+            let y = GetY + offsetY(radius, angle);
+
+            CreateShot01(x, y, rand(1,3), angle, color, 0);
+            angle += span;
+        }
+    }
+
+    // 円の中心からのズレを取得（offsetX : x 座標, offsetY : y 座標）
+    //   radius : 半径
+    //   angle  : 角度
+    function offsetX(radius, angle) {
+        return radius * cos(angle);
+    }
+
+    function offsetY(radius, angle) {
+        return radius * sin(angle);
+    }
+
+    // なるべくプレイヤーの方向に移動
+    //   xMove  : x 方向の移動量（正の数）
+    //   yAdd   : y 方向の移動量
+    //   frame  : 移動に要するフレーム数
+    //   left   : 以下、可動範囲
+    //   top    :
+    //   right  :
+    //   bottom :
+    function moveToPlayer(xMove, yAdd, frame, left, top, right, bottom) {
+        let x;
+        let y;
+
+        if(GetPlayerX < GetX) {
+            // プレイヤーより右に敵がいれば、敵は左に動きます。
+            x = GetX - xMove;
+
+            // 但し、敵が可動領域の左端よりも左にいくようなら、右に動きます。
+            if(x < left) {
+                x = GetX + xMove;
+            }
+        } else {
+            // さもなくば、敵は右に動きます。
+            x = GetX + xMove;
+
+            // 但し、敵が可動領域の右端よりも右にいくようなら、左に動きます。
+            if(right < x) {
+                x = GetX - xMove;
+            }
+        }
+
+        // 可動領域の外に行く場合は、端っこで止めます。
+        y = GetY + yAdd;
+        if(y < top) {
+            y = top;
+        } else if(bottom < y) {
+            y = bottom;
+        }
+
+        SetMovePosition02(x, y, frame);
+    }
+}

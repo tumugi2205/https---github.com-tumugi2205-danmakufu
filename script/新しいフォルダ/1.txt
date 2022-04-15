@@ -1,0 +1,193 @@
+#東方弾幕風
+#Title[対マミ戦闘練習.txt]
+#Text[杏子が練習中です
+邪魔したら....ねぇ？]
+#BackGround[User()]
+#ScriptVersion[2]
+#BGM[bgm\bgm.wav\イマジンブレイク.mp3]
+
+script_enemy_main{
+
+       let frame     = 0;
+       let angleBase = 90;
+    //グローバル変数
+	let imgBoss = "script\img\きょーこ.png";
+	let arrayObj = [];
+ let wIni = 120;
+	
+	///////////////////////////////////////////////////////////
+
+	@Initialize{
+
+        SetX(GetCenterX);
+        SetY(GetClipMinY + 120);
+	LoadGraphic(imgBoss);
+        SetLife(3500);
+        SetTimer(60);
+        SetDamageRate(50, 50);
+        SetTexture(imgBoss);
+        SetGraphicRect(0, 0, 63, 63);
+        SetScore(3500);
+        SetDamageRate(100,70);
+TMove;
+TNway1;
+	 mainTask;
+	 mainTask2;
+	 mainTask3;
+	 mainTask4;
+	}
+		
+	@MainLoop{
+		SetCollisionA(GetX(), GetY(), 32);
+		SetCollisionB(GetX(), GetY(), 24);
+
+         yield;
+	}
+
+	@DrawLoop{
+	    DrawGraphic(GetX(), GetY());
+	}
+		
+	@Finalize{
+	    DeleteGraphic(imgBoss);
+	}
+
+    task TNway1 {
+		loop(60) {yield;}
+
+		loop {
+			let angle = 90-40 ;
+			loop(180) {
+                    CreateLaser01(GetX,GetY,10,angle+20,400,5,BLUE03,50);
+					angle += 20;
+				loop(1) {yield;}
+			}
+			loop(60) {yield;}
+		}
+}
+	task mainTask {
+		loop {
+			loop(6) {
+SetShotDirectionType(PLAYER);
+let angle;
+let angle=0;
+				CreateShotA("stop1", GetClipMinX, GetClipMinY, 0);
+				SetShotDataA("stop1", 0, 4, angle, 0, 0.1, 0, BLUE01);
+				SetShotDataA("stop1", 100, 4, angle, 0, -0.1, 0, BLUE01);
+				SetShotDataA("stop1", 300, 2, angle, 0, 0.01, 5, RED01);
+				FireShot("stop1");
+			loop(10) {yield;}
+			}
+			loop(60) {yield;}
+		}
+}
+	task mainTask2 {
+		loop {
+			loop(10) {
+SetShotDirectionType(ABSOLUTE);
+				CreateShotA("stop2", GetClipMaxX, GetClipMinY, 0);
+SetShotDirectionType(PLAYER);
+let angle;
+let angle=0;
+				SetShotDataA("stop2", 0, 4, angle, 0, 0.1, 0, BLUE01);
+				SetShotDataA("stop2", 100, 4, angle, 0, -0.1, 0, BLUE01);
+				SetShotDataA("stop2", 300, 2, angle, 0, 0.01, 5, RED01);
+				FireShot("stop1");
+			loop(10) {yield;}
+			}
+			loop(60) {yield;}
+		}
+}
+	task mainTask3 {
+		loop {
+			loop(10) {
+SetShotDirectionType(ABSOLUTE);
+			let speed = 0.5;
+				CreateShotA("stop3", GetClipMinX, GetClipMinY, 0);
+				SetShotDataA("stop3", 0, speed, 90, 0, 0.1, 5, BLUE01);
+				speed += 0.3;
+SetShotDirectionType(PLAYER);
+let angle;
+let angle=0;
+				SetShotDataA("stop3", 100, 4, angle, 0, -0.1, 0, BLUE01);
+				SetShotDataA("stop3", 300, 2, angle, 0, 0.01, 5, RED01);
+				FireShot("stop3");
+			loop(10) {yield;}
+			}
+			loop(60) {yield;}
+		}
+}
+	task mainTask4 {
+		loop {
+			loop(10) {
+SetShotDirectionType(ABSOLUTE);
+			let speed = 0.5;
+				CreateShotA("stop4", GetClipMaxX, GetClipMinY, 0);
+				SetShotDataA("stop4", 0, speed, 90, 0, 0.1, 5, BLUE01);
+				speed += 0.3;
+SetShotDirectionType(PLAYER);
+let angle;
+let angle=0;
+				SetShotDataA("stop4", 100, 4, angle, 0, -0.1, 0, BLUE01);
+				SetShotDataA("stop4", 300, 2, angle, 0, 0.01, 5, RED01);
+				FireShot("stop4");
+			loop(10) {yield;}
+			}
+			loop(60) {yield;}
+		}
+}
+
+// キャラを移動させるタスク
+    task TMove {
+        yield;
+
+        loop {
+            loop(120) { yield; }
+            moveToPlayer(rand(40, 80), rand(-40, 40), 60,
+                         GetClipMinX + 32, GetClipMinY + 32,
+                         GetClipMaxX - 32, GetClipMinY + 160);
+        }
+    }
+
+    // なるべくプレイヤーの方向に移動
+    //   xMove  : x 方向の移動量（正の数）
+    //   yAdd   : y 方向の移動量
+    //   frame  : 移動に要するフレーム数
+    //   left   : 以下、可動範囲
+    //   top    :
+    //   right  :
+    //   bottom :
+    function moveToPlayer(xMove, yAdd, frame, left, top, right, bottom) {
+        let x;
+        let y;
+
+        if(GetPlayerX < GetX) {
+            // プレイヤーより右に敵がいれば、敵は左に動きます。
+            x = GetX - xMove;
+
+            // 但し、敵が可動領域の左端よりも左にいくようなら、右に動きます。
+            if(x < left) {
+                x = GetX + xMove;
+            }
+        } else {
+            // さもなくば、敵は右に動きます。
+            x = GetX + xMove;
+
+            // 但し、敵が可動領域の右端よりも右にいくようなら、左に動きます。
+            if(right < x) {
+                x = GetX - xMove;
+            }
+        }
+
+        // 可動領域の外に行く場合は、端っこで止めます。
+        y = GetY + yAdd;
+        if(y < top) {
+            y = top;
+        } else if(bottom < y) {
+            y = bottom;
+        }
+
+        SetMovePosition02(x, y, frame);
+    }
+
+}

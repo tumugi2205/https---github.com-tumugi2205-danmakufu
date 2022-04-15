@@ -1,0 +1,15 @@
+#東方弾幕風[Plural]
+#Title[一面]
+#Text[血塗られた過去に
+君はいったい何を眼にするだろう]
+#ScriptVersion[2]
+#BGM[bgm\bgm.wav\イマジンブレイク.mp3]
+
+
+#ScriptPathData
+   #ScriptPath[\script\東方楽生記\１面\1面中ボス通常.txt]
+   #ScriptPath[\script\東方楽生記\１面\逢坂文香通常1.txt]
+   #ScriptPath[\script\東方楽生記\１面\ふみゅスペカ1.txt]
+   #ScriptPath[\script\東方楽生記\１面\逢坂文香通常2.txt]
+   #ScriptPath[\script\東方楽生記\１面\ふみゅスペカ2.txt]
+#EndScriptPathData

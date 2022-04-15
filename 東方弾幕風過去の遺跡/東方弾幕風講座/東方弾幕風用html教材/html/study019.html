@@ -1,0 +1,230 @@
+<html>
+<head>
+<title>停止弾</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０１９回　停止弾<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回は前々回の加速弾の応用で、減速して停止し、さらに加速する弾を作る。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+だんだんトリッキーな弾も作れるようになってきましたね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+だがこういった特殊な弾はイメージが難しく、バランス調整なども難しい。<br>
+特殊弾を用いた秀逸な弾幕というのは相当難しいだろうな。<br>
+ではスクリプトを見ようか。<br>
+『study019.txt』を開こう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    CreateShotA("stop", GetX, GetY, 0);
+    SetShotDataA("stop", 0, 4, GetAngleToPlayer, 0, <font color="red">-0.1, 0,</font> BLUE01);
+    SetShotDataA("stop", <font color="red">60, NULL, NULL,</font> 0, 0.1, 8, RED01);
+    FireShot("stop");
+
+    loop(180) {yield;}
+    loop {
+      let angle = rand(0, 360);
+      loop(24) {
+        CreateShotA("stop1", GetX, GetY, 0);
+        SetShotDataA("stop1", 0, 4, angle, 0, -0.1, 0, BLUE01);
+        SetShotDataA("stop1", 60, NULL, NULL, 0, 0.1, 8, RED01);
+        FireShot("stop1");
+        CreateShotA("stop2", GetX, GetY, 0);
+        SetShotDataA("stop2", 0, 4, angle+360/48, 0, -0.07, 0, RED01);
+        SetShotDataA("stop2", 60, NULL, NULL, 0, 0.07, 8, BLUE01);
+        FireShot("stop2");
+        angle += 360/24;
+      }
+      loop(120) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回も自習枠を設けている。<br>
+解説はFireShot("stop")までで、残りは自力で読み取ってくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+CreateShotAとFireShotは弾の名付け方が違うだけで、他は同じですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回は<b>１回のCreateShotAに対して２回SetShotDataAを使っている</b>ということがカギだな。<br>
+最初のSetShotDataAの引数については前々回と比べて加速度絡みの引数が異なっている。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+加速度を意味する第６引数がマイナスですから、だんだん減速していくってことですね。<br>
+それで加速の限界値を示す第７引数が０だから、速度がマイナスにはならないんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうことだな。<br>
+第７引数は最大速度の設定と言ったが、減速していくときの最小速度の設定でもある。<br>
+今回作るのは停止する弾だから、速度がマイナスになって<br>
+反対方向に飛んでいくのを防がないとな。<br>
+では話を戻して、２つめのSetShotDataAについて見ていこう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+２番目の引数が６０になっていますね。<br>
+前回では説明を飛ばした引数ですけれど、これは何を意味しているのでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それは<b>SetShotDataAの設定を、弾が出てから何フレーム目で適用するか</b>を決めるんだ。<br>
+前回必ず０にするように言ったのは、０にしないと弾が出てから設定が<br>
+反映されなくなってしまうからだったんだ。<br>
+それで２つめのSetShotDataAは６０になっているから、<br>
+弾が出てから６０フレーム経過したら設定が適用されるワケだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+第３第４引数が『NULL』ってなっていますけど、これはなんでしょう？<br>
+関数の一種ですかね？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+NULLは関数じゃないんだな。<br>
+NULLとは何も無いことを意味する特殊な表現をするための文字なんだ。<br>
+他のプログラミング言語を既に知っているなら馴染みがあると思うのだが。<br>
+それでここでいうNULLとは、<b>設定をせずにこれまでの値をそのまま使う</b>ことを意味する。<br>
+第３引数のNULLは速度だから、この場合６０フレーム目の初速は０になる。<br>
+６０フレームになる前に減速しきって速度が０になるハズだからな。<br>
+第４引数のNULLは発射角度で、引き続き最初のGetAngleToPlayerの角度のまま<br>
+弾が進むことになるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ということは、もし２つめのSetShotDataAの第４引数をGetAngleToPlayerにしたら、<br>
+６０フレーム目から角度が再設定されて、弾が進む角度がいきなり変わるっていう<br>
+可能性があるんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう思うかもしれないが、実はそんなことはない。<br>
+GetAngleToPlayerが出す角度は、弾が出てから６０フレーム目の角度が参照される<br>
+というワケではないんだ。<br>
+６０フレーム目に指定するGetAngleToPlayerは弾を発射する直前の角度、<br>
+つまり１つめのSetShotDataAにあるGetAngleToPlayerの角度と同じ値になる。<br>
+だから今回の例では両方GetAngleToPlayerにして問題ないんだ。<br>
+だが、同じ方向に弾を撃たせる設定にするならばNULLとした方が良いだろう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+同じ方向に撃つんだよってコトを強調したい場合はNULLの方が良いんですね。<br>
+残りの引数は前回と同じ加速弾の設定になってますから、<br>
+６０フレーム目からはだんだん加速していくようになるんですね。<br>
+･･････って、弾の見た目がBLUE01からRED01になっていますけど？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回の例のようにすると、最初は青色だった弾が後から赤色になるという<br>
+弾にすることができるんだ。<br>
+数字の部分も書き換えれば小さい弾から大きい弾に変えることができるが･･････<br>
+当たり判定が大きくなる場合があるから、下手するとプレイヤーに嫌われるかもな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+まとめると、減速する青弾が撃たれて、その後停止、さらに赤弾になって加速する<br>
+っていう弾が撃たれることになるんですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうことだな。<br>
+後は自習枠だから、各自頑張って勉強してくれ。<br>
+今回は残念ながらノーヒントだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+私のカンでは、+360/48っていうところが重要そうな気がします！<br>
+それじゃまた次の講座で！
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+script_enemy_main
+{//Exルーミア通常弾幕1
+	let count=0;
+	let cx=GetCenterX();//STGシーンの中心x座標を取得
+	let imgExRumia=GetCurrentScriptDirectory~"img\ExRumia.png";
+	@Initialize
+	{
+		SetLife(1500);//ライフを1500に設定
+		SetTimer(60);//時間制限を60秒に設定
+		SetGraphicRect(1,1,64,64);//描画元矩形を設定
+		SetInvincibility(30);//敵を30フレーム無敵にする
+		LoadGraphic(imgExRumia);//画像「img\ExRumia.png」を読みこむ		
+		SetMovePosition02(cx+0,60,60);//座標(cx,60)へ60フレームかけて移動する
+		DeleteEnemyShot(ALL);//出現と同時に敵弾を全て削除
+	}
+	
+	@MainLoop
+	{
+		if(count>60&&count%8==0)
+		{
+			let ang=GetAngleToPlayer();//敵から自機方向への角度を取得
+			let i=0;
+			while(i<360)
+			{
+				CreateShot02(GetX(),GetY(),7,i+count,-0.4,4,BLUE12,0);//弾を発射
+				CreateShot02(GetX(),GetY(),5,i-count,-0.4,3,RED12,0);
+				i+=30;
+			}
+
+		}
+		if(count==150)
+		{
+			SetMovePositionRandom01(50,20,5,GetClipMinX()+100,30,GetClipMaxX()-100,100);
+		}
+
+		if(count==160){count=89;};
+		SetCollisionA(GetX(),GetY(),32);//当たり判定(自弾)登録
+		SetCollisionB(GetX(),GetY(),24);//当たり判定(体当たり)登録
+		count++;
+	}
+	
+	@Finalize
+	{//読みこんだファイルを削除
+		DeleteGraphic(imgExRumia);
+	}
+	
+	@DrawLoop
+	{//描画
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX()==0){SetGraphicRect(64,1,127,64);}
+		else if(GetSpeedX()>0){SetGraphicRect(192,1,255,64);}
+		else if(GetSpeedX()<0){SetGraphicRect(128,1,191,64);}
+		DrawGraphic(GetX(),GetY());
+	}
+}

@@ -1,0 +1,234 @@
+<html>
+<head>
+<title>回転砲台</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０１５回　回転砲台<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+回転砲台とは弾の発射角度をグルグル回すという弾幕だ。<br>
+今回はより弾幕シューティングっぽく弾を多くしてみた。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+弾が多いと弾幕シューティングやってるってカンジがしますよね！<br>
+やっぱり最終的には弾がいっぱいの弾幕を作りたくなります～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ではいつも通りスクリプトを開こう。<br>
+『study015.txt』だ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    let angle = rand(0, 360);
+    loop {
+      loop(5) {
+        CreateShot01(GetX, GetY, 1, angle, RED01, 0);
+        angle += 360/5;
+      }<font color="red">
+      angle = (angle+6.7) % 360;</font>
+      loop(5) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回の弾幕は『study012.txt』の全方位弾を応用した弾幕と言える。<br>
+loop(5) { } の中身を見ると似たような形になっているのがわかるな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+angle += 360/5ってなっていますから、全方位5way弾を撃つ形ですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+だが全方位弾と違うのはそのloop(5) { } の次だ。<br>
+angle = (angle+6.7) % 360のところだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+angle+6.7っていうところはangle += 6.7とも書けますよね。<br>
+でも % 360 っていうのはなんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+% は『剰余』を求める演算子だ。<br>
+剰余とは、割り算をしたときの余りだな。<br>
+例えば a = 11 % 3 の場合、１１÷３の答えが『３余り２』になるから、<br>
+変数aには２の値が格納されるワケだな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ということは、angleに６．７足した値から、３６０で割った余りを新たな<br>
+angleの値にするってことですよね。<br>
+どうしてわざわざこんな書き方をするんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ここでは余りを求めるというより、３６０以上の数値を３６０未満に修正する<br>
+という処理をしていると考えた方が良いかな。<br>
+角度を示す数値は３６０を超えると１周して０に戻るだろう？<br>
+だから % 360 を使うことで角度を表現する上で余分な数値を省くことができるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+でも大きい数値をそのまま使っても角度を表現する上で支障は無いのでは？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあ基本的にはそうなんだが。<br>
+数字があまりにも大きくなってくると、変数のビット数で表現できる限界のせいで<br>
+オーバーフローしたり小数点の精度が悪くなったり･･････<br>
+まあコンピューター側の問題なんだが、プログラミングに疎いと<br>
+イマイチ重要性が実感できないかな。<br>
+正直上で言った問題は弾幕風ではそうそう起こらないから、<br>
+普通に angle += 6.7 と書いてもまず問題ない。<br>
+気になる方や問題が起こった場合は今回のような書き方をすればいい。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+弾幕風の場合はそこまで神経質にならなくてもいいってことですかね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それで話を戻すと、angleにどんどん6.7が足されていくことで発射角度が<br>
+少しずつズレていく。<br>
+これによって回転砲台の回転が実現できるようになるんだな。<br>
+ちなみにloop(5) { } の中で足された分はきっかり３６０だから、<br>
+その後の % 360 で丁度消えるから発射角度には影響しないな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+６．７っていう中途半端な増え方をするようにしているのは何故でしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+あまりにも綺麗な数値だと常に同じ方向に撃ったりしてしまうからね。<br>
+それが何を招くかというと安全地帯が発生する恐れがあるということ。<br>
+だからそれを防ぐために中途半端な数値にしているの。<br>
+素数っぽい数値なら大体大丈夫でしょう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+安置ができるとせっかく作った弾幕が台無しになる可能性がありますからね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+他に安置を防ぐ手段としては、ボス自体を細かくランダムに動かしたり、<br>
+自機狙いの弾を混ぜて安置を潰したりするというのもあるわ。<br>
+ボスの動きについては後の講座で学ぶとしましょう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そういえば変数angleの宣言位置が大分外の方にありますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだ忘れていた。<br>
+全方位弾のスクリプトのときはloop { } の後に変数を宣言しているが、<br>
+今回はloop { } の手前で宣言しているな。<br>
+これがloop { } の後に宣言すると弾を撃つ度にangleが乱数で初期化されてしまうから、<br>
+回転砲台にならなくなってしまうからな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+実際にスクリプトを実行してみると･･････<br>
+うわぁ、凄い弾の量ですね～！<br>
+それでちゃんと5wayの回転砲台が時計回りで回っていますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回は弾速を１にしているからね。<br>
+弾速が遅い分、長く画面に残ることになるから必然的に弾が多くなりがちね。<br>
+弾数で勝負したい弾幕を作りたいなら、広範囲に遅い弾幕をばら撒くといいわ。<br>
+では今回はこんなところにして、また次回にするとしましょう。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+function GetAngleToPlayer (let arg) {
+  return atan2(GetPlayerY-ObjMove_GetY(arg), GetPlayerX-ObjMove_GetX(arg));
+}
+
+function rand_int0 (let arg) {
+  return truncate(rand(0, arg+1)%(arg+1));
+}

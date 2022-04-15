@@ -1,0 +1,258 @@
+<html>
+<head>
+<title>オブジェクト弾 (回転ビット　その２)</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０３４回　オブジェクト弾 (回転ビット　その２)<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+前回予告した通り、回転ビットの続編だ。<br>
+今回はビットの軌道を色々変えるようにしてみる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+より派手になるってワケですね！<br>
+それは楽しみです～<br>
+今回のスクリプトは『study034.txt』ですね。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    let angle = rand(0, 360);
+    loop(6) {
+      objectBullet(angle);
+      angle += 360/6;
+    }
+  }
+
+  task objectBullet (let angle) {
+    let obj = Obj_Create(OBJ_SHOT);
+    Obj_SetX(obj, GetX);
+    Obj_SetY(obj, GetY);
+    Obj_SetSpeed(obj, 0);
+    Obj_SetAngle(obj, angle);
+    ObjShot_SetGraphic(obj, RED02);
+    ObjShot_SetDelay(obj, 0);
+    ObjShot_SetBombResist(obj, true);
+
+    let count = 0;<font color="red">
+    let radiusX = 0;
+    let radiusY = 0;</font>
+    let angularVelocity = 2.2;
+    while(!Obj_BeDeleted(obj)) {
+      Obj_SetX(obj, GetX+<font color="red">radiusX</font>*cos(angle));
+      Obj_SetY(obj, GetY+<font color="red">radiusY</font>*sin(angle));
+      if((count >= 120) && (count%6 == 0)) {
+        CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 1.5, angle<font color="red">+count/2</font>, RED01, 0);
+      }
+<font color="red">
+      if(count < 60) {
+        radiusX += 100/60;
+        radiusY += 60/60;
+      } else if((count%600 >= 240) && (count%600 < 300)) {
+        radiusX -= 40/60;
+        radiusY += 60/60;
+      } else if(count%600 >= 540) {
+        radiusX += 40/60;
+        radiusY -= 60/60;
+      }
+
+      if((count%720 >= 240) && (count%720 < 360)) {
+        angularVelocity -= 4.4/120;
+      } else if(count%720 >= 600) {
+        angularVelocity += 4.4/120;
+      }</font>
+
+      angle += angularVelocity;
+      count++;
+      yield;
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+前回ビットの円軌道の半径としてdistanceという変数を使っていたが、<br>
+今回はradiusXとradiusYという変数を使っている。<br>
+そしてObj_SetXではradiusXを、Obj_SetYではradiusYを計算式に組み込んでいる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+２つの変数に分けたんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+次にwhileループの２番目のif文処理に注目だ。<br>
+６０フレームをかけてradiusXを１００に、<br>
+radiusYを６０まで増やすようにする。<br>
+２つの変数が異なる数値で円軌道を作ろうとすることになる。<br>
+つまりどういうことになるのかわかるかな、橙？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+え～っと･･････<br>
+横方向を意味するXの数値が大きくて、縦のYが小さいから･･････<br>
+横長の楕円軌道になるということですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通りよ。<br>
+このような書き方をすれば楕円軌道を作ることが可能なの。<br>
+普通の円軌道に物足りなさを感じたら楕円にするのも面白いね。<br>
+ただ楕円軌道だと弾幕の形は美しくなりにくいでしょうけど。<br>
+無論不恰好なりの美というのもあるからこういうのも悪くないわ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+楕円軌道も意外と簡単に作れるものなんですね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+また次のif文の条件で、楕円軌道をさらに変えている。<br>
+countの６００フレーム周期で、２４０以上３００未満の６０フレームの間に<br>
+radiusXを１００から４０引いて６０に、<br>
+radiusYを６０から６０足して１２０になるようにしている。<br>
+今度は縦長の楕円に滑らかに変化するようにしているんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+カウントがそして５４０以上６００未満の時に元に戻すんですね。<br>
+弾幕を展開しながらビットの軌道を横長にしたり縦長になるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回の例では触れていないが、斜めの楕円軌道も作ることができるぞ。<br>
+Obj_SetXとObj_SetYで使う角度の周期をずらせばいい。<br><font color="black">
+Obj_SetX(obj, GetX+radiusX*cos(angle));<br>
+Obj_SetY(obj, GetY+radiusY*sin(angle<font color="red">+45</font>));</font><br>
+このようにすると斜め楕円にできる。<br>
+気になるなら試しに書き換えてみるといい。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+斜め楕円の形ってなかなか見かけませんから、<br>
+意外と面白い弾幕が作れそうですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+また同じようなif文の条件で、角速度angularVelocityも変えている。<br>
+ビットが回る速度が遅くなり、やがて逆回転するようになっている。<br>
+円軌道半径の変化する周期と一緒だと変化のバリエーションが乏しくなるから、<br>
+こちらは７２０フレーム周期で変化するようにしている。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+周期をあえてずらすというのも重要なんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+またCreateShot01の第４引数にcountを使っている。<br>
+これにより弾のビット位置による発射角度も時間と共に変化するようにしている。<br>
+これまでは常にボスの外側へ撃っていたが、これで内側にも撃つようになる。<br>
+countを使ったお手軽な変化の付け方の１つだな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+前回のスクリプトと比べると、楕円軌道に時間による軌道の変化、<br>
+ビットの逆回転に弾の発射角度と大分変化を加えたんですね。<br>
+これだけ変わると弾幕も派手になりそうですね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+実際にスクリプトを動かすと実にダイナミックな弾幕であることがわかるわ。<br>
+美しさでは前回のスクリプトに負けるかもしれないけど、<br>
+こちらの弾幕の方が好みだという方もいるんじゃないかしら？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+美しさを取るか派手さを取るか･･････<br>
+そんな悩みもあるんですね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その悩みは普通の人から見れば贅沢な悩みに思えるかもね。<br>
+弾幕を作りたくても作れない人もいるのだから。<br>
+でもここまで講座を終えたのなら自分が作りたい弾幕を自由に作れるくらい<br>
+弾幕作りが上手くなってほしいわね。<br>
+これからも頑張って弾幕作りを学んでちょうだい。<br>
+ではまた次の講座で会いましょう。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

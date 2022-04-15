@@ -1,0 +1,234 @@
+<html>
+<head>
+<title>ばら撒き弾</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０１１回　ばら撒き弾<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+では今回の講座ではばら撒き弾について学ぶ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ばら撒き弾っていうのはランダムに弾を撒き散らす弾幕のことですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうね。<br>
+そのランダムというのが今回のカギよ。<br>
+つまり乱数の作り方を学ぶワケ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+じゃあスクリプトを開いてみましょう！<br>
+今回のファイルは『study011.txt』ですね。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {
+      CreateShot01(GetX, GetY, <font color="red">rand(1, 4),</font> GetAngleToPlayer<font color="red">+rand(-45, 45),</font> RED01, 0);
+      loop(3) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+第０１０回のスクリプトと比べて、ループが少なくなって随分シンプルになっているな。<br>
+しかしCreateShot01を見てみると･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+速度を与える３番目の引数が rand(1, 4)<br>
+発射角度を与える４番目の引数が GetAngleToPlayer + rand(-45, 45)<br>
+ってなっていますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+この rand という関数が乱数を作成する関数なんだ。<br>
+見て分かるとおり、rand関数には２つの引数を与える。<br>
+この２つの引数の範囲で乱数を作ることができる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+っていうことは、rand(1, 4)だったら１から４の範囲でランダムな数を１つ<br>
+作ってくれるってことですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+おおよそ合っているが、２つ注意点がある。<br>
+まず１つ、『作られる乱数は少数を含む』ということ。<br>
+そして２つめは『最大数となっている値も作られる』ということだ。<br>
+当たり前のように思えるが、プログラミング言語などによっては<br>
+最大値が絶対に作られない場合もあるんだ。<br>
+だが弾幕風は最大値の値も作られる可能性がある。<br>
+プログラミングに慣れている方はその点注意しておこう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+つまり最大値『未満』ではないってコトですね。<br>
+だから撃たれる弾の速さは１以上４以下の数値になるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通りだ。<br>
+ちなみに１番目の引数を２番目の引数より大きくしても構わない。<br>
+その場合は１番目の引数が最大値になり、２番目の引数が最小値になるだけだ。<br>
+だが基本的に１番目の引数の方を最小値にするよう統一した方が良いだろうな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+分かりました～！<br>
+それじゃあ４番目の引数で使われているrand関数は･･････<br>
+－４５以上４５以下の範囲で乱数を作るんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そこにさらにGetAngleToPlayerの値が加わるワケだ。<br>
+つまり自機狙いの発射角度から±４５°の誤差が加わるという意味だな。<br>
+この誤差によって弾をばら撒くことができるようになる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen06.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+実際にスクリプト『ばら撒き弾』を選んでみると、<br>
+画面下にいっぱい弾をばら撒きますね！<br>
+GetAngleToPlayerを使ってますから、<br>
+ボスの上に行くとしっかり上側に弾を撃ってきますね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+スクリプトの中身は『study003.txt』の連続した自機狙いに近い形だけど、<br>
+乱数を使うと一気に様変わりするわね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+乱数を使うと手軽に弾幕のバリエーションを増やせますね！<br>
+ただ使いどころを間違えると綺麗な弾幕が崩れちゃうかな･･････？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうそう、乱数を作る関数は他にもある。<br>
+rand_int関数がそうだ。<br>
+基本的に使い方は同じだが、作られる乱数は必ず整数であるという特徴がある。<br>
+こちらもrand関数と同じく最大値の値が作られる場合もある。<br>
+他にもprand関数などもあるが･･････<br>
+正直この関数を使う必要性を感じるのは上級者になってからだろう。<br>
+だからここでは説明を省かせてもらう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+乱数作成範囲の設定次第で大分難易度に影響しそうですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+難易度調整の際は気をつけなくてはならないな。<br>
+ところで今回の宿題だが。<br>
+まあ適当に乱数の生成範囲をいじったりして色々試してみてくれ。<br>
+loop(3) {yield;}のループ数を書き換えてみるのも悪くないな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+loop(0) {yield;}にしたら無限ループになっちゃうからダメとして･･････<br>
+loop(1) {yield;}だったら１秒間で６０発撃つようになるんですね～<br>
+こうなるとかなりの弾の量になりますね。<br>
+もしそれ以上弾を増やしたい場合はどうすればいいんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その場合は単純にCreateShot01をもう１つ増やせばいいだけだ。<br>
+なにもloop(3) {yield;}だけが弾数の量に関わってくるワケではないな。<br>
+無論他にも別の方法はあるが。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+柔軟な発想ができないと色々苦労しそうですね･･････<br>
+では、次回の講座でお会いしましょうね！
+</p></td>
+</tr>
+
+</table>
+
+
+
+</body>
+</html>

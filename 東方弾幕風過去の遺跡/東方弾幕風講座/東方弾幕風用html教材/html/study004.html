@@ -1,0 +1,224 @@
+<html>
+<head>
+<title>自機狙い3way</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第００４回　自機狙い3way<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+では今回は3wayの出し方について講座するわ。<br>
+だんだん弾幕シューティングらしくなってきたわね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それじゃいつも通りスクリプトを開くところから始めますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ああ。<br>
+今回は『study004.txt』を開いてくれ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {
+      CreateShot01(GetX, GetY, 2, GetAngleToPlayer, RED01, 0);<font color="red">
+      CreateShot01(GetX, GetY, 2, GetAngleToPlayer+20, RED01, 0);
+      CreateShot01(GetX, GetY, 2, GetAngleToPlayer-20, RED01, 0);</font>
+      loop(60) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+今まで１つしかなかったCreateShot01が３つに増えていますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+確かにそうだが、見るべきところはもう１箇所あるぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+え～っと、４番目の、発射角度を決める引数がそれぞれ違いますね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだな、重要なところはそこだ。<br>
+最初のCreateShot01の４番目の引数は以前通りGetAngleToPlayerだけだ。<br>
+つまりこの関数で撃たれる弾は自機へ向けて精確に撃ってくる。<br>
+ところが残り２つは･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それぞれ＋２０と－２０って後から付加されていますね。<br>
+関数から数字を引くってなんかヘンなカンジがしますー
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まずGetAngleToPlayer関数を『文字』だと思っていることが間違いなんだ。<br>
+そもそもGetAngleToPlayerはボスから自機への角度、つまり数値を導き出してくれる関数だ。<br>
+つまり最終的にGetAngleToPlayerは１つの数値に化けるワケ。<br>
+だから<b>GetAngleToPlayerは『文字』ではなく『数値』として捉えるべきだ。</b>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そう考えると、数値－数値で自然な算数になりますね。<br>
+っていうことは、自機を狙った角度の『数値』からそれぞれ２０足した数値と<br>
+２０差し引いた数値がCreateShot01の引数として与えられるわけですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうことだ。<br>
+したがって、下２つのCreateShot01は自機狙いの角度からそれぞれ＋方向と－方向に<br>
+２０°ずつ逸れた方向に弾を出すことになる。<br>
+この２つの弾が3wayの両端の弾を担っていることになるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+あれ？<br>
+でもこの書き方だと自機狙いの弾を撃って、その次に＋２０°ずれた方向に弾を撃って、<br>
+最後に－２０°ずれた方向に弾を撃つんですよね。<br>
+普通3wayって３つの弾を同時に出すものじゃないですか。<br>
+今回の例みたいな記述で大丈夫なんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういう疑問を持つことは大切だが、結論から言えば大丈夫だ。<br>
+３つのCreateShot01の間には yield つまり『待つ』処理が無いだろう？<br>
+だから実際に弾幕風を動かすと、３つの弾は同時に出されることになるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そうなんですか～<br>
+それなら安心ですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+実際に弾幕風の方で実行してもらえれば、ちゃんと3wayが撃てていることがわかると思う。<br>
+『自機狙い3way』のスクリプトだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+3way弾を連続して撃ってきて、弾幕シューティングっぽくなってきました！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ところで橙。<br>
+今回は3wayの出し方を学んだわけだが、もし5wayにするときはどうしたらいいと思う？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+CreateShot01を５つ作ればいいと思います！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあそう答えるだろうね。<br>
+じゃあ15wayとか撃ちたい場合はどうする？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+えぇ！？<br>
+え～～～っと･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+･･････とまぁ、弾を１発１発CreateShot01で表現するのは大変なワケ。<br>
+弾幕シューティングでは弾の数が１０００発を超えることもあるからね。<br>
+もっと効率的にスクリプトを作る必要があるの。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+次回はそのことについて学ぶわけですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうこと。<br>
+それではまた次の講座でね。
+</p></td>
+</tr>
+
+</table>
+
+</body>
+</html>

@@ -1,0 +1,349 @@
+<html>
+<head>
+<title>オブジェクト弾 (回転ビット　その１)</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０３３回　オブジェクト弾 (回転ビット　その１)<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回は回転ビットを学ぶ。<br>
+この回転ビットとは、ボスの周囲をぐるぐる回り続ける弾のことだ。<br>
+幻想郷風に言うなら、式神の一種と言えるな。<br>
+あの白黒の著書『The Grimoire of Marisa』風に言えば、奴隷タイプだな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+式神ということは、私たちと同じということですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+うむ、つまりボス自らが弾を出すのとは別に、<br>
+小型の機体や魔方陣を出してそこからも弾を出すようにする弾幕だ。<br>
+私、八雲藍のスペルカードである式神「十二神将の宴」も<br>
+１２個の魔方陣を出し、そこから弾を出す弾幕だな。<br>
+その魔方陣に相当するものを、オブジェクト弾で表現する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+でも確か藍様のスペルカードって、魔方陣がグルグル回るような<br>
+動きをしなかったと思いますけど？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+確かに私のスペルカードは一定の位置まで魔方陣を飛ばし、<br>
+その後魔方陣は固定の位置に陣取るというものだ。<br>
+だが今回はビットの動かし方を学ぶのが目的だから、<br>
+１歩踏み込んだ円軌道をするビットを作ることにする。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なんだか難しそうですけれど･･････<br>
+今回開くスクリプトは『study033.txt』ですね。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    let angle = rand(0, 360);
+    loop(6) {
+      objectBullet(angle);
+      angle += 360/6;
+    }
+  }
+
+  task objectBullet (let angle) {
+    let obj = Obj_Create(OBJ_SHOT);
+    Obj_SetX(obj, GetX);
+    Obj_SetY(obj, GetY);
+    Obj_SetSpeed(obj, <font color="red">0</font>);
+    Obj_SetAngle(obj, angle);
+    ObjShot_SetGraphic(obj, RED02);
+    ObjShot_SetDelay(obj, 0);
+    ObjShot_SetBombResist(obj, true);
+
+    let count = 0;
+    let distance = 0;
+    while(!Obj_BeDeleted(obj)) {<font color="red">
+      Obj_SetX(obj, GetX+distance*cos(angle));
+      Obj_SetY(obj, GetY+distance*sin(angle));</font>
+      if((count >= 120) && (count%6 == 0)) {
+        CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 1.5, angle, RED01, 0);
+      }
+      if((count >= 120) && (count%240 == 0)) {
+        let speed = 2;
+        loop(10) {
+          CreateShot01(Obj_GetX(obj), Obj_GetY(obj), speed, atan2(GetPlayerY-Obj_GetY(obj), GetPlayerX-Obj_GetX(obj)), RED11, 0);
+          speed += 0.2;
+        }
+      }
+
+      if(count < 60) {
+        distance += 80/60;
+      }
+
+      angle = (angle+2.2) % 360;
+      count++;
+      yield;
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回のmainTaskの処理は驚くほど単純だ。<br>
+全方位6wayの要領でオブジェクト弾を撃つ。<br>
+それだけだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ホントにそれだけで終わりなんですね。<br>
+mainTask自体も終わっていますし。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+というワケで、objectBulletの中身に集中するとしよう。<br>
+まず注目すべきは初期設定の１つ、Obj_SetSpeedだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+えっ！？<br>
+弾速が０になっていますけど？<br>
+これじゃ弾がずっと止まったままになるのでは？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、今回のオブジェクト弾はスピードが０なんだ。<br>
+スピードが０なのにどのように弾を動かすのか、<br>
+それが重要なポイントだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そういう弾を作るのは初めてですね～<br>
+あっ、そういえばObjShot_SetBombResistがtrueになっていますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回のオブジェクト弾は弾というよりビットだから、<br>
+簡単に消されてしまっては困るわ。<br>
+もし消えてしまったらボスは棒立ちになってしまうからね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+whileループの中身は･･････<br>
+count方式の処理になっていますね。<br>
+そして最初にObj_SetXとObj_SetYがありますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+このObj_SetXとObj_SetYが今回の肝だ。<br>
+この２つの関数を毎フレーム実行することで、<br>
+オブジェクト弾の位置を指定するんだ。<br>
+パラパラ漫画のページを一枚々々作るのと同じようなものだと思ってもいい。<br>
+そうそう、Obj_SetXとObj_SetYを同時に実行できる<br>
+Obj_SetPositionという関数があるから、そちらを使ってもいい。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そういうやり方で弾を動かすこともできるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そして実際にどのように弾の位置を決めているかというと、<br>
+Obj_SetXの方は GetX+distance*cos(angle) になっており、<br>
+Obj_SetYの方は GetX+distance*sin(angle) となっている。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+cosにsinというのは初めての関数ですが、<br>
+これは三角関数のサイン、コサインですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだ。<br>
+三角関数については数学の授業で習っているだろうから、<br>
+ここでは詳しく語らない。<br>
+気になるなら自分で勉強してくれ。<br>
+とりあえず今回の講座では次のように憶えてくれ。<br>
+半径１の円、つまり単位円において、<br>
+円周上に存在するある点Ａの座標を (x, y) とする。<br>
+そして円の中心から点Ａへの角度をθとする。<br>
+このときの点Ａの座標はそれぞれ、<br>
+x = cosθ と y = sinθ になる。<br>
+これだけ頭に入れておけば大丈夫だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen01.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+え～～～っと･･････<br>
+ごめんなさい、わからないです。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+円周上にある点は、x座標をコサインで、y座標をサインで<br>
+簡単に表現できるということだ。<br>
+『極座標』でググッて、図解付きで説明しているページを見れば<br>
+詳しくわかると思うからそちらを参照してくれ。<br>
+それでもよくわからなかったら今回の記述の仕方を<br>
+公式として憶えてもらってもOKだ。<br>
+でもできれば三角関数の理解を深めてほしい。<br>
+弾幕作りにおいて三角関数をフル活用できると<br>
+実に多彩な弾幕を作れるようになれるからな。<br>
+特に幾何学的な模様の弾幕を作りたかったら是非勉強してほしい。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+が、頑張ります･･････<br>
+っと、whileループの中身は他に特筆すべきところは無いですかね。<br>
+最初のif文は普通に弾を出していて、<br>
+２番目のif文は･･････これは一斉発射型の連弾ですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+一斉発射連弾はatan2を使った自機狙い弾を作っているな。<br>
+それはそうとして、whileループの最後の方にある<br>
+if文に注目してみよう。<br>
+ここでは６０フレームかけて変数distanceを８０に増やしている。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ホントだ。<br>
+え～っと、これは今回の肝になる部分のObj_SetXとObj_SetYの<br>
+部分で使われていますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+この変数distanceは、ビット弾の円軌道における半径の長さを<br>
+意味している変数だ。<br>
+距離を意味するdistanceと名前を付けているが、<br>
+半径を意味するradiusでもいいな。<br>
+このdistanceの部分に位置する数字が小さくなると小さい円軌道に、<br>
+大きくなると大きい円軌道でビットが回るようになるワケだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ということは、最初はビット弾がボスの中央から出てきて、<br>
+だんだん拡がるように弾が動いていって、<br>
+６０フレーム経過した後は一定の距離をボスから保ちながら<br>
+グルグル回り続けるようになるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうこと。<br>
+実際にどのようにビット弾が拡がるかイメージし辛かったら、<br>
+スクリプトを動かして自分の目で確認してみてちょうだい。<br>
+いきなり空間からビット弾が現れると不自然だから、<br>
+自然に見えるように少し細工をしてみたわ。<br>
+弾幕的にはなんら意味がないことだが、<br>
+弾幕作りに慣れてきたならこういった自然な演出にも気を配りたいわね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+実際にスクリプトを動かすとかなり派手ですね～<br>
+弾幕としてはstudy015の回転砲台と、study008の連弾を<br>
+併せたものとほとんど同じ性質なのに、<br>
+ビット弾に撃たせるだけで大分印象が変わりますね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+次回の講座ではこのビット弾の動きに手を加えてみるわ。<br>
+今回はただ円に回るだけだったが、もっと手の込んだものにしてみよう。<br>
+よりインパクトのある、多彩な表現ができるようになるからね。<br>
+それではまた次回の講座で。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

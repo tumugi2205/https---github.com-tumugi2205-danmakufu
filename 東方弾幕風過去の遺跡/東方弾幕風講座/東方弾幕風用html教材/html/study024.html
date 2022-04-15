@@ -1,0 +1,348 @@
+<html>
+<head>
+<title>ユーザー定義関数</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０２４回　ユーザー定義関数<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回学ぶのはユーザー定義関数。<br>
+文字通りスクリプトの作者が好きなように関数を作ることができる。<br>
+このユーザー定義関数は前々回で学んだサブルーチンの応用版と言える。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+応用版ですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+以前サブルーチンを『引数無しの関数を自作する』と表現したが、<br>
+ユーザー定義関数は『引数<b>有り</b>の関数を自作する』といえる。<br>
+では今回の例を見てみよう。
+『study024.txt』を開こう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {
+      let way = 3;
+      let angleSpan = 20;
+      while(way <= 15) {<font color="red">
+        shotNway(way, angleSpan);</font>
+        way++;
+        angleSpan--;
+        loop(60) {yield;}
+      }
+      loop(120) {yield;}
+    }
+  }
+<font color="red">
+  function shotNway (let way, let angleSpan) {
+    let angle = GetAngleToPlayer - angleSpan * (way-1) / 2;
+    loop(way) {
+      CreateShot01(GetX, GetY, 2, angle, RED01, 0);
+      angle += angleSpan;
+    }
+  }
+}</font>
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+mainTaskの中をよく見ると、shotNwayという記述がありますね。<br>
+これがユーザー定義関数かな？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通り。<br>
+サブルーチンのときは3wayを撃つことしかできなかったが、<br>
+今回のユーザー定義関数shotNwayは任意のway数で撃てる関数だ。<br>
+スクリプトがだんだん複雑になってきたが、ちゃんと理解できるように頑張ってくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+shotNwayの右には (way, angleSpan) とありますね。<br>
+この書き方はまさしくCreateShot01みたいな引数の書き方です。<br>
+ユーザー定義関数も同じように引数を書くんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだな。<br>
+このshotNway関数はway数とway弾の角度間隔を指定する関数になっている。<br>
+ではmainTaskの流れをざっと説明しよう。<br>
+宣言している変数wayはway数を示す数値を入れて、変数angleSpanには<br>
+way弾の角度間隔を示す数値を入れている。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それを踏まえると、まずはwhileループの中に入って･･････<br>
+shotNway関数に引数を指定して3way弾を撃つんですね。<br>
+それでその後wayが１増えて４になって、angleSpanは１減って１９になります。<br>
+そしてloop(60) {yield;}で６０フレーム待ったら、whileループの先頭に戻るんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+あとは同じ要領でループを繰り返す。<br>
+１回ループするたびにway数が増えていくから、<br>
+4way, 5way, 6way, 7way･･････とだんだん増えていくことになる。<br>
+また角度間隔が１°ずつ少なくなるから、way弾がだんだん狭くなってくる。<br>
+15wayを撃ち終えたあと、変数wayが１６になったらwhileループの条件を<br>
+満たさなくなるのでループを抜ける。<br>
+その後loop(120) {yield;}で１２０フレーム待ったら、また3wayに戻って<br>
+まただんだんway数が増えていく、といった処理になるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+way弾が増えていくなんて、だんだん凝った弾幕が作れるようになってきましたね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+では今度はshotNway関数の中身を見てみよう。<br>
+２つの引数を与えるだけでどのような処理をしてNway弾を撃っているのか。<br>
+その構造について理解していこう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+下にあるfunction shotNwayって書いてあるのがそうですね。<br>
+サブルーチンのときは頭にsubってありましたけど、ユーザー定義関数の場合は<br>
+functionって書くんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、ユーザー定義関数を宣言するときはfunctionと書くんだ。<br>
+ちなみにfunctionとは英語で『関数』という意味だ。<br>
+もちろんユーザー定義関数も自分で名前を付けるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+shotNwayの右にサブルーチンでは書かなかった記述がありますね。<br>
+見たカンジ変数の宣言をしているみたいですけど。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+これが重要なポイント、ユーザー定義関数の引数だな。<br>
+shotNwayは２つの引数を使うわけだから、与えられた２つの引数を<br>
+『受ける』変数を用意しておく必要があるんだ。<br>
+shotNwayの第１引数がway数を意味する数字で、第２引数が角度間隔の数字になる。<br>
+今回はmainTaskと全く同じ変数way, angleSpanで変数を受け取るようにしている。<br>
+が、別に同じ名前の変数を使う必要はない。<br>
+そもそも引数指定のときは直接数値を入れることもあるだろうし。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+関数を呼び出すときの引数の数と、定義するときの関数で受ける引数の数、<br>
+どちらも同じ数にしないとエラーがでるみたいですからそこは注意しないとですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+うむ。<br>
+それで最初の１行の内容なんだが･･････<br>
+この式はある意味Nway弾を作る上で一番重要であるといえる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+え、え～と？<br>
+<font color="black">let angle = GetAngleToPlayer - angleSpan * (way-1) / 2;</font>
+いつになく複雑な計算式があるような･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+この計算式がNwayで撃つ上で必要な部分だ。<br>
+では橙。<br>
+もし角度間隔が２０°の自機狙い3wayを撃ちたい場合、<br>
+最初のangleの値はどうすればいい？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+えっと、確か『study005.txt』の内容と同じだから･･････<br>
+GetAngleToPlayer - 20にすれば大丈夫です！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、そうすればループする度に＋２０°されることを考えれば<br>
+－２０、±０、＋２０となって同じ角度間隔でway弾が撃てる。<br>
+では、同じ要領で5wayの弾を撃ちたい場合はangleの値をどうすればいい？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ん～っと･･････<br>
+＋４０°の方向と－４０°の方向にも撃てればいいんですから･･････<br>
+GetAngleToPlayer - 40にすればできます！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+正解。<br>
+ではここからが本題。<br>
+同じ要領でNway弾を撃ちたい場合はangleの値はどうすればいいか、<br>
+way数を示す変数Nを用いて答えよ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+えぇっ！？<br>
+う～～～ん･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+この問題は数学的な意味での関数の問題だな。<br>
+等差数列の問題と考えてもいい。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+Nが３のときは－２０°で、Nが５のときは－４０°でよかったから･･････<br>
+もしNが１だったら±０でよくて･･････<br>
+Nが７だったら･･････ええっと更に－２０されて－６０°なら･･････合ってるか。<br>
+１なら０。<br>
+３なら－２０。<br>
+５なら－４０。<br>
+７なら－６０。<br>
+じゃあNなら･･････GetAngleToPlayerにNから１引いた数を１０倍した値を<br>
+引いた数値が答えだ！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+大正解！！<br>
+よくできたね、橙。<br>
+式にするとangle = GetAngleToPlayer - 10 * (N - 1)といったような形になる。<br>
+さらに角度間隔の２０という数字をそのまま使った形にするなら、<br>
+angle = GetAngleToPlayer - 20 * (N - 1) / 2となるな。<br>
+ではここで角度間隔である２０を変数angleSpanにしてみよう。<br>
+さらに変数Nの名前をwayにすると･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+あっ！<br>
+shotNwayの最初の式と全く同じになりますね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+と、このような仕組みで最初のangleの値がこのような式になるワケだ。<br>
+ちなみにNが偶数の場合でもちゃんと綺麗な偶数弾になるぞ。<br>
+気になるなら各自計算してみてくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+angleの初期設定が終わったあとはway回ループに入って、弾を出しては<br>
+angleSpanの値をangleに足していってway弾を実現する･･････<br>
+このあたりの仕組みは『study005』と同じですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+これでshotNwayがどのような理屈でNway弾が撃てているかわかったかな？<br>
+このようにユーザー定義関数では好きな引数を設定することで<br>
+サブルーチン以上のバリエーションが出せるんだ。<br>
+今回は引数２つだったが、もちろん１つでも３つ以上でもOKだ。<br>
+ただあんまり引数が多すぎると逆に使いづらくなるから注意しよう。<br>
+ちなみにC言語などのように返り値を渡すこともできる。<br>
+でも弾幕風では返り値が必要になる場面は少ないと思う。<br>
+もし興味があったらヘルプにあるサンプルを参照してくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+また１歩理想の弾幕作りに近づいたってカンジですね！<br>
+それではまた次回の講座で！
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

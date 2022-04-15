@@ -1,0 +1,258 @@
+#東方弾幕風
+#Title[スラッシュビジョン]
+#Text[杏子が練習中です
+邪魔したら....ねぇ？]
+#BackGround[User()]
+#ScriptVersion[2]
+#BGM[bgm\bgm.wav\イマジンブレイク.mp3]
+
+
+script_enemy_main{
+
+       let frame     = 0;
+       let angleBase = 90;
+    //グローバル変数
+	let imgBoss = "script\img\杏子.png";
+	let arrayObj = [];
+ let wIni = 120;
+	
+	///////////////////////////////////////////////////////////
+
+	@Initialize{
+
+        SetX(GetCenterX);
+        SetY(GetClipMinY + 120);
+	LoadGraphic(imgBoss);
+        SetLife(2000);
+        SetTimer(60);
+        SetDamageRate(50, 50);
+        SetTexture(imgBoss);
+        SetGraphicRect(0, 0, 63, 63);
+        SetScore(3500);
+        SetDamageRate(60,70);
+        CutIn(YOUMU,"スラッシュビジョン","script\img\画像 098.png",0,0,373,397);//スペルカード名表示
+	    TMain;  
+	    TNway1;  
+	    TNway2;
+	    TNway3;
+	    TNway4;
+	    TNway5;
+	    TNway6;
+	    TNway7;
+	    TNway8;
+     TMove;
+	}
+
+		
+	@MainLoop{
+		SetCollisionA(GetX(), GetY(), 32);
+		SetCollisionB(GetX(), GetY(), 24);
+
+         yield;
+	}
+
+	@DrawLoop{
+	    DrawGraphic(GetX(), GetY());
+	}
+		
+	@Finalize{
+	    DeleteGraphic(imgBoss);
+	}
+
+        let L1 = Obj_Create(OBJ_LASER); 
+        SetShotKillTime(L1,400);
+	task TMain{
+	    //初期化
+        SetShotKillTime(L1,400);
+	    
+	    yield;
+        SetShotKillTime(L1,400);
+	    loop(wIni){ yield; }
+        SetShotKillTime(L1,400);
+	    
+	    //処理
+     loop{
+     
+         loop(1){
+        SetShotKillTime(L1,400);
+CreateLaserA(L1,GetX, GetY,150,20, RED01, 150);
+SetLaserDataA(L1,1,rand(0,360),1.5,0,1.5,rand(0,360));
+          FireShot(L1);
+             loop(1){ yield; }
+         }
+         loop(100){ yield; }
+}
+}
+
+	task TNway1{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    
+	    //処理
+     loop{
+     
+         loop(1){
+        SetShotKillTime(L1,400);
+CreateLaserA(L1,GetX, GetY,150,20, RED01, 150);
+SetLaserDataA(L1,1,rand(0,360),-1.5,0,1.5,rand(0,360));
+          FireShot(L1);
+             loop(1){ yield; }
+         }
+         loop(50){ yield; }
+}
+}
+	task TNway2{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(50){
+         CreateShot02(GetX,GetY,rand(0.5,2),
+	                rand(0,360),-0.02,-5,RED23,150);
+}
+         loop(100){ yield; }
+	}
+ }
+	task TNway3{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+         CreateShot02(GetX,GetY,rand(1.5,3),
+	                rand(0,360),-0.03,-5,RED02,150);
+}
+         loop(100){ yield; }
+	}
+ }
+	task TNway4{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+         CreateShot02(GetX,GetY,rand(1.5,3),
+	                rand(0,360),-0.09,-5,YELLOW11,150);
+}
+         loop(100){ yield; }
+	}
+ }
+
+	task TNway5{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+         CreateShot02(GetX,GetY,rand(0.5,2),
+	                rand(0,360),-0.02,-5,AQUA04,150);
+}
+         loop(100){ yield; }
+	}
+ }
+	task TNway6{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+         CreateShot02(GetX,GetY,rand(0.5,2),
+	                rand(0,360),-0.02,-5,RED04,150);
+}
+         loop(100){ yield; }
+	}
+ }
+	task TNway7{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+         CreateShot02(GetX,GetY,rand(0.5,2),
+	                rand(0,360),-0.02,-5,YELLOW04,150);
+}
+         loop(100){ yield; }
+	}
+ }
+	task TNway8{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(50){
+         CreateShot02(GetX,GetY,rand(1.5,2),
+	                rand(0,360),-0.05,-5,YELLOW23,150);
+}
+         loop(100){ yield; }
+	}
+ }
+// キャラを移動させるタスク
+    task TMove {
+        yield;
+
+        loop {
+            loop(120) { yield; }
+            moveToPlayer(rand(40, 80), rand(-40, 40), 60,
+                         GetClipMinX + 32, GetClipMinY + 32,
+                         GetClipMaxX - 32, GetClipMinY + 160);
+        }
+    }
+
+    // なるべくプレイヤーの方向に移動
+    //   xMove  : x 方向の移動量（正の数）
+    //   yAdd   : y 方向の移動量
+    //   frame  : 移動に要するフレーム数
+    //   left   : 以下、可動範囲
+    //   top    :
+    //   right  :
+    //   bottom :
+    function moveToPlayer(xMove, yAdd, frame, left, top, right, bottom) {
+        let x;
+        let y;
+
+        if(GetPlayerX < GetX) {
+            // プレイヤーより右に敵がいれば、敵は左に動きます。
+            x = GetX - xMove;
+
+            // 但し、敵が可動領域の左端よりも左にいくようなら、右に動きます。
+            if(x < left) {
+                x = GetX + xMove;
+            }
+        } else {
+            // さもなくば、敵は右に動きます。
+            x = GetX + xMove;
+
+            // 但し、敵が可動領域の右端よりも右にいくようなら、左に動きます。
+            if(right < x) {
+                x = GetX - xMove;
+            }
+        }
+
+        // 可動領域の外に行く場合は、端っこで止めます。
+        y = GetY + yAdd;
+        if(y < top) {
+            y = top;
+        } else if(bottom < y) {
+            y = bottom;
+        }
+
+        SetMovePosition02(x, y, frame);
+    }
+
+}

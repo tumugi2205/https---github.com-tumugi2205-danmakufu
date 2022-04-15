@@ -1,0 +1,161 @@
+<html>
+<head>
+<title>インデントについて</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.yukari{text-align : left;
+        font-family : sans-serif;
+        font-size : 14pt;
+        line-height : 150%;
+        color : #ff00ff}
+-->
+</style>
+</head>
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+閑話休題　インデントについて<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/yukari04.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+また会ったわね。<br>
+今回もスクリプト作成に直接的には関係ない話をさせてもらうわ。<br>
+･･････といっても、今回は少し真面目に聞いて欲しいわね。<br>
+割と大切な話だからね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/yukari03.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br><br>
+さて、今回の話は『インデント』よ。<br>
+言い換えると『字下げ』ね。<br>
+スクリプトの左側にある空白のことね。<br>
+これ何のためにあるのか疑問に思っていた人もいるかもしれないわね。<br>
+結論から言うと、意味は無いの。<br>
+スペースや改行が無くてもプログラム自体は動くわ。<br>
+試しに取っ払ってみましょうか。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+task mainTask {loop(60) {yield;}loop {let angle;angle = GetAngleToPlayer - 20;loop(3) {CreateShot01(GetX, GetY, 2, angle, RED01, 0);angle = angle + 20;}loop(60) {yield;}}}}
+</font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/yukari04.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br><br>
+これ、なんのスクリプトかわかる？<br>
+実はstudy005の『変数を使用した自機狙い3way』のスクリプトそのものよ。<br>
+信じられない？<br>
+ちなみにこんな書き方でもちゃんと動くわよ。<br>
+さっきインデントは意味が無いって言ったけれど、それはプログラム側にとっての話。<br>
+スクリプトの中身を見る私達にとっては、見辛いことこの上ないわ。<br>
+だからインデントは欠かせないというワケね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/yukari07.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br>
+ん？<br>
+見辛いのは改行が無いせいで、空白は無くても良いんじゃないかって？<br>
+貴方も言うわね。<br>
+では別の例で空白だけ取っ払った場合を見てみましょう。<br>
+今回の例はstudy010の『5way連弾 (後追い) 』の最後に出た、<br>
+変数の寿命で用いた例よ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+let a = 1;
+(処理A1)
+loop (2) {
+let b = 2;
+(処理B1)
+loop(3) {
+let c = 3;
+(処理C)
+}
+(処理B2)
+}
+(処理A2)
+</font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/yukari04.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br><br>
+さて、この書き方でどの { と } が対応しているかわかるかしら？<br>
+インデントが無いだけで大分把握しにくくなっていないかしら？<br>
+この程度のスクリプトでも見づらくなるのに、もっと複雑なスクリプトだったら･･････<br>
+想像するだけで気が滅入るわね。<br>
+仮に貴方がこの書き方で慣れたとしても、よ。<br>
+他人からアドバイスを貰うために自分のスクリプトを見てもらうとき、<br>
+こんな書き方だったら読む気になってもらえないでしょうね。<br>
+だから常日頃からインデントを付けるクセを身に付けないとね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/yukari02.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br>
+さて、それでインデントの規則なんだけど･･････<br>
+一度 { を書いたら、次の行から１段インデントを増やすのね。<br>
+そして } で閉じる行で１段インデントを減らすの。<br>
+今までのスクリプトを見直すと全てその規則で書かれているのがわかると思うわ。<br>
+但しloop(60) {yield;}みたいにループ間の処理が１行で済むような場合は<br>
+１行でまとめてしまった方が見やすいかもね。<br>
+まあそこは好みの問題で済まされるレベルの話ね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/yukari04.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br>
+そして何個の空白を以って１段のインデントとするかについてだけど。<br>
+これについては各自の好みね。<br>
+毎回バラバラにするのは論外として、半角スペース１個、２個、４個、８個、<br>
+このあたりが定番ね。<br>
+『Tabキー』１回で済ますのも一般的ね。<br>
+普通の場合はTabキー１回で半角スペース８個分になるかしら。<br>
+自分で好きな量だけ選んで使いなさいな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/yukari03.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br><br><br>
+まあインデントについてはこんなところかしら。<br>
+これは弾幕風のスクリプトに限らずプログラミング全体の作法だから、<br>
+蔑ろにするわけにはいかないわね。<br>
+それじゃ今回の話はこれでおしまい。<br>
+それじゃまたね～
+<br><br><br><br>
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

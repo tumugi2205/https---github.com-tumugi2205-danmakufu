@@ -1,0 +1,162 @@
+#東方弾幕風
+#Title[神秘「緋色の月光」]
+#Text[]
+#BackGround[User()]
+#ScriptVersion[2]
+#BGM[bgm\bgm.wav\イマジンブレイク.mp3]
+
+script_enemy_main{
+
+       let frame     = 0;
+       let angleBase = 90;
+    //グローバル変数
+	let imgBoss = "script\img\杏子.png";
+	let arrayObj = [];
+ let wIni = 120;
+	
+	///////////////////////////////////////////////////////////
+
+	@Initialize{
+
+        SetX(GetCenterX);
+        SetY(GetClipMinY + 120);
+	LoadGraphic(imgBoss);
+        SetLife(2000);
+        SetTimer(60);
+        SetDamageRate(50, 50);
+        SetTexture(imgBoss);
+        SetGraphicRect(0, 0, 63, 63);
+        SetScore(3500);
+        SetDamageRate(60,50);
+        CutIn(YOUMU,"神秘「緋色の月光」",0,0,0,0,0);//スペルカード名表示
+	 TMain;
+TNway2;
+	   TNway1;
+ TNway3;
+ TNway4;
+	}
+		
+	@MainLoop{
+		SetCollisionA(GetX(), GetY(), 32);
+		SetCollisionB(GetX(), GetY(), 24);
+
+         yield;
+	}
+
+	@DrawLoop{
+	    DrawGraphic(GetX(), GetY());
+	}
+		
+	@Finalize{
+	    DeleteGraphic(imgBoss);
+	}
+
+    task TNway1 {
+     yield;
+     
+     //処理////////////////////
+     loop{
+         loop(1){
+       frame++;
+        let S1 = Obj_Create(OBJ_SHOT);
+             CreateShotA(S1,GetX,GetY,2);
+          SetShotDataA(S1,rand(1,5),1,1,rand(0.5,3),0.02,5,RED03);
+          FireShot(S1);
+             loop(1){ yield; }
+         }
+         loop(60){ yield; }
+     }
+    }
+
+    task TNway2 {
+     yield;
+     
+     //処理////////////////////
+     loop{
+         loop(1){
+       frame++;
+        let S1 = Obj_Create(OBJ_SHOT);
+             CreateShotA(S1,GetX,GetY,2);
+          SetShotDataA(S1,rand(1,5),1,1,rand(-0.5,-3),0.02,5,AQUA03);
+          FireShot(S1);
+             loop(1){ yield; }
+         }
+         loop(60){ yield; }
+     }
+    }
+    task TNway3 {
+     yield;
+     
+     //処理////////////////////
+     loop{
+         loop(1){
+       frame++;
+        let S1 = Obj_Create(OBJ_SHOT);
+             CreateShotA(S1,GetX,GetY,2);
+          SetShotDataA(S1,rand(1,5),-1,1,rand(0.5,3),0.02,-5,GREEN03);
+          FireShot(S1);
+             loop(1){ yield; }
+         }
+         loop(60){ yield; }
+     }
+    }
+    task TNway4 {
+     yield;
+     
+     //処理////////////////////
+     loop{
+         loop(1){
+       frame++;
+        let S1 = Obj_Create(OBJ_SHOT);
+             CreateShotA(S1,GetX,GetY,2);
+          SetShotDataA(S1,rand(1,5),-1,1,rand(-0.05,-3),0.02,-5,PURPLE03);
+          FireShot(S1);
+             loop(1){ yield; }
+         }
+         loop(60){ yield; }
+     }
+    }
+
+
+	task TMain{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    
+	    //処理
+     loop{
+     loop(1){
+             CreateObjLaser(GetX, GetY, GetAngleToPlayer,4000,350, RED04, 120,300) ;
+	        loop(1){ yield; }
+	    }
+         loop(350){ yield; }
+	}
+
+ }
+
+ //////////////////////////////////////////////////////////
+ 
+ //オブジェクト弾の例
+task CreateObjLaser(let x, let y, let angle,let length,
+                 let width, let graphic, let delay,let time) {
+ 
+   
+        //オブジェクト弾の作成
+        let obj_L = Obj_Create(OBJ_LASER);
+        
+        //パラメータの設定
+        Obj_SetPosition(obj_L, x, y);
+        Obj_SetSpeed(obj_L, 0);
+        Obj_SetAngle(obj_L, angle);
+        ObjShot_SetGraphic(obj_L, graphic);
+        ObjShot_SetDelay(obj_L, delay);
+        ObjLaser_SetLength(obj_L, length);
+        ObjLaser_SetWidth(obj_L, width);
+        ObjLaser_SetSource(obj_L, true);
+        
+        loop(delay + time){ yield; }
+        
+        Obj_Delete(obj_L);
+}
+}

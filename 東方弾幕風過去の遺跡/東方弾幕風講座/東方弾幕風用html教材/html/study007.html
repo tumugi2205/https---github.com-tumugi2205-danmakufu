@@ -1,0 +1,159 @@
+<html>
+<head>
+<title>連弾 (後追い)</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第００７回　連弾 (後追い)<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+では前回予告したとおり、後追い型の連弾の作り方について説明する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+今回はちょっとした応用だけですからサクッと終わらせちゃいましょう！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうね。<br>
+では『study007.txt』を開きましょう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {<font color="red">
+      let angle = GetAngleToPlayer;</font>
+      loop(6) {
+        CreateShot01(GetX, GetY, 2, <font color="red">angle</font>, RED01, 0);
+        loop(10) {yield;}
+      }
+      loop(60) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+では、サクッと解説しよう。<br>
+前回との違いは連弾を撃たせるloop(6) { }の前に変数を使っていることだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+弾を撃つ直前の自機角度を取得して、それを変数angleに格納していますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そしてそのangleの値をCreateShot01で使っている。<br>
+ここが前回と違う点だな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+これだけだと同じGetAngleToPlayerを使って撃っていますから、<br>
+一見変わっていないように思えますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+最初の１発に関しては確かにそうだな。<br>
+だが２発目以降は違う。<br>
+<b>loop(10) {yield;}の待ち時間を経た後でも、変数angleの値を使う。</b><br>
+angleの値は変化していないから、２発目以降も１発目と同じ方向に撃つワケだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+だから今回は自機をどれだけ動かしても弾幕の形が崩れないんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+うむ。<br>
+実際に弾幕風で『連弾 (後追い)』のスクリプトで自機を動かしてみれば<br>
+弾幕の形が崩れないことを確認できる。<br>
+最初の１発が通った角度を残りの弾も通っていく。<br>
+だから (後追い) という注釈を付けている。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+今回の講座で連弾は終わりですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+いや、まだ２種類ほどある。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+あと２種類もあるんですか！？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあ残り２種類もちょっとした変化をつけたスクリプトだからすぐに終わるわ。<br>
+これまでの連弾の仕組みがしっかり理解できているなら<br>
+軽い気持ちで講座に臨んで大丈夫。<br>
+では次の講座で会うとしましょう。
+</p></td>
+</tr>
+
+</table>
+
+</body>
+</html>

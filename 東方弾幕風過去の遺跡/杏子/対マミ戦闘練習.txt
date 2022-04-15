@@ -1,0 +1,208 @@
+#東方弾幕風
+#Title[対マミ戦闘練習.txt]
+#Text[杏子が練習中です
+邪魔したら....ねぇ？]
+#BackGround[User()]
+#ScriptVersion[2]
+#BGM[bgm\bgm.wav\イマジンブレイク.mp3]
+
+script_enemy_main{
+
+       let frame     = 0;
+       let angleBase = 90;
+    //グローバル変数
+	let imgBoss = "script\img\きょーこ.png";
+	let arrayObj = [];
+ let wIni = 120;
+	
+	///////////////////////////////////////////////////////////
+
+	@Initialize{
+
+        SetX(GetCenterX);
+        SetY(GetClipMinY + 120);
+	LoadGraphic(imgBoss);
+        SetLife(2000);
+        SetTimer(60);
+        SetDamageRate(50, 50);
+        SetTexture(imgBoss);
+        SetGraphicRect(0, 0, 63, 63);
+        SetScore(3500);
+        SetDamageRate(100,70);
+TMove;
+TNway1;
+TNway2;
+TNway3;
+TNway4;
+TNway5;
+TNway6;
+TNway7;
+TNway8;
+TNway9;
+	}
+		
+	@MainLoop{
+		SetCollisionA(GetX(), GetY(), 32);
+		SetCollisionB(GetX(), GetY(), 24);
+
+         yield;
+	}
+
+	@DrawLoop{
+	    DrawGraphic(GetX(), GetY());
+	}
+		
+	@Finalize{
+	    DeleteGraphic(imgBoss);
+	}
+
+    task TNway1 {
+        let angleBase = 90;
+        yield;
+
+        loop {
+
+            loop(30) { yield; }
+                    CreateLaser01(GetX,GetY,10,GetAngleToPlayer+rand(10,80),400,20,BLUE03,rand(10,60));
+        }
+    }
+    task TNway2 {
+        let angleBase = 90;
+        yield;
+
+        loop {
+
+            loop(30) { yield; }
+                    CreateLaser01(GetX,GetY,10,GetAngleToPlayer+rand(10,80),400,20,YELLOW11,rand(10,60));
+        }
+    }
+
+    task TNway3 {
+        let angleBase = 90;
+        yield;
+
+        loop {
+
+            loop(30) { yield; }
+                    CreateLaser01(GetX,GetY,10,GetAngleToPlayer+rand(10,80),400,20,BLUE02,rand(10,60));
+        }
+    }
+
+    task TNway4 {
+        let angleBase = 90;
+        yield;
+
+        loop {
+
+            loop(30) { yield; }
+                    CreateLaser01(GetX,GetY,10,GetAngleToPlayer+rand(10,80),400,20,RED02,rand(10,60));
+        }
+    }
+
+    task TNway5 {
+        let angleBase = 90;
+        yield;
+
+        loop {
+
+            loop(30) { yield; }
+                    CreateLaser01(GetX,GetY,10,GetAngleToPlayer-rand(10,80),400,20,RED23,rand(10,60));
+        }
+    }
+
+    task TNway6 {
+        let angleBase = 90;
+        yield;
+
+        loop {
+
+            loop(30) { yield; }
+                    CreateLaser01(GetX,GetY,10,GetAngleToPlayer-rand(10,80),400,20,RED21,rand(10,60));
+        }
+    }
+
+    task TNway7 {
+        let angleBase = 90;
+        yield;
+
+        loop {
+
+            loop(30) { yield; }
+                    CreateLaser01(GetX,GetY,10,GetAngleToPlayer-rand(10,80),400,20,RED04,rand(10,60));
+        }
+    }
+
+    task TNway8 {
+        let angleBase = 90;
+        yield;
+
+        loop {
+
+            loop(30) { yield; }
+                    CreateLaser01(GetX,GetY,10,GetAngleToPlayer-rand(10,80),400,20,RED03,rand(10,60));
+        }
+    }
+
+    task TNway9 {
+        let angleBase = 90;
+        yield;
+	    loop{
+	        CreateShot12(GetX,GetY,rand(-2,2),rand(-1,-3),0,0.02,2,3,RED21,3);
+	        loop(1){ yield; }
+	    }
+    }
+
+// キャラを移動させるタスク
+    task TMove {
+        yield;
+
+        loop {
+            loop(120) { yield; }
+            moveToPlayer(rand(40, 80), rand(-40, 40), 60,
+                         GetClipMinX + 32, GetClipMinY + 32,
+                         GetClipMaxX - 32, GetClipMinY + 160);
+        }
+    }
+
+    // なるべくプレイヤーの方向に移動
+    //   xMove  : x 方向の移動量（正の数）
+    //   yAdd   : y 方向の移動量
+    //   frame  : 移動に要するフレーム数
+    //   left   : 以下、可動範囲
+    //   top    :
+    //   right  :
+    //   bottom :
+    function moveToPlayer(xMove, yAdd, frame, left, top, right, bottom) {
+        let x;
+        let y;
+
+        if(GetPlayerX < GetX) {
+            // プレイヤーより右に敵がいれば、敵は左に動きます。
+            x = GetX - xMove;
+
+            // 但し、敵が可動領域の左端よりも左にいくようなら、右に動きます。
+            if(x < left) {
+                x = GetX + xMove;
+            }
+        } else {
+            // さもなくば、敵は右に動きます。
+            x = GetX + xMove;
+
+            // 但し、敵が可動領域の右端よりも右にいくようなら、左に動きます。
+            if(right < x) {
+                x = GetX - xMove;
+            }
+        }
+
+        // 可動領域の外に行く場合は、端っこで止めます。
+        y = GetY + yAdd;
+        if(y < top) {
+            y = top;
+        } else if(bottom < y) {
+            y = bottom;
+        }
+
+        SetMovePosition02(x, y, frame);
+    }
+
+}

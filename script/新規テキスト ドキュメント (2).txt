@@ -1,0 +1,93 @@
+#東方弾幕風
+#Title[５５：オブジェクトレーザー (その１)]
+#Text[]
+#PlayLevel[弾幕風教材用]
+#Image[.\img\study055.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 100, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+		main2;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		loop(60) {yield;}
+
+		loop {
+			let px = rand(GetClipMinX+50, GetClipMaxX-50);
+			let py = rand(GetClipMinY+30, GetClipMinY+230);
+			SetMovePosition02(px, py, 5);
+			loop(50) {yield;}
+loop(13){
+          let ang=rand(0,360);
+		CreateShotA("stop", GetX,GetY,rand(0,20));
+		SetShotDataA("stop", 0, rand(0.01,0.1), ang, 0, rand(0.03,0.1),2, BLUE01);
+		SetShotDataA("stop", 20, NULL, NULL, rand(0.1,2), 0,2, BLUE01);
+		SetShotDataA("stop", 80, NULL, NULL,0, 0,2, BLUE01);
+		FireShot("stop");
+		CreateShotA("stop1", GetX,GetY,rand(0,20));
+		SetShotDataA("stop1", 0, 0.03, ang, 0, rand(-0.03,-0.1),2, BLUE01);
+		SetShotDataA("stop1", 20, NULL, NULL, rand(0.1,2), 0,2, BLUE01);
+		SetShotDataA("stop1", 80, NULL, NULL,0, 0,2, BLUE01);
+		FireShot("stop1");
+}
+loop(13){
+          let ang=rand(0,360);
+		CreateShotA("stop1", GetX,GetY,rand(0,20));
+		SetShotDataA("stop1", 0, rand(0.01,0.1), ang, 0, rand(-0.03,-0.1),2, BLUE01);
+		SetShotDataA("stop1", 20, NULL, NULL, rand(0.1,2), 0,2, BLUE01);
+		SetShotDataA("stop1", 80, NULL, NULL,0, 0,2, BLUE01);
+		FireShot("stop1");
+}
+
+		}
+	}
+       task main2 {
+              loop(60){yield;}
+
+            loop{
+                  let ang = GetAngleToPlayer;
+                  CreateLaserA("L1",GetX,GetY,1000,300,AQUA02,100);
+                  SetLaserDataA("L1",0,ang,0,0.1,0,0);
+                  SetLaserDataA("L1",400,NULL,0,0,10000,1);
+                  FireShot("L1");
+
+}
+                }
+
+}

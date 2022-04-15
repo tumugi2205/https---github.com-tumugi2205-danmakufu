@@ -1,0 +1,85 @@
+#“Œ•û’e–‹•—
+#Title[‚Q‚WFƒIƒuƒWƒFƒNƒg’e (Ž©‹@‚ÌˆÊ’u‚É”½‰ž‚·‚é)]
+#Text[]
+#PlayLevel[’e–‹•—‹³Þ—p]
+#Image[.\img\study028.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		loop(60) {yield;}
+
+		let count = 0;
+		loop {
+			if(count%10 == 0) {
+				CreateShot01(GetX, GetY, rand(2, 4), GetAngleToPlayer+rand(-30, 30), BLUE01, 0);
+			}
+			if(count%60 == 0) {
+				objectBullet;
+			}
+			count++;
+			yield;
+		}
+	}
+
+	task objectBullet {
+		let obj = Obj_Create(OBJ_SHOT);
+		Obj_SetX(obj, GetX);
+		Obj_SetY(obj, GetY);
+		Obj_SetSpeed(obj, 3);
+		Obj_SetAngle(obj, GetAngleToPlayer+rand(-15, 15));
+		ObjShot_SetGraphic(obj, BLUE04);
+		ObjShot_SetDelay(obj, 0);
+
+		while(!Obj_BeDeleted(obj)) {
+			if(Obj_GetY(obj) >= GetPlayerY) {
+				Obj_SetSpeed(obj, 0);
+				ObjShot_SetGraphic(obj, RED04);
+				loop(30) {yield;}
+
+				CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 2, 0, RED11, 0);
+				CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 2, 180, RED11, 0);
+				Obj_Delete(obj);
+			}
+			yield;
+		}
+	}
+}

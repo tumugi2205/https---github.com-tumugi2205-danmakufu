@@ -1,0 +1,102 @@
+#“Œ•û’e–‹•—
+#Title[‚R‚PFƒIƒuƒWƒFƒNƒg’e (ƒIƒuƒWƒFƒNƒg’e‚©‚çŽ©‹@‘_‚¢’e)]
+#Text[]
+#PlayLevel[’e–‹•—‹³Þ—p]
+#Image[.\img\study031.png]
+#BackGround[User]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		loop(60) {yield;}
+
+		loop {
+			let sign = rand_int(0, 1)*2 - 1;
+			loop(4) {
+				objectBullet1(GetAngleToPlayer + 60*sign);
+				sign *= -1;
+				loop(60) {yield;}
+			}
+			loop(120) {yield;}
+
+			objectBullet2(GetAngleToPlayer-20);
+			objectBullet2(GetAngleToPlayer+20);
+			loop(600) {yield;}
+		}
+	}
+
+	task objectBullet1 (let angle) {
+		let obj = Obj_Create(OBJ_SHOT);
+		Obj_SetX(obj, GetX);
+		Obj_SetY(obj, GetY);
+		Obj_SetSpeed(obj, 4);
+		Obj_SetAngle(obj, angle);
+		ObjShot_SetGraphic(obj, RED04);
+		ObjShot_SetDelay(obj, 0);
+
+		let count = 0;
+		while(!Obj_BeDeleted(obj)) {
+			if(count%3 == 0) {
+				angle = atan2(GetPlayerY-Obj_GetY(obj), GetPlayerX-Obj_GetX(obj));
+				CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 2+count*0.1, angle, RED11, 0);
+			} else if(count >= 30) {
+				Obj_Delete(obj);
+			}
+			count++;
+			yield;
+		}
+	}
+
+	task objectBullet2 (let angle) {
+		let obj = Obj_Create(OBJ_SHOT);
+		Obj_SetX(obj, GetX);
+		Obj_SetY(obj, GetY);
+		Obj_SetSpeed(obj, 12);
+		Obj_SetAngle(obj, angle);
+		ObjShot_SetGraphic(obj, RED04);
+		ObjShot_SetDelay(obj, 0);
+
+		while(!Obj_BeDeleted(obj)) {
+			angle = atan2(GetPlayerY-Obj_GetY(obj), GetPlayerX-Obj_GetX(obj));
+			CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 1, angle, RED11, 0);
+			yield;
+		}
+	}
+}

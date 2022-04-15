@@ -1,0 +1,16 @@
+
+#UserShotData
+
+ShotImage="script\img\黒弾（レ-ザー用）.png"
+
+//Shotの定義
+
+ShotData
+{
+    id = 11 //ID
+    rect =(0,0,36,36)//描画
+    render = ADD//描画方法
+    delay_color = (255,128,255)//遅延時間の光の色
+    angular_velocity = 0//回転速度
+}
+

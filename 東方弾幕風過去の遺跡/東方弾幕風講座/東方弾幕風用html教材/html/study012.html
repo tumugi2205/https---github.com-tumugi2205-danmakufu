@@ -1,0 +1,238 @@
+<html>
+<head>
+<title>全方位弾</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０１２回　全方位弾<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回学ぶのは全方位弾だ。<br>
+全方向に弾を撃つこの弾幕は弾数と無駄が多く、そして美しい。<br>
+スペルカードの概念にも沿っているし、実に幻想郷向けだ。<br>
+まさに弾幕の花形とも言える。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ベタ褒めですね、藍さま。<br>
+でもそれはわかりますね～<br>
+弾幕シューティングの中でも、東方projectの作品ではよく見かける気がします。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そんな全方位弾の中身だが、way弾の応用といっていい。<br>
+ではスクリプトを見てみよう。<br>
+今回の『study012.txt』だ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {<font color="red">
+      let angle = rand(0, 360);</font>
+      loop(16) {
+        CreateShot01(GetX, GetY, 2, angle, RED01, 0);<font color="red">
+        angle += 360/16;</font>
+      }
+      loop(60) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+では解説していこう。<br>
+肝心のスクリプトの中身なんだが、実は３行を除いて『study005.txt』の<br>
+変数を使用した自機狙い3wayと一緒なんだ。<br>
+<font color="black">let angle = rand(0, 360);<br>
+loop(16) {<br>
+angle += 360/16;<br></font>
+違うのはこの３行だな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+変数を宣言しているところではrand関数を使っていますね。<br>
+０以上３６０以下の範囲で作った乱数をangleに格納するんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+これはつまり、３６０°全方位の角度の何処かを適当に選ぶというワケだ。<br>
+今回の全方位弾はランダムに撃たせるものだから乱数を作っている。<br>
+もし自機狙いの全方位弾を撃ちたかったら代わりにGetAngleToPlayerを使えばいい。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ループ回数は３から１６に増えているだけですね。<br>
+そしてangleの増え方が･･････360/16？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+この角度の増え方が全方位弾を作る上での肝だな。<br>
+今回は全方位に16wayを撃たせるから、１６発の弾を等間隔で撃たせる必要がある。<br>
+だから角度の増え方は３６０を１６で割った数値を足していくワケだ。<br>
+ちなみに『/ (スラッシュ)』が算数の割り算 (÷) に相当する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なるほど～<br>
+これで綺麗に16wayを撃つことができるんですね。<br>
+でも360/16のところは、えっと、２２．５にしても大丈夫じゃないですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+確かに大丈夫だけど、360/16と書いた方が『この部分で全方位16way弾を撃っている』<br>
+ということがパッと見でわかりやすいでしょう？<br>
+それにもし全方位96wayとか撃たせたい場合、angle += 3.75; とか書いてあると<br>
+96wayであるとわかりにくいわ。<br>
+そういう場合は律儀に計算した値を書くのではなく、<br>
+今回の例のような書き方をする方が良いでしょう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+わかりました！<br>
+実際にスクリプト『全方位弾』を選ぶと、ちゃんと全方位16way弾を撃ってきますね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回の全方位弾はまだ密度が少ないからあまり綺麗に見えないかな。<br>
+でもway数を増やしたり、画面中央寄りで撃たせたりすると映えるわ。<br>
+ところで橙。<br>
+今回の16wayを32wayにしたかったらどうすればいいと思う？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+え～っと、ん～っと･･････<br>
+loop(16)のところをloop(32)にするのと、angle += 360/16をangle += 360/32<br>
+に書き換えれば大丈夫だと思います！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、その２箇所を書き換えればいいな。<br>
+さて、それを踏まえて今回の例を下のように書き換えたとする。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {
+      let angle = rand(0, 360);<font color="red">
+      let way = 16;</font>
+      loop(<font color="red">way</font>) {
+        CreateShot01(GetX, GetY, 2, angle, RED01, 0);
+        angle += 360/<font color="red">way</font>;
+      }
+      loop(60) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+上の例では、今まで『１６』と書いていた場所をwayとし、新たに変数wayに１６を入れている。<br>
+この場合でも勿論全方位16way弾を撃てる。<br>
+さて、ここで同じ問題を出そう。<br>
+このスクリプトの場合で、16wayを32wayに変えたかったらどうすればいい？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+う～ん。<br>
+あっ、let way = 16;をlet way = 32;に書き換えるだけでできますね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+このように変数をうまく使うと書き換えが楽になるの。<br>
+難易度調整するときとかは何度も書き換えることになるだろうから、<br>
+こうした方が便利ね。<br>
+まあ今回の例では書き換えの手間が１つしか減っていないけれど･･････<br>
+もっと複雑なスクリプトだとより手間が省けるようになるでしょう。<br>
+さらに複数の箇所を書き換えるときに、<br>
+１箇所書き換え忘れなどを防げるメリットもあるわ。<br>
+だから、特に何度も書き換える可能性のある数値は変数で表現しておくと後々楽よ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+スクリプトを書く上では色々な工夫があるんですね～<br>
+ではまた次回で会いましょう！
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

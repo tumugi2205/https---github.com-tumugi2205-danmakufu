@@ -1,0 +1,256 @@
+<html>
+<head>
+<title>サブルーチン</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０２２回　サブルーチン<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回の講座は『サブルーチン』だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+初めて聞く名前ですけど、サブルーチンってどんな弾幕なんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+いやいや、サブルーチンというのは弾幕のことじゃないわ。<br>
+プログラミングで使う処理、というか記述の仕方のひとつ。<br>
+だから今回の講座は弾幕と直接的な関係があるワケではないのよ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そ、そうだったんですか･･････<br>
+じゃあ今回は新しい弾幕について学ぶワケではないんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだな、弾幕自体は『study005』で学んだ変数を使用した<br>
+自機狙いの3wayと全く同じ内容だ。<br>
+ただ今回はスクリプトにサブルーチンを使っている。<br>
+それがどんな仕組みなのかについて学ぶんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+今回のスクリプトは『study022.txt』ですね。<br>
+それでは開いてみましょう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {<font color="red">
+      shot3way;</font>
+      loop(60) {yield;}
+    }
+  }
+<font color="red">
+  sub shot3way {
+    let angle;
+    angle = GetAngleToPlayer - 20;
+    loop(3) {
+      CreateShot01(GetX, GetY, 2, angle, RED01, 0);
+      angle = angle + 20;
+    }
+  }</font>
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+これまでの講座ではmainTaskと書かれた枠の中でしか作業しなかったが、<br>
+今回はその枠を越え、新たにshot3wayという括りを作っている。<br>
+このshot3wayというのが今回学ぶサブルーチンだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+shot3wayの中身は特別変わった書き方をしないんですね。<br>
+見たカンジ今までの記述と変わっているようには見えませんが。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+サブルーチンの中身は今まで通りのように書いていい。<br>
+重要なのはサブルーチンを使うとどのような順で処理されるのかということだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+今までとは全く違った形ですから、ちょっと手順がわからないです･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そこで、サブルーチン化する前のスクリプトと比べてみることにしよう。<br>
+『study005.html』のスクリプトを開いてみよう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {
+      let angle;
+      angle = GetAngleToPlayer - 20;
+      loop(3) {
+        CreateShot01(GetX, GetY, 2, angle, RED01, 0);
+        angle = angle + 20;
+      }
+      loop(60) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さあ、『study005』と『study022』を比べると何か見えてくるものがないか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+う～･･････<br>
+ん～･･････<br>
+･･････あっ！<br>
+『study005』の方の3way弾を撃つ処理の部分が『study022』の方では<br>
+shot3wayという文字に置き換わってますね。<br>
+それでshot3wayっていうのがサブルーチンの名前で、その中身が･･････<br>
+『study005』の置き換わっていた部分と全く同じになってます！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通り、よくわかったね橙。<br>
+要するにサブルーチンとは、<b>一定量の処理を１つの括りとしてまとめ、<br>
+別の場所に置いて何時でも呼び出せるようにする</b>ことなんだ。<br>
+『引数無しの関数を自作する』と考えてもいいな。<br>
+サブルーチンの名前は基本的に自由に付けられるが、<b>頭文字が数字だと使えない</b><br>
+みたいだから注意してくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+へ～こういう書き方もできるんですね。<br>
+でもわざわざサブルーチンを使うメリットってあるんでしょうか？<br>
+なんだか二度手間のような印象がありますけれど。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+確かに今回の例だとサブルーチンにした意味はまるで無いな。<br>
+だが今後大規模なスクリプトを作るとき、時には同じような処理を繰り返すような<br>
+場面が出てくることもあるだろう。<br>
+そうなると何度も何度も同じ処理を書くのは馬鹿らしい。<br>
+そんなときこそ同じ処理をサブルーチン化するんだ。<br>
+そうすればサブルーチンの名前を書いて呼び出すだけでその処理が実現できる。<br>
+無駄も少なくなって読みやすくなるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+確かにそれならサブルーチンを使うと良さそうですね。<br>
+でも初心者にはあまり使う機会が無いような気も･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあ初心者向けのスクリプトだとわざわざサブルーチン化するケースは少ないだろうね。<br>
+しかし今後学ぶ内容を考えると基礎の内容として<br>
+サブルーチンを教えておきたかったのよ。<br>
+正直初心者にとって弾幕風のサブルーチンはそこまで使う機会は無いと思うわ。<br>
+ただサブルーチンのように処理の一部を別の場所で一括りにするという<br>
+記述の仕方があるということだけは憶えてほしいの。<br>
+そうすると今後の講座の理解の助けになるでしょう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+つまりまだまだ序の口ってことですね。<br>
+それじゃ腰を据えて臨まないと。<br>
+それではまた次の講座で会いましょうね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+っと、少し待って。<br>
+もしC言語など他のプログラミング言語を知っている方に補足を。<br>
+スクリプトの最初を見ればわかるように、プロトタイプ宣言は不要よ。<br>
+だからmainTaskの前に書く必要もないわ。<br>
+そこは安心してね。<br>
+ではまた。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

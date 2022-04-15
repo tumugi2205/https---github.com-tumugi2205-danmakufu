@@ -1,0 +1,177 @@
+<html>
+<head>
+<title>モーションブラーとスロー</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０４２回　モーションブラーとスロー<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回はモーションブラーとスローを弾幕風で起こし方を<br>
+学んでいくことにするわ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+スローはなんとなくわかりますけど、<br>
+もーしょんぶるぁってなんなんです？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ぶるぁじゃなくて、ブラー。<br>
+モーションブラーというのは、物体が高速に動いたときに見える<br>
+『ブレ』そのもののことを意味しているわ。<br>
+日本語で言うと『残像』が最も適した意味になるかしら。<br>
+でも物体の形がハッキリ見える残像と違って、<br>
+モーションブラーはブレたりぼやけたりして見えるのが特徴よ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+もしかして、白玉楼の庭師さんのスペルカードみたいな<br>
+エフェクトのことですかね？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、本家東方projectの妖々夢ステージ５、<br>
+魂魄妖夢のスペルカード演出で共通して見られるな。<br>
+画面が白くなり、弾や自機にも残像が見えるようになる。<br>
+これにスロー効果も合わせることでより本家のような<br>
+演出になるからそれを目指して作ってみるぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+派手な弾幕になりそうですね～<br>
+開くスクリプトは『study042.txt』ですよ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+  task mainTask {
+    loop(60) {yield;}
+
+    let count = 0;
+    loop {
+      CreateShot01(GetX, GetY, 2, GetAngleToPlayer+rand(-120, 120), RED04, 0);
+      if(count%360 == 270) {<font color="red">
+        MotionBlur(ALL, 30, 100);</font>
+        let angle1 = GetAngleToPlayer - 40;
+        loop(5) {
+          let angle2 = -8;
+          loop(17) {
+            let speed = 3;
+            loop(5) {
+              CreateShot01(GetX, GetY, speed, angle1+angle2, RED23, 0);
+              speed += 0.5;
+            }
+            angle2 += 1;
+          }
+          angle1 += 20;
+        }
+      } else if(count%360 == 300) {<font color="red">
+        MotionBlur(ALL, 60, 200);
+        Slow(2);</font>
+      } else if(count%360 == 0) {<font color="red">
+        Slow(0);</font>
+      }
+      count++;
+      yield;
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回も前回と同じ、エフェクト以外にも<br>
+適当な弾幕を撃つ処理を加えてみた。<br>
+だが今回の核になるのは２つの関数だけ。<br>
+その名もズバリSlow, MotionBlur関数だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+MontionBlur関数に必要な引数は３つですね。<br>
+なんだか最初の引数は文字になっていますが･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+第１引数はモーションブラーを発生させる対象の指定だ。<br>
+ALLと指定すると敵、自機、弾の全てにエフェクトがかかる。<br>
+SHOTと指定すると弾だけにエフェクトがかかる。<br>
+敵だけ、自機だけにモーションブラーをかけるのはできないようだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+
+</p></td>
+</tr>
+
+</table>
+
+MotionBlurExについて少し言及
+
+</body>
+</html>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+
+</p></td>
+</tr>
+
+</table>

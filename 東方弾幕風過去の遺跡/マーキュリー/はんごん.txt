@@ -1,0 +1,178 @@
+#“Œ•û’e–‹•—
+#Title[‚O‚WF˜A’e (ˆêÄ”­ŽË)]
+#Text[]
+#PlayLevel[’e–‹•—‹³Þ—p]
+#Image[.\img\study008.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+        LoadUserShotData("script\ƒ}[ƒLƒ…ƒŠ[\™’e‰©F.txt");
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 128, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+                TNway5;
+		mainTask2;/*
+		mainTask3;
+		mainTask32;
+		mainTask33;
+		mainTask34;
+		mainTask35;
+		mainTask36;*/
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+/*
+	task mainTask {
+		loop(20) {yield;}
+
+		loop {
+			let speed = 1;
+			loop(30) {
+				CreateShot01(GetX, GetY, speed, GetAngleToPlayer, RED01, 0);
+				speed += 5 / 30;
+			}
+			loop(60) {yield;}
+		}
+	}
+	task mainTask2 {
+		loop(10) {yield;}
+       SetShotAutoDeleteClip(100,100,100,100);
+
+		loop {
+			let angle = rand(0, 360);
+			loop(6) {
+                loop(36){
+				CreateShotA("S1",GetX, GetY, 20);
+                                SetShotDataA("S1",0,2.5,angle,2,-0.02,0,RED22);
+                                SetShotDataA("S1",120,NULL,NULL,0,0.02,5,BLUE22);
+                                SetShotDataA("S1",160,NULL,NULL,0,-0.02,-5,BLUE22);
+                                FireShot("S1");
+				angle += 360/36;
+			}
+			loop(10) {yield;}
+                        }
+			loop(60) {yield;}
+		}
+	}
+	task mainTask3 {
+		loop(10) {yield;}
+       SetShotAutoDeleteClip(100,100,100,100);
+
+		loop {
+			let angle = rand(0, 360);
+			loop(6) {
+                loop(36){
+				CreateShotA("S1",GetX, GetY, 20);
+                                SetShotDataA("S1",0,2.5,angle,2,-0.02,0,RED22);
+                                SetShotDataA("S1",120,NULL,NULL,0,0.02,5,BLUE22);
+                                SetShotDataA("S1",160,NULL,NULL,0,0.02,5,BLUE22);
+                                FireShot("S1");
+				angle += 360/36;
+			}
+			loop(10) {yield;}
+                        }
+			loop(60) {yield;}
+		}
+	}*/
+
+	task mainTask {
+		loop(120) {yield;}
+       SetShotAutoDeleteClip(100,100,100,100);
+
+		loop {
+			let way = 20;
+			let angleSpan = 20;
+			while(way <= 36) {
+				shotNway(way, angleSpan);
+				way++;
+				angleSpan--;
+				loop(60) {yield;}
+			}
+			loop(120) {yield;}
+		}
+	}
+
+	function shotNway (let way, let angleSpan, ) {
+		let angle = GetAngleToPlayer - angleSpan * (way-1) / 2;
+		loop(30) {
+			loop(way) {
+				CreateShotA("S1",GetX, GetY, 20);
+                                SetShotDataA("S1",0,2.5,angle,2,-0.02,0,RED22);
+                                SetShotDataA("S1",120,NULL,NULL,0,0.02,5,BLUE22);
+                                SetShotDataA("S1",160,NULL,NULL,0,0.02,5,BLUE22);
+                                FireShot("S1");
+				angle += 360/way;
+			}
+			loop(10) {yield;}
+		}
+	}
+	task mainTask2 {
+		loop(120) {yield;}
+       SetShotAutoDeleteClip(100,100,100,100);
+
+		loop {
+			let way = 20;
+			let angleSpan = 20;
+			while(way <= 36) {
+				shotNway2(way, angleSpan);
+				way++;
+				angleSpan--;
+				loop(60) {yield;}
+			}
+			loop(120) {yield;}
+		}
+	}
+
+	function shotNway2 (let way, let angleSpan, ) {
+		let angle = GetAngleToPlayer - angleSpan * (way-1) / 2;
+		loop(30) {
+			loop(way) {
+				CreateShotA("S1",GetX, GetY, 20);
+                                SetShotDataA("S1",0,2.5,angle,2,-0.02,0,RED22);
+                                SetShotDataA("S1",120,NULL,NULL,0,0.02,5,BLUE22);
+                                SetShotDataA("S1",160,NULL,NULL,0,-0.02,-5,BLUE22);
+                                FireShot("S1");
+				angle += 360/way;
+			}
+			loop(10) {yield;}
+		}
+	}
+    task TNway5 {
+        yield;
+	    loop{
+	        CreateShot12(GetX,GetY,rand(-2,2),rand(-1,-3),0,0.02,2,3,5,3);
+	        loop(1){ yield; }
+	    }
+    }
+}

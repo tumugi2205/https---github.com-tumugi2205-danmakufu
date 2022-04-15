@@ -1,0 +1,474 @@
+#“Œ•û’e–‹•—
+#Title[u•s”j‚Ì•‘v]
+#Text[]
+#PlayLevel[’e–‹•—‹³Þ—p]
+#Image[.\img\study008.png]
+#BackGround[Default]
+#ScriptVersion[2]
+#BGM[bgm\bgm.wav\‚n ‚t ‚s ‚r ‚h ‚c ‚d ‚q.wav]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+	let obj = Obj_Create(OBJ_SHOT);
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+		mainTask2;
+		mainTask3;
+		mainTask4;
+		mainTask5;
+		mainTask6;
+		mainTask7;
+		mainTask8;
+		mainTask9;
+		mainTask10;
+		mainTask11;
+		mainTask12;
+		mainTask13;
+		mainTask14;
+		mainTask15;
+		mainTask16;
+		mainTask17;
+		mainTask18;
+		mainTask19;
+		mainTask20;
+		mainTask21;
+		mainTask22;
+		mainTask23;
+		mainTask24;
+		mainTask25;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+                   let angle = 1;
+		loop(60) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",300,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask2 {
+                   let angle = 1;
+		loop(70) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",290,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask3 {
+                   let angle = 1;
+		loop(80) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",280,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask4 {
+                   let angle = 1;
+		loop(90) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",270,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask5 {
+                   let angle = 1;
+		loop(100) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",260,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask6 {
+                   let angle = 1;
+		loop(110) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",250,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask7 {
+                   let angle = 1;
+		loop(120) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",240,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask8 {
+                   let angle = 1;
+		loop(130) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",230,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask9 {
+                   let angle = 1;
+		loop(140) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",220,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask10 {
+                   let angle = 1;
+		loop(150) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",210,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask11 {
+                   let angle = 1;
+		loop(160) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",200,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask12 {
+                   let angle = 1;
+		loop(170) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",190,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask13 {
+                   let angle = 1;
+		loop(180) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",180,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask14 {
+                   let angle = 1;
+		loop(190) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",170,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask15 {
+                   let angle = 1;
+		loop(200) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",160,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask16 {
+                   let angle = 1;
+		loop(210) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",150,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask17 {
+                   let angle = 1;
+		loop(220) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",140,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask18 {
+                   let angle = 1;
+		loop(230) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",130,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask19 {
+                   let angle = 1;
+		loop(240) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",120,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask20 {
+                   let angle = 1;
+		loop(250) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",110,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask21 {
+                   let angle = 1;
+		loop(260) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",100,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask22 {
+                   let angle = 1;
+		loop(270) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",90,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(300) {yield;}
+		}
+}
+	task mainTask23 {
+                   let angle = 1;
+		loop(280) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",80,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask24 {
+                   let angle = 1;
+		loop(290) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",70,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+	task mainTask25 {
+                   let angle = 1;
+		loop(300) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetX, GetY,0);
+          SetShotDataA("S3",0,rand(5,7),rand(0,180),0,0,0,RED32);
+          SetShotDataA("S3",rand(10,40),0,NULL,rand(50,100),0,0,AQUA32);
+          SetShotDataA("S3",95,5,NULL,0,0.2,0,AQUA32);
+          SetShotDataA("S3",60,1,NULL,0,0.2,10,AQUA32);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+        }
+}

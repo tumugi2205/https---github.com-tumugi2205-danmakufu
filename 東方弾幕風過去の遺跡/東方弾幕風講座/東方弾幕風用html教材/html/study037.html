@@ -1,0 +1,217 @@
+<html>
+<head>
+<title>オブジェクト弾 (弾を消す弾)</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０３７回　オブジェクト弾 (弾を消す弾)<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回は弾を消す弾を学ぶ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+弾が弾を消すんですか？<br>
+それってヘンなカンジがしますけど。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+確かにせっかく出した弾を弾で消すのも不思議な話だ。<br>
+が、弾幕としてはそんな変り種の弾幕があっても悪くないだろう。<br>
+そんな変則的な弾幕を今回作ってみるぞ。<br>
+スクリプトは『study037.txt』だ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+    let count = 0;
+    loop {
+      if(count%60 == 0) {
+        let angle = GetAngleToPlayer - 90;
+        loop(97) {
+          CreateShot01(GetX, GetY, 1, angle, RED22, 0);
+          angle += 180/96;
+        }
+      }
+      if(count%150 == 135) {
+        objectBullet;
+      }
+      count++;
+      yield;
+    }
+  }
+
+  task objectBullet {
+    let obj = Obj_Create(OBJ_SHOT);
+    Obj_SetX(obj, GetX);
+    Obj_SetY(obj, GetY);
+    Obj_SetSpeed(obj, 3);
+    Obj_SetAngle(obj, GetAngleToPlayer);
+    ObjShot_SetGraphic(obj, BLUE02);
+    ObjShot_SetDelay(obj, 0);
+    ObjShot_SetBombResist(obj, true);
+
+    while(!Obj_BeDeleted(obj)) {<font color="red">
+      DeleteEnemyShotInCircle(SHOT, Obj_GetX(obj), Obj_GetY(obj), 12);</font>
+      yield;
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+mainTaskでは１秒おきに自機狙い97wayという超密度の弾を発射している。<br>
+普通はこのway弾を潜ることができない。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+これだとボスの周囲を回る以外に避ける方法がありませんね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そんな弾幕では批判されるだけだろうな。<br>
+そこで弾を消す処理をするオブジェクト弾でバランスを取ることにする。<br>
+ではオブジェクト弾の詳細を見ていこうか。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+objectBulletのタスクの中に初めて見る関数がありますね。<br>
+DeleteEnemyShotInCircleってヤツですね。<br>
+これで弾を消せるのかな？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+DeleteEnemyShotInCircleは指定した場所の円範囲に存在する弾を消す関数だ。<br>
+第１引数は弾を消す種類を指定する。<br>
+今回は『SHOT』としているが、『ALL』にするとボムなどで<br>
+消せない弾も消せるようになるぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+第２、第３引数はObj_SetX, Yになっていますから、<br>
+これは弾を消す場所の中心位置を指定するみたいですね。<br>
+第４引数は１２となっていますが、これは？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+第４引数は弾消し範囲の半径を指定するんだ。<br>
+つまり今回のオブジェクト弾は、<br>
+『オブジェクト弾を中心とした半径１２の円に存在する弾を、<br>
+毎フレーム消去する処理を行う』ということになるな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なるほど～<br>
+でも、これじゃオブジェクト弾自体も消えてしまうんではないですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それを防ぐためにObjShot_SetBombResistを使って<br>
+オブジェクト弾にボム耐性を持たせている。<br>
+この処理を忘れたり、DeleteEnemyShotInCircleの第１引数を<br>
+『ALL』にした場合は橙の言うとおりオブジェクト弾が消えてしまう。<br>
+弾消し弾を作るときはそこに注意する必要があるな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+実際にスクリプトを動かしてみると･･････<br>
+超密度way弾が自機狙いオブジェクト弾によって避けるスペースができますね。<br>
+弾で作った障害を弾で消す弾幕は珍しいですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+プレイヤーが有利になる要素をあえてボス側が与えるというものだな。<br>
+このような関数を使って一風変わった弾幕を作れるのも<br>
+弾幕風の面白いところだ。<br>
+もし面白いアイディアが浮かんだら、是非それを弾幕風で形にしてほしい。<br>
+それが実現できるよう、これからも頑張ってほしい。<br>
+ではまた次の講座で。
+</p></td>
+</tr>
+
+</table>
+
+<br><br><br><br><br>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+っと、そうそう。<br>
+他にも弾を消せる関数がある。<br>
+画面内の敵弾全てを消すことができるDeleteEnemyShot、<br>
+フェードアウトさせることなく一瞬で消せるDeleteEnemyShotImmediatelyInCircle、<br>
+画面内の弾を点アイテムに変換するDeleteEnemyShotToItem、<br>
+点アイテム変換を円範囲で行えるのがDeleteEnemyShotToItemInCircleがある。<br>
+どれも似たような使い方で扱える関数だ。<br>
+詳細は例によってヘルプを参照してくれ。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

@@ -1,0 +1,423 @@
+<html>
+<head>
+<title>オブジェクト弾 (回転ビット　その３)</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０３５回　オブジェクト弾 (回転ビット　その３)<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+回転ビットの講座第３弾。<br>
+これまではボスの周りを回るものだったが、<br>
+今回学ぶのはその限りでない。<br>
+つまりビットの円軌道の中心位置をずらす処理を行う。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ビットの軌道だけでなく中心も変えられるなら、<br>
+もうどんなビット弾幕でも作れますね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあどうやればできるのかうすうす理解している方もいるかもしれない。<br>
+もし自力でできるなら今回の講座は飛ばしてもOKだ。<br>
+ただちょっとしたテクニックも盛り込んでいるから、<br>
+それが気になるなら受けていってほしい。<br>
+ではスクリプトの説明に移ろう。<br>
+今回のスクリプトは『study035.txt』だ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}<font color="red">
+    SetShotAutoDeleteClip(10, 10, 10, 10);</font>
+
+    let sign = rand_int(0, 1)*2 - 1;
+    loop {
+      let angle = rand(0, 360);
+      loop(3) {
+        objectBullet(angle, sign);
+        angle += 360/3;
+      }
+
+      sign *= -1;
+      loop(300) {yield;}<font color="red">
+      loop(600) {
+        if(GetEnemyShotCount < 50) {
+          break;
+        }
+        yield;
+      }</font>
+    }
+  }
+
+  task objectBullet (let angle, let sign) {
+    let obj = Obj_Create(OBJ_SHOT);
+    Obj_SetX(obj, GetX);
+    Obj_SetY(obj, GetY);
+    Obj_SetSpeed(obj, 0);
+    Obj_SetAngle(obj, angle);
+    ObjShot_SetGraphic(obj, RED02);
+    ObjShot_SetDelay(obj, 0);
+    ObjShot_SetBombResist(obj, true);
+
+    let count = 0;
+    let distance = 0;<font color="red">
+    let px = GetX;
+    let py = GetY;</font>
+    let aim = 0;
+    while(!Obj_BeDeleted(obj)) {
+      Obj_SetX(obj, <font color="red">px</font>+distance*cos(angle));
+      Obj_SetY(obj, <font color="red">py</font>+distance*sin(angle));
+
+      if(count < 60) {
+        distance += 60/60;
+      }
+<font color="red">
+      if(count == 120) {
+        aim = GetAngleToPlayer;
+      } else if(count > 120) {
+        px += 2*cos(aim);
+        py += 2*sin(aim);
+      }</font>
+
+      if((count >= 120) && (count%2 == 0)) {
+        CreateShotA("shot", Obj_GetX(obj), Obj_GetY(obj), 30);
+        SetShotDataA("shot", 0, 0, angle+count*4*sign, 0, 0, 0, RED11);
+        SetShotDataA("shot", 240, NULL, NULL, 0, 0.02, 1, RED11);
+        FireShot("shot");
+      }
+
+      angle += 2.2*sign;
+      count++;
+      yield;
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+今回はmainTaskの方にも赤文字になっている部分がありますが･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それは後回しにしよう。<br>
+まずは今回の講座のメインであるビットを構成するobjectBulletからだ。<br>
+今回新しく変数として使っているのがpxとpyだ。<br>
+これが今回の肝になる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+回転ビットのカギだったObj_SetXとObj_SetYのところで使われていますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、GetXとGetYの代わりに使っている。<br>
+今までボスの周りを回っていたのは、このGetXとGetYが中心位置として<br>
+基準になってきたワケだな。<br>
+それを今回はpxとpyという変数に置き換えた。<br>
+つまりこの変数を適宜書き換えていくことでビットの軌道の中心を<br>
+動かすことができるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+前回までの講座でGetXとGetYがビットの中心になってたってことに気づけば、<br>
+自分でも作れたってことだったんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうことだ。<br>
+それでこのビットの中心位置をどのように動かしているのかというと･･････<br>
+whileループ２番目のif文がその処理をしている。<br>
+まずcountが１２０きっかりになった瞬間のみ、<br>
+変数aimの更新を行っている。<br>
+ちなみにaimというのは『狙う』という意味だな。<br>
+GetAngleToPlayerの値を入れているから自機への角度が入るな。<br>
+ビットの中心位置から自機への角度を取得するためだ。<br>
+pxとpyは初期値のボスの位置であるGetXとGetYの値が入っているから、<br>
+atan2を使わずGetAngleToPlayerで問題無いな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+でもなんのために変数aimを用意したのでしょうか？
+自機狙い弾を撃つためでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+このaimはビットの中心位置を自機方向へ動かすためだ。<br>
+１２０フレーム目で自機を動かした後は１２１フレーム目以降、<br>
+次のelse if文でpxとpyの更新を行っていく。<br>
+ここの処理がこのスクリプトで一番重要かな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+pxにはコサインを使って、pyにはサインを使う･･････<br>
+これってビット軌道の表現に使ったやり方に似てますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだな。<br>
+そしてその数値に２をかけている。<br>
+ここの処理は<b>弾速２の自機狙い弾と同じ速さ</b>でビットの中心位置を<br>
+動かしているのと同じ意味なんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+つまり普通の弾もこれと同じ計算式で動かしているんですね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+これでビットの中心を動かすという今回の肝は以上だ。<br>
+ちなみに今回のビット弾はCreateShotA系統を使った<br>
+停止弾→ゆっくり加速する弾を大量に吐き出す。<br>
+どのようになるのかは実際にスクリプトを動かすか、<br>
+スクリプトを読んで推測してくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+実際の弾幕は凄い派手ですね～<br>
+というか派手なだけじゃなくて難しいですね、コレは。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+この弾幕は虫姫さまふたりの５面ボスである、<br>
+『恐獣ドラガンエンペリオン・トゥルー』のウルトラモードの発狂の一部を<br>
+抽出、改変したものになっている。<br>
+この弾幕を避ける基本はまずビットをなるべく画面の左右に撃たせることだな。<br>
+そうすれば弾が拡がるまでの距離が稼げて避けやすくなる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なるほど～<br>
+では後の解説はmainTaskの方ですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+mainTaskの方は２つほど赤字で強調しているが、<br>
+どちらも軽い工夫程度のものだ。<br>
+まずは最初、SetShotAutoDeleteClipだ。<br>
+これは画面端で弾が消えるまでの距離を設定する。<br>
+第１引数から順に、左、上、右、下方向への距離を設定する。<br>
+ちなみにこの関数を使わなかった場合は、<br>
+どの方向も６４ (単位はピクセル) の距離で弾が消えるようになっている。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なんで画面端に行ったらすぐ消えないようにしているんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+例えばカーブ弾を撃つ弾幕があったとしよう。<br>
+そんなときに画面端ですぐ消えるようにしてしまうと、<br>
+画面４隅に弾が届きづらい。<br>
+カーブの曲がり具合が激しい場合は尚更だな。<br>
+それをある程度防ぐ意味合いもある。<br>
+あるいは画面外から弾を出すような弾幕を作りたい場合でも<br>
+画面外の見えないところに弾を作れる余裕があった方が都合がいい。<br>
+だからデフォルトである程度消えないようにしているんだ。<br>
+かといってSetShotAutoDeleteClipで無駄に消えないようにすると、<br>
+弾幕風側が制御する弾の数が増えるからパソコンの負担が大きくなる。<br>
+不必要に大きな値を設定することがないようにしよう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+では、何故今回になってこの関数を取り上げたのでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それは今回のビット弾が出す弾のせいだ。<br>
+デフォルトの状態でビット弾が画面下に行った場合、<br>
+画面下の見えない場所に弾が作られて下から弾が飛んでくる。<br>
+これはプレイヤーにとって好ましくない事態だろう。<br>
+それを防ぐためにわざわざSetShotAutoDeleteClipを使ったんだ。<br>
+ちなみに１０だけ猶予を残したのはビット弾が画面端で<br>
+不自然に消えることを避けるための処置だ。<br>
+まあプレイヤー側からすればほとんど意味の無い猶予なのだが。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+画面端の弾消えまで考慮するまでの段階まで進んだんですね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+で、mainTaskにある６００回のループなんだが･･････<br>
+ループの中の条件に新しく出てきた関数があるな。<br>
+このGetEnemyShotCountは今現在画面上にある敵弾の数を取得する関数だ。<br>
+ちなみにSetShotAutoDeleteClipで設定する画面外の見えない猶予に<br>
+存在する弾もカウントしていることに注意しておこう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ということは今回の場合だと弾の数が５０発未満になったら<br>
+if文の条件を満たすことになるんですね。<br>
+でもそのif文の中にあるbreakというのは？<br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+breakは実行されたとき、『今行っている処理から一番手前にある<br>
+ループから強制的に抜け出す処理』を行うんだ。<br>
+抜け出すループは１段階分だけなので、loop(600) {}から抜け出すだけで<br>
+その手前の無限ループからはまだ抜けないことになる。<br>
+ちなみにloopだけでなくwhileループにも有効だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+でもそんなbreakと弾数を測る関数を使ってまでして、<br>
+ここの処理にはどんな意味があるんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+もしこの処理が単純に６００フレーム待つだけの処理だったとして、<br>
+ミスやボムのせいで停止→加速弾が全て消えたとしよう。<br>
+するとボスは長い間弾が全く無い状態で６００フレーム待つという<br>
+完全に無防備な状態になってしまう。<br>
+この間に自機に張り付かれて一気にダメージを受けてしまうワケだ。<br>
+それを防ぐために画面上の弾の数に反応することで、<br>
+無防備な状態を長く作らないようにしているんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen06.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+弾の数に反応する、そういうのもあるのか！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+･･････紫様か？<br>
+橙にヘンなことを教えているのは。<br>
+まあしかし、この方式が必ず良いというワケではない。<br>
+プレイヤー側からすれば決めボムをして無防備な敵を一気に削るという<br>
+攻略の選択肢を潰されてしまうことになるのだから。<br>
+だからプレイヤーの攻略法をひたすら潰すというのも考え物だ。<br>
+そのあたりの裁量もスクリプト作成者次第ということだな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+これまでもプレイヤーに対する配慮に色々触れてきましたけれど、<br>
+配慮にも色々な要素や工夫があるのですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その配慮も正しいものとそうでないものがあるし、<br>
+その境界はプレイヤーによっても異なる。<br>
+バランス調整はスクリプト作成者の永遠の課題の１つと言える。<br>
+自分が作りたいスクリプトを作れるようになってきたら、<br>
+バランス調整の仕方も色々試してみてほしい。<br>
+それではまた次回の講座で会うとしよう。
+</p></td>
+</tr>
+
+</table>
+
+<br><br><br><br><br><br><br><br><br><br>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran06.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+･･････それと紫様？<br>
+あとでちょっとお話が･･････
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

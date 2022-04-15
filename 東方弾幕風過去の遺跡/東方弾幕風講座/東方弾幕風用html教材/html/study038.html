@@ -1,0 +1,253 @@
+<html>
+<head>
+<title>オブジェクト弾 (自機の移動状態に反応する)</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０３８回　オブジェクト弾 (自機の移動状態に反応する)<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回もまた変り種の弾幕を学ぼう。<br>
+自機の移動状態によって弾幕の性質を変えるという処理をやってみる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+自機の移動状態？
+それってどういうことなんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+具体的に言うと、自機が通常速度で移動している場合と、<br>
+低速移動をしている場合で弾幕の挙動が異なるギミックを作るんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+弾幕風ではそんなこともできるんですね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+弾幕風には実に色々な関数があるからね。<br>
+有効に使えば面白い弾幕ができたりするわ。<br>
+では今回のスクリプト、『study038.html』を開いて。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+    loop {
+      objectBullet;
+      yield;
+    }
+  }
+
+  task objectBullet {
+    let obj = Obj_Create(OBJ_SHOT);
+    Obj_SetX(obj, GetX);
+    Obj_SetY(obj, GetY);
+    Obj_SetSpeed(obj, 4);
+    Obj_SetAngle(obj, GetAngleToPlayer+rand(-90, 90));
+    ObjShot_SetGraphic(obj, RED04);
+    ObjShot_SetDelay(obj, 0);
+
+    while(!Obj_BeDeleted(obj)) {
+      if(GetPlayerMoveState == MOVE_NORMAL) {
+        Obj_SetSpeed(obj, 1.5);
+        ObjShot_SetGraphic(obj, BLUE04);
+      } else {
+        Obj_SetSpeed(obj, 4);
+        ObjShot_SetGraphic(obj, RED04);
+      }
+      yield;
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+mainTaskの方はひたすらオブジェクト弾を撃つだけだな。<br>
+なので例によってオブジェクト弾の方だけを見ることにしよう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+目新しい関数は･･････<br>
+GetPlayerMoveStateというのがそうですかね？<br>
+あとすぐ隣にあるMOVE_NORMALっていうのもそうなのかな？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+MOVE_NORMALはちょっと違うな。<br>
+GetPlayerMoveStateの受け答えとして使う専用の文字列なんだ。<br>
+それでGetPlayerMoveState関数は自機の移動状態を教えてくれる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ということは、前回のDeleteEnemyShotInCircleの第１引数で使った<br>
+『SHOT』と同じ要領で書けば良いんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうことだな。<br>
+今回の例だとif文の条件が<br>
+<font color="black">GetPlayerMoveState == MOVE_NORMAL</font><br>
+となっている。<br>
+これは『プレイヤーの自機移動状態が通常状態ならば』<br>
+if文の条件を満たしていると判断される。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+では低速移動状態かどうかを判断したいときは？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+GetPlayerMoveState == MOVE_SLOW<br>
+このように書けば低速移動かどうかで判断できるようになる。<br>
+まあ GetPlayerMoveState != MOVE_NORMAL と書いてもOKなのだが。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なるほど、GetPlayerMoveStateの使い方はわかりました。<br>
+ということは自機の移動速度が普通のときだと･･････<br>
+オブジェクト弾の速度を１．５にして、青色の弾になるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そしてif文の条件を満たさなかった場合、つまり低速移動状態のときは<br>
+オブジェクト弾の速度が４になり、赤色の弾になるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ということは自機が速いときには弾が遅くて、<br>
+自機が遅いときには弾が速くなるワケですね。<br>
+随分いやらしい弾幕ですね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあそれを意図した弾幕だから。<br>
+とはいったものの、いきなり弾が速くなって被弾するという<br>
+理不尽なミスだと受け取られやすい弾幕でもあるから。<br>
+そこは作り手として考えなければいけないわね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+でもその問題を解決するのって難しそうですね。<br>
+弾幕が簡単なうちにプレイヤーがギミックに気づくように、<br>
+最初は弾を出す量を控えめにするのがいいのかな？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうそう、実はGetPlayerMoveStateよりも万能な関数があるんだ。<br>
+それがGetKeyStateという関数だ。<br>
+これは自機の移動状態だけでなく、プレイヤーのキー入力を<br>
+全て判別することができる関数なんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それは凄いですね！<br>
+全部ということはShiftキーの入力も判別できるってことだから、<br>
+GetPlayerMoveStateの役目も兼ねることができるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+GetKeyStateの凄いところはそれだけじゃない。<br>
+キーを『押した瞬間』『押している状態』『離した瞬間』『離している状態』の<br>
+４通りの状態を判別することができる。<br>
+この『押した瞬間』『離した瞬間』というのが意外と重要で、<br>
+使いこなせると色々と表現の幅が拡がるぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+弾幕風ヘルプの説明を見る限りでは<br>
+GetPlayerMoveState == MOVE_NORMAL<br>
+となっている部分をGetKeyStateを使った表現に直すと<br>
+GetKeyState(VK_SLOWMOVE) == KEY_FREE<br>
+と書けば同じ意味になるみたいですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+残りの使い方については弾幕風ヘルプを参照して。<br>
+上記のような引数の与え方をするということがわかれば、<br>
+自ずと使い方がわかると思うわ。<br>
+それじゃまた次の講座で。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

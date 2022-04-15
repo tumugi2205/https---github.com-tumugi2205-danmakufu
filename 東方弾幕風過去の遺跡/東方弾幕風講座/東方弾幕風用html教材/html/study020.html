@@ -1,0 +1,326 @@
+<html>
+<head>
+<title>弾吐き弾</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０２０回　弾吐き弾<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回学ぶのは弾吐き弾だ。<br>
+弾から弾が出る弾のことを指している。<br>
+弾吐き弾という呼び方も、此処の講座での暫定的な呼び方で一般的ではない。<br>
+そこは注意してくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+弾から弾が出る弾幕っていうのは、ありそうで意外と少ないですよね。<br>
+小型ビットみたいなのが弾を出すっていうのはありますけれど。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+どちらにせよ、この弾の作り方を憶えれば弾幕のバリエーションがさらに増える。<br>
+加速弾やカーブ弾よりも広域で派手な弾幕が作りやすい。<br>
+是非憶えてほしい内容ではある･･････が、結構ややこしい。<br>
+まずはスクリプトを開こう。<br>
+『study020.txt』だ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    CreateShotA("vomit", GetX, GetY, 0);
+    SetShotDataA("vomit", 0, 3, GetAngleToPlayer-20, 0, 0, 0, RED01);
+<font color="red">
+    let vomited = 1;
+    CreateShotA(vomited, 0, 0, 0);
+    SetShotDirectionType(PLAYER);
+    SetShotDataA(vomited, 0, 2, 0, 0, 0, 0, RED11);
+    SetShotDirectionType(ABSOLUTE);
+
+    AddShot(30, "vomit", vomited, 0);
+    FireShot("vomit");
+</font>
+    loop(180) {yield;}
+
+    loop {
+      let shotTime = 90;
+      loop(30) {
+        CreateShotA("vomit", GetX, GetY, 0);
+        SetShotDataA("vomit", 0, rand(2, 3), GetAngleToPlayer+rand(-45, 45), 0, 0, 0, RED01);
+
+        let vomited = 1;
+        CreateShotA(vomited, 0, 0, 0);
+        SetShotDirectionType(PLAYER);
+        SetShotDataA(vomited, 0, 1, 0, 0, 0, 0, RED11);
+        SetShotDirectionType(ABSOLUTE);
+
+        AddShot(shotTime, "vomit", vomited, 0);
+        FireShot("vomit");
+
+        shotTime -= 2;
+        loop(2) {yield;}
+      }
+      loop(120) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+弾幕部分だけでも結構長いスクリプトになっているな。<br>
+というのも弾吐き弾を１つ作るだけでも結構手順が面倒なんだ。<br>
+では、最初の部分から見ていくとするか。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+最初の２行は普通のCreateShotAとSetShotDataAですね。<br>
+引数を見る限り加速もカーブもしない普通の弾みたいですけど。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだな、"vomit" (英：吐く) と名付けた弾はCreateShot01で作れる普通の弾だ。<br>
+発射角度が自機狙いからあえて外して撃っている以外はごく普通だな。<br>
+が、最終的にこの"vomit"に弾を撃たせるからCreateShotAの方を使っている。<br>
+その次にあるvomitedと付けた弾を撃たせるために。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+vomitedの方は名前が文字列じゃなくて変数なんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+CreateShotAで弾の名前を付けるとき、今回のように変数の名前を使う方法もある。<br>
+変数の中身が参照されるから内部的に数値なんだが、こういう書き方なら<br>
+スクリプトを見てわかりやすい。<br>
+文字列を使いたくなかったらこのように書いてもいい。<br>
+そうそう、<b>変数名にaddを使わないように。</b><br>
+予約語だからエラーが出てしまう。<br>
+原因に気づきにくいエラーだから注意しよう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+vomitedの方も加速、カーブ共にしないんですね。<br>
+でもSetShotDirectionTypeを使って自機狙い基準に設定しているんですね。<br>
+今まで通りGetAngleToPlayerじゃダメなんでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+弾から自機狙いの弾を出したい場合はこう書かないとダメ。<br>
+何故なら<b>GetAngleToPlayerはボスから自機への角度を取得する関数だからだ。</b><br>
+だから弾が出される瞬間の弾の位置から自機への角度を取得するワケではない。<br>
+そこでSetShotDirectionTypeをPLAYERに変えて撃つようにしている。<br>
+その直後に再びABSOLUTEに戻しているけれど。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+『ボスからの』角度っていうところが重要なんですね。<br>
+それで、vomitedの設定が終わった後はAddShot･･････<br>
+これは初めて見る関数ですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+これが弾に弾を持たせるときに使う関数だな。<br>
+引数は見ての通り４つ。<br>
+まず１つめの引数について説明しよう。<br>
+第１引数は弾を出すまでの時間を設定するんだ。<br>
+弾を吐く側の弾が発射されてから、何フレーム経過してから弾を撃つかの時間だな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+今回の場合は３０になっていますから、弾を吐く側の弾･･････<br>
+えっと、vomitの方ですね。<br>
+vomitが撃たれてから３０フレーム経過すると、vomitからvomitedが撃たれるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そして吐く弾、吐かれる弾を設定するのが第２，３引数になる。<br>
+第２引数が吐く弾で、第３引数が吐かれる弾になるんだ。<br>
+どっちがどっちか間違えないように。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+第４引数は０になっていますけれど、これはなんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+実は今回の例だと意味を成さない引数なんだ。<br>
+だからとりあえず０にしている。<br>
+どういう意味か知りたい方は弾幕風付属のヘルプを見てくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+これで弾を吐く弾の完成ですね！<br>
+ちなみに１つの弾から複数の弾を撃たせることもできるんでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+勿論可能だ。<br>
+AddShotを１つの弾に何回も使えばできる。<br>
+その際はループをうまく使うと良いだろう。<br>
+ちなみにSetShotKillTimeという関数を使って吐く側の弾を消して、<br>
+炸裂弾のような弾幕を作ることも可能だ。<br>
+このあたりの応用については、弾幕風付属のヘルプにあるサンプルページを見てほしい。<br>
+ただこの講座のスクリプトと比べるとかなり難解だから大変だと思う。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+見たところwhileループが３重になっていますから処理の流れを読むのが大変です･･････<br>
+幸いコメントアウトに細かく説明がされてますから、それをヒントにできますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+あとそうだ。<br>
+AddShot関数を使うとき、<b>吐く側と吐かれる側の弾の両方が『文字列の名前』だと、<br>
+正常に動作しない</b>みたいなんだ。<br>
+どちらか片方、あるいは両方が変数 (実質数値だが) なら大丈夫なんだが･･････<br>
+勘違いだったら申し訳ないが、とにかく両方文字列にするのはやめよう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+あとはいつもの自習枠ですね。<br>
+今回は何かヒントはないんでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+shotTimeという変数に注目してほしい。<br>
+これをうまく使うことで、１つ１つの弾吐き弾が出されたタイミングが異なるのに<br>
+弾を吐く瞬間は同時に吐くようにすることができる。<br>
+このような工夫をすることで、弾が吐かれるインパクトをより強調できると思う。<br>
+こういう使い方もあることを憶えてくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+これで加速弾に停止弾、カーブ弾と弾吐き弾を作れるようになったワケですね！<br>
+もう大体の弾幕を作れる基礎ができたんじゃないですかね？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+でもまだこれだけでは実現できない特殊な弾があったりするわ。<br>
+例えば真下に撃たれた弾と自機のY座標が一致したとき、弾が直角に曲がったり<br>
+真横に弾を撃つような弾を作りたいとする。<br>
+自機の位置は絶えず変わるから、どのタイミングで弾と自機のY座標が一致するのか<br>
+予測することはできないわ。<br>
+つまり前もって何時弾を出すのか正しく設定できないのよ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そんな特殊な弾とかもあるんですね～<br>
+そういった弾も弾幕風で作ることができるんでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+方法はあるわ。<br>
+弾１つ１つに毎フレーム自機の位置と弾の位置を比較させれば実現できるわ。<br>
+でもそういった判別はCreateShotAなどでは無理なの。<br>
+『オブジェクト弾』というモノを学ぶ必要があるわ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そのオブジェクト弾というのがあればもっと特殊な弾が作れるんですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ええ。<br>
+これまでの基本的な特殊弾も表現できるから、人によってはCreateShotAより<br>
+オブジェクト弾の方ばかり使うこともあるでしょう。<br>
+ここの作者もその一人だったりするけれど。<br>
+とにかく、オブジェクト弾を習うときが来るまで楽しみにしててね。<br>
+ではまた次の講座で会いましょう。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

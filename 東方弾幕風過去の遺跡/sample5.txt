@@ -1,0 +1,119 @@
+#東方弾幕風
+#Title[幻視弾の例]
+#Text[]
+#BackGround[User()]
+#ScriptVersion[2]
+
+script_enemy_main{
+
+    //グローバル変数
+	let imgBoss = GetCurrentScriptDirectory() ~ "ExRumia.png";
+	let wIni = 120;
+	
+	///////////////////////////////////////////////////////////
+
+	@Initialize{
+	    LoadGraphic(imgBoss);
+	    
+        SetMovePosition02(GetCenterX(), GetClipMinY() + 120, wIni);
+        SetLife(4000);
+        SetTimer(60);
+        SetInvincibility(wIni);
+        SetDamageRate(100, 100);
+	    
+	    TMain();
+	}
+		
+	@MainLoop{
+		SetCollisionA(GetX(), GetY(), 32);
+		SetCollisionB(GetX(), GetY(), 24);
+	    yield;
+	}
+	
+	@DrawLoop{
+	    SetTexture(imgBoss);
+	    SetGraphicRect(1, 1, 64, 64);
+	    DrawGraphic(GetX(), GetY());
+	}
+		
+	@Finalize{
+	    DeleteGraphic(imgBoss);
+	}
+	
+	//////////////////////////////////////////////////////////
+	
+	task TMain{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    
+	    //処理
+	    loop{
+	        SetVisionState(false);
+	        
+	        loop(3){
+	            let angle = rand(-5,5);
+	            ascent(let i in 0..36){
+	                CreateVisionalShot(GetX(), GetY(), 2, angle + i*10, 1, 135, RED12, 10);
+	                CreateVisionalShot(GetX(), GetY(), 2, angle + i*10, 1, 45, RED12, 10);
+	            }
+    	        loop(10){ yield; }
+	        }
+	        loop(30){ yield; }
+	        
+	        SetVisionState(true);
+	        loop(60){ yield; }
+	    }
+	}
+	
+	//////////////////////////////////////////////////////////
+
+    //幻視弾の例
+    //speed1,angle1:通常状態
+    //speed2,angle2:幻視状態
+    task CreateVisionalShot(let x, let y, let speed1, let angle1,
+                          let speed2, let angle2, let graphic, let delay) {
+        
+        //オブジェクト弾の作成
+        let obj = Obj_Create(OBJ_SHOT);
+        
+        //パラメータの設定
+        Obj_SetPosition(obj, x, y);
+        Obj_SetSpeed(obj, speed1);
+        Obj_SetAngle(obj, angle1);
+        Obj_SetAlpha(obj, 255);
+        ObjShot_SetGraphic(obj, graphic);
+        ObjShot_SetDelay(obj, delay);
+        
+        loop(delay){ yield; }
+        
+        while(!Obj_BeDeleted(obj))
+        {
+            if(GetVisionState()){
+                //幻視状態
+                Obj_SetSpeed(obj, 0);
+                Obj_SetPosition(obj, Obj_GetX(obj) + speed2*cos(angle2), Obj_GetY(obj) + speed2*sin(angle2));
+                Obj_SetAlpha(obj, 127);
+                Obj_SetCollisionToPlayer(obj, false);
+            }
+            else{
+                //通常状態
+                Obj_SetSpeed(obj, speed1);
+                Obj_SetAngle(obj, angle1);
+                Obj_SetAlpha(obj, 255);
+                Obj_SetCollisionToPlayer(obj, true);
+            }
+            yield;
+        }
+    }
+    
+    //幻視状態かどうかを取得・設定する関数
+    function GetVisionState(){
+        return GetCommonDataDefault("vision", false);
+    }
+    function SetVisionState(let bVision){
+        SetCommonData("vision", bVision);
+    }
+
+}

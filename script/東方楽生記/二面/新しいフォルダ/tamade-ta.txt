@@ -1,0 +1,16 @@
+
+#UserShotData
+
+ShotImage="script\img\•’e.png"
+
+//Shot‚Ì’è‹`
+
+ShotData
+{
+    id = 1 //ID
+    rect =(0,0,36,36)//•`‰æ
+    render = ADD//•`‰æ•û–@
+    delay_color = (255,128,255)//’x‰„ŠÔ‚ÌŒõ‚ÌF
+    angular_velocity = 0//‰ñ“]‘¬“x
+}
+

@@ -1,0 +1,433 @@
+<html>
+<head>
+<title>オブジェクト弾 (画面枠着弾式炸裂弾)</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０２９回　オブジェクト弾 (画面枠着弾式炸裂弾)<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回は画面枠着弾式炸裂弾について学ぶ。
+何やら長ったらしい名前だが、適当に付けた名前なので深く考えないように。<br>
+ようするに弾が画面外へ消える直前に、<br>
+新しい弾を出して自らは消える弾のことだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+炸裂弾って画面端で炸裂するものが多いですもんね。<br>
+ですから今回の炸裂弾は基本のものですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+うむ。<br>
+ではスクリプトの解説といこう。<br>
+『study029.txt』を開いてくれ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {
+      let angle = rand(0, 360);
+      loop(32) {
+        objectBullet1(angle);
+        angle += 360/32;
+      }
+      loop(180) {yield;}
+
+      angle = 70;
+      loop(5) {
+        objectBullet2(angle);
+        angle += 10;
+        loop(15) {yield;}
+      }
+      loop(720) {yield;}
+    }
+  }
+
+  task objectBullet1 (let angle) {
+    let obj = Obj_Create(OBJ_SHOT);
+    Obj_SetX(obj, GetX);
+    Obj_SetY(obj, GetY);
+    Obj_SetSpeed(obj, 4);
+    Obj_SetAngle(obj, angle);
+    ObjShot_SetGraphic(obj, BLUE04);
+    ObjShot_SetDelay(obj, 0);
+
+    while(!Obj_BeDeleted(obj)) {<font color="red">
+      if(Obj_GetX(obj) < GetClipMinX) {</font>
+        let speed = 0.4;
+        loop(12) {
+          CreateShot01(Obj_GetX(obj), Obj_GetY(obj), speed, 0, BLUE12, 0);
+          speed += 0.1;
+        }
+        Obj_Delete(obj);<font color="red">
+      } else if(Obj_GetX(obj) > GetClipMaxX) {</font>
+        let speed = 0.4;
+        loop(12) {
+          CreateShot01(Obj_GetX(obj), Obj_GetY(obj), speed, 180, BLUE12, 0);
+          speed += 0.1;
+        }
+        Obj_Delete(obj);<font color="red">
+      }</font>
+      yield;
+    }
+  }
+
+  task objectBullet2 (let angle) {
+    let obj = Obj_Create(OBJ_SHOT);
+    Obj_SetX(obj, GetX);
+    Obj_SetY(obj, GetY);
+    Obj_SetSpeed(obj, 3);
+    Obj_SetAngle(obj, angle);
+    ObjShot_SetGraphic(obj, RED03);
+    ObjShot_SetDelay(obj, 0);<font color="red">
+    ObjShot_SetBombResist(obj, true);</font>
+
+    while(!Obj_BeDeleted(obj)) {<font color="red">
+      if(Obj_GetY(obj) > GetClipMaxY) {</font>
+        let angle = rand(0, 360);
+        loop(32) {
+          CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 0.7, angle, RED01, 0);
+           angle += 360/32;
+        }
+        Obj_Delete(obj);<font color="red">
+      }</font>
+      yield;
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ざっと見てもわかるように、今回は２種類のオブジェクト弾を作る。<br>
+つまり２パターンの炸裂弾を作ることになる。<br>
+と、その前にmainTaskの説明からだな。<br>
+loop { } の前半部分は全方位弾を撃っている。<br>
+基本的な弾幕なら、そろそろスクリプトを見るだけでどんな弾幕を<br>
+撃つようになるのか理解できるようになったんじゃないだろうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ループの中身にあるangleの増え方が３６０÷ループ回数になっているあたりで<br>
+なんとなくわかりますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあそこはスクリプトの書き方次第で印象が変わるが･･････<br>
+見ただけですぐにわかると自分がレベルアップした気分になるだろう。<br>
+ではmainTaskの後半に行く前に、全方位弾で撃っているオブジェクト弾<br>
+その１について見ていくとしよう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+objectBullet1のタスクですね。<br>
+オブジェクト弾の初期設定の部分とか、<br>
+while文の条件もこれまでのものと大差ありませんね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだな。<br>
+今回重要なのはwhile文のif文処理だ。<br>
+条件は (Obj_GetX(obj) &lt; GetClipMinX) となっている。<br>
+これの意味はわかるかな？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+このくらいわかりますよ！<br>
+『オブジェクト弾のX座標位置がゲーム画面左端よりも左にあるならば』ですよね。<br>
+X座標は値が小さいほど左へ行くわけですから。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+模範的な解答、見事だ橙。<br>
+つまりここのif文の条件で弾が左端に到達したかどうかをチェックしているワケだ。<br>
+それでもし弾が画面左端を越えたらif文の中で弾を出すようにする。<br>
+その処理を見てみると、変数speedを使って１２発の弾を出している。<br>
+この形式の処理は『study008』で学んだ一斉発射型連弾のものだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+発射角度は０になっているから右方向へ弾を撃つみたいですね。<br>
+左端で弾が消えるのですから、右側へ撃たないと意味がなくなっちゃいます。<br>
+それで弾を撃ち終えた後はObj_Deleteでオブジェクト弾を消すんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+どうせ画面端で消えるのだからObj_Deleteで消さなくても大丈夫だと<br>
+思うかもしれないが、それは間違いだ。<br>
+オブジェクト弾がif文の条件を満たし始める座標に入ってから、
+実際に画面端で自動的に消えるまでの間に条件を満たし続けてしまうから、<br>
+思いがけない弾の量を出してしまうので注意しよう。<br>
+そして次のelse ifも同じような処理がある。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+(Obj_GetX(obj) &gt; GetClipMaxX) ってなっていますから･･････<br>
+こちらはオブジェクト弾が右端に到達した場合の処理ですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+うむ。<br>
+if文の中身も、CreateShot01の発射角度が１８０に変わっている以外は同じだ。<br>
+こちらの場合は真左に連弾を撃つ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+while文の中身は以上ですね。<br>
+あれ？<br>
+ってことは画面上や画面下へ消えたときには何も起こらないってことですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+このオブジェクト弾に限ればそうだな。<br>
+もちろん新しく処理を追加すれば上でも下でも炸裂する弾を作れるぞ。<br>
+だがここでは左右の画面枠でのみ炸裂するようにしている。<br>
+ではオブジェクト弾その１の説明が終わったところで今度はmainTaskの続きといこう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+変数angleはまだ寿命が終わっていませんから、letは不要ですね。<br>
+でも７０という固定の値を使うのも珍しいですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+大体の場合は自機位置依存かランダムを使う傾向が多いから、<br>
+完全に固定というのも確かに珍しいな。<br>
+で、処理の方はループを使って７０°、８０°、９０°、１００°、１１０°の<br>
+方向に向かってオブジェクト弾その２を撃っている。<br>
+といっても１発撃つごとに１５フレームの待ちがあるから、<br>
+5way弾というワケではない。<br>
+薙ぎ払うように撃つ形になる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+mainTaskの処理はこれで終了ですね。<br>
+次はオブジェクト弾その２について見ていくんですね。<br>
+初期設定はやっぱりいつもと同じ･･････と思ったら、<br>
+ObjShot_SetBombResistというのがありますけれど、これは？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+これは『オブジェクト弾にボム耐性を持たせる』関数だ。<br>
+第２引数を『true』にするとボム耐性を持たせることができる。<br>
+ボム耐性を持たせると、ボムを使っても消すことができなくなるんだ。<br>
+またボム以外でも、ミスしたときの弾消し効果でも消えない。<br>
+自機スクリプトによっては弾を消す特殊な攻撃ができるものもあるが、<br>
+それを使っても消すことはできない。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ということは、これを使えば全部の弾にボム耐性を持たせることも<br>
+可能になるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran05.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+だが全部の弾を消せなくするのは良くない。<br>
+過度なボム耐性弾を作るのはプレイヤーの不評を買うだけだろう。<br>
+弾幕的に難しくなるならまだしも、システム的に難しくされると<br>
+ストレスが溜まるだろう。<br>
+そういった難易度の上げ方はあまり好まれない。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen01.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ううっ、ではどういう場面で使えばいいのでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ある弾が消えることで、弾幕全体の難易度が著しく落ちるものに対して<br>
+使うのが一般的だろう。<br>
+弾吐き弾なんてまさにその典型だ。<br>
+弾を出す大元の弾が消えてしまっては他の弾が出ないで終わってしまう。<br>
+弾幕のタイプによっては数秒間弾が全く無い状態に成りうるものもある。<br>
+その場合は大元の弾だけにボム耐性を持たせると丁度いいバランスになるだろう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ということは･･････<br>
+弾吐き弾の数が少なかったり、弾を吐く量が多いものには<br>
+ボム耐性を持たせるといいカンジってことですかね？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+弾幕作者の裁量にもよるが、大体そう思っておけばいいだろう。<br>
+後は弾吐き弾自体が遅くて、長い間画面に残りそうな場合もだな。<br>
+また単純に遅いだけの弾にもボム耐性は効果がある。<br>
+遅い弾にボム耐性がないと、<br>
+１．弾が自機に近づくまでショットを撃つ。<br>
+２．弾が迫ってきたらボムを撃つ。<br>
+３．弾がまた迫ってくるまで時間が稼げる。<br>
+と、このように楽に攻略できるようになってしまうからそれを防ぐことができる。<br>
+･･････が、この場合でもプレイヤーの反感を招きかねない。<br>
+決めボムが効果的な弾幕が１つや２つくらいある方が丁度いい。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それでは基本的に一部の弾吐き弾だけにボム耐性を持たせるってことですね。
+次のオブジェクト弾その２の方も、その１と同じような形ですね。<br>
+while文の中のif文条件は･･････<br>
+(Obj_GetY(obj) &gt; GetClipMaxY) ってなっていますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+この条件は『オブジェクト弾が画面下に到達したら』ということになる。<br>
+そしてif文の処理の中身は32way全方位弾だ。<br>
+ここはもう詳しく言わなくても問題ないだろう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+オブジェクト弾その２の処理はこれで終わりですね。<br>
+こちらは画面下でしか炸裂しないんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+mainTaskの方で固定の角度で弾を撃つようにしているから、<br>
+弾が画面下以外で消えることはない。<br>
+だからオブジェクト弾の処理も下へ消える場合だけ書けばいい。<br>
+手抜きだと言えるが、無駄が無いとも言える。<br>
+もし発射角度のデータを変えたりする場合があったり、<br>
+他のスクリプトにコピーする場合は修正が必要なんだが。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+実際にスクリプトを動かしてみると、解説通りの処理をしてくれますね。<br>
+それにしても、この弾幕も難しいですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+最初の左右炸裂弾は画面下でじっとする。<br>
+大玉炸裂弾がきたら画面左端か右端へ移動。<br>
+下からの全方位弾に追いつかれないよう、針を抜けて上へ。<br>
+全方位弾の隙間が大きくなってきたら、下へ動いて全方位弾を抜ける。<br>
+このような避け方が一般的かな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+後ろから密度の高い弾幕が来るっていうのが怖いですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+この弾幕のコンセプトは、『上へ逃げさせるようにしたい』だからね。<br>
+ただ普通に上へ動くだけでは楽なので、横からの弾がそれを妨害する。<br>
+そういう意図で作った弾幕なの。<br>
+このように『こういう避け方をする弾幕を作りたい』というコンセプトから<br>
+弾幕をイメージしていくのもアリね。<br>
+ただ今回の例は初見殺し要素が強い弾幕になっているわ。<br>
+初見だとボスへ近づきに行くという行動はまずしないからね。<br>
+避け方がわからずにボムすることが多いだろうし、<br>
+そんな弾幕ばかりにならないよう、注意したいところね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それではまた次回の講座で会いましょう！
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

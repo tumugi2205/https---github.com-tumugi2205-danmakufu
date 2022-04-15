@@ -1,0 +1,220 @@
+<html>
+<head>
+<title>反撃する弾幕</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０４０回　反撃する弾幕<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回は一風変わったスクリプトを作る。<br>
+ここのスクリプトは『反撃』するんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+は、反撃って･･････<br>
+一体どんな弾幕なんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+試しに実際に『study040.txt』を実行して、<br>
+Exルーミアを倒そうとしてみると良いわ。<br>
+普通はただランダムに7way弾をばら撒いているだけだけど･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+お、こっちが攻撃すると全方位弾も撃ってきました！<br>
+でもこっちが攻撃を止めると撃ってこなくなりましたね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+このように、自機の弾が当たったときに<br>
+攻撃が激しくなるというカウンター弾幕が作れるのよ。<br>
+今回はそんなスクリプトについて説明していくわ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+へー、弾幕風ってそんなこともできるんですね！<br>
+では『study040.txt』を開いてみましょう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+  task mainTask {
+    loop(60) {yield;}
+
+    let count = 0;
+    let counter = 0;
+    loop {
+      if(count%20 == 0) {
+        let angle = GetAngleToPlayer - 45 + rand(-15, 15);
+        loop(7) {
+          CreateShot01(GetX, GetY, 2, angle, RED12, 0);
+          angle += 15;
+        }
+      }
+
+      if(counter >= 30) {
+        let angle = rand(0, 360);
+        loop(16) {
+          CreateShot01(GetX, GetY, 4, angle, WHITE02, 0);
+          angle += 360/16;
+        }
+        counter -= 30;
+      }
+
+      count++;
+      counter += <font color="red">GetHitCount</font>;
+      yield;
+    }
+  }
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+結構複雑に見えるけど、今回のカギはたった１つ。<br>
+GetHitCount関数だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+う～ん、名前からすると当たった数をカウントする？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+GetHitCountは『実行した前のフレームで被弾した数』を<br>
+返してくれる関数だ。<br>
+ここでいう被弾する弾は自機が撃った弾のことだな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+えーっと、そのGetHitCountで取得した被弾数を<br>
+変数counterに加えているんですね。<br>
+それでこのcounterが･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その手前のif文の条件にかかってくるワケだな。<br>
+『これまでの被弾数の合計が３０以上になったら』<br>
+if文の条件を満たして全方位弾の処理を行う。<br>
+そして最後にcounterの値を３０減らしておいて、<br>
+またcounterの値が溜まったら再び反撃するんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+じゃあifを (counter >= 10) とかにすると<br>
+反撃の全方位弾がより激しくなるんですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうことだ。<br>
+ただ、一つ注意してほしいことがあるんだ。<br>
+自機を『霊符　追尾タイプ』の低速ショットと<br>
+『恋符　貫通タイプ』の低速ショットを比べてみてくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+うわあっ！？<br>
+追尾タイプのときは反撃が易しかったのに、<br>
+貫通タイプだと一気に激しくなりましたよ！？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、自機のタイプによっては同じ敵スクリプトでも<br>
+反撃の強さが全く変わってくるんだ。<br>
+あくまで『被弾数』で判断しているのであって、<br>
+『被ダメージ』ではないからな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ということは、『威力の大きい弾を少し出す自機』だと
+反撃は少なくて済むんだけど、<br>
+『威力が小さい弾をたくさん出す自機』だと<br>
+反撃が激しくなっちゃうんですね。<br>
+レーザーだと１フレーム毎にダメージが入るから、<br>
+貫通タイプだと反撃も激しくなっちゃうのか･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+自機によってここまで難度に差があるのは考え物ね。<br>
+もっと平等な弾幕にしたいと思ったら、<br>
+第１３回講座に出た『GetLife』関数を使って<br>
+ボスの体力から判断するようにすると良いわ。<br>
+でも『ダメージを受けた量』を求めるためには<br>
+変数を上手く組み合わせる必要があるから注意よ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+今まで学んできた関数も上手く使っていけば<br>
+もっと面白い弾幕とかもできそうですね！<br>
+それではまた次回で！
+</p></td>
+</tr>
+
+</table>
+
+</body>
+</html>

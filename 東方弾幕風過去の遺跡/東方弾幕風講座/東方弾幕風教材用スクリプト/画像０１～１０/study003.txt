@@ -1,0 +1,162 @@
+#ìåï˚íeñãïó
+#Title[ÇOÇRÅFâÊëúÇâ¡çHÇµÇƒï`âÊ]
+#Text[]
+#PlayLevel[íeñãïóã≥çﬁóp]
+#Image[.\img\study003.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+	let scaleX = 1;
+	let scaleY = 1;
+	let angleX = 0;
+	let angleY = 0;
+	let angleZ = 0;
+	let alpha = 255;
+	let colorR = 255;
+	let colorG = 255;
+	let colorB = 255;
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 100, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(0, 0, 63, 63);
+
+		mainTask;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetGraphicScale(scaleX, scaleY);
+		SetGraphicAngle(angleX, angleY, angleZ);
+		SetAlpha(alpha);
+		SetColor(colorR, colorG, colorB);
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		loop(60) {yield;}
+		loop {
+			loop(60) {
+				scaleX += 1/60;
+				scaleY += 1/60;
+				yield;
+			}
+			loop(60) {
+				scaleX -= 1/60;
+				scaleY -= 1/60;
+				yield;
+			}
+			loop(60) {yield;}
+
+			loop(60) {
+				scaleX -= 1/60;
+				scaleY -= 1/60;
+				yield;
+			}
+			loop(60) {
+				scaleX += 1/60;
+				scaleY += 1/60;
+				yield;
+			}
+			loop(60) {yield;}
+
+			loop(60) {
+				scaleX += 1/60;
+				scaleY -= 1/60;
+				yield;
+			}
+			loop(60) {
+				scaleX -= 1/60;
+				scaleY += 1/60;
+				yield;
+			}
+			loop(60) {yield;}
+
+			loop(60) {
+				scaleX -= 1/60;
+				scaleY += 1/60;
+				yield;
+			}
+			loop(60) {
+				scaleX += 1/60;
+				scaleY -= 1/60;
+				yield;
+			}
+			loop(60) {yield;}
+
+
+
+			loop(120) {
+				angleX += 360/120;
+				yield;
+			}
+			loop(60) {yield;}
+
+			loop(120) {
+				angleY += 360/120;
+				yield;
+			}
+			loop(60) {yield;}
+
+			loop(120) {
+				angleZ += 360/120;
+				yield;
+			}
+			loop(60) {yield;}
+
+
+
+			loop(120) {
+				alpha -= 255/120;
+				yield;
+			}
+			loop(120) {
+				alpha += 255/120;
+				yield;
+			}
+			loop(60) {yield;}
+
+
+
+			colorR = 255;
+			colorG = 0;
+			colorB = 0;
+			loop(120) {yield;}
+
+			colorR = 0;
+			colorG = 255;
+			colorB = 0;
+			loop(120) {yield;}
+
+			colorR = 0;
+			colorG = 0;
+			colorB = 255;
+			loop(120) {yield;}
+
+			colorR = 32;
+			colorG = 32;
+			colorB = 32;
+			loop(120) {yield;}
+
+			colorR = 255;
+			colorG = 255;
+			colorB = 255;
+			loop(120) {yield;}
+		}
+	}
+}

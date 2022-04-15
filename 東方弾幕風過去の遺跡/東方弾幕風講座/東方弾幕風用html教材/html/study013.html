@@ -1,0 +1,558 @@
+<html>
+<head>
+<title>体力減少による発狂</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０１３回　体力減少による発狂<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回は『発狂』を作る。<br>
+ここでいう発狂とは難しい弾幕を指すのではなく、体力減少による攻撃の激化を指す。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+敵の体力が減ってくると攻撃が激しくなるんですね。<br>
+なんだか面白そうです～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ではスクリプトを見てみるか。<br>
+『study.013.txt』を開いてみよう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {
+      CreateShot01(GetX, GetY, 2, GetAngleToPlayer, RED01, 0);<font color="red">
+      if(GetLife >= 1500) {</font>
+        loop(45) {yield;}<font color="red">
+      }</font>
+      loop(15) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回のプログラムでいよいよif文が登場する。<br>
+C言語などを使ったことがある方はお馴染みだろうが。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+私は知らないので、if文を教えてくださいっ！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+if文とは、条件分岐をしたいときに使う構文だ。<br>
+今までは全ての処理を順番通りにやってきた。<br>
+だがif文を使うことによって特定の条件を満たしたときだけ処理を行うことができる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それができれば表現の幅がグッと広がりますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+だからこそif文はプログラミングにおいて基本中の基本の１つよ。<br>
+弾幕風では使わなくてもそれなりに弾幕が作れるからかなり後回しにしたけれど。<br>
+さてそのif文の行に何が書いてあるかだけど･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+if(GetLife >= 1500) { って書いてありますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まずif文の仕組みから説明しようか。<br>
+if文は if(『条件判定文』) { という形になっており、『条件判定文』のところが<br>
+条件を満たしていれば、次の { の中の処理を行うというものだ。<br>
+今回の場合、if文の条件を満たしていればloop(45) {yield;}の処理が行われる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それで今回のif文の条件が･･････<br>
+GetLife >= 1500 ってなっています～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+GetLifeというのはGetAngleToPlayerのように引数が要らない関数だ。<br>
+これを使うと現在のボスの体力を表す数値を得ることができる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ボスの体力ってどのくらいの数値なんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ああ、それについても説明しなければならなかったな。<br>
+今まで略してきたスクリプトの上の方を見てみよう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+#東方弾幕風
+#Title[体力減少による発狂]
+#Text[]
+#PlayLevel[弾幕風教材用]
+#Image[.\img\study013.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+  let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+<font color="red">
+  @Initialize {</font>
+    SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);<font color="red">
+    SetLife(3000);</font>
+
+    LoadGraphic(imgExRumia);
+    SetTexture(imgExRumia);
+    SetGraphicRect(1, 1, 64, 64);
+
+    mainTask;<font color="red">
+  }</font>
+
+～　後略　～
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今までスルーしてきた前半部分だが、今回２つ新たに学ぶとしよう。<br>
+まず @Initialize { } だ。<br>
+この { } の中の処理はスクリプトが始まって１度だけ実行される。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+下準備のための処理をここに書いておくってことですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そしてもう１つはSetLife関数。<br>
+これはボスの体力を設定するために使う関数で、与えた引数がそのまま体力になる。<br>
+今回の場合は３０００としている。<br>
+つまりボスの体力は３０００であるということだな。
+この３０００という数値がどれくらいの量なのかは、<br>
+実際に自機で攻撃して確認してくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+@Initialize内でSetLifeを使うことで、まず真っ先に体力を設定している<br>
+ってことになるんですね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さてボスの体力が３０００であることがわかったワケだ。<br>
+話をif文の条件に戻すぞ。<br>
+if文の条件は GetLife >= 1500 となっている。<br>
+ここの >= は『大なりイコール』、つまり算数の『≧』と同じ意味だ。<br>
+要するにこの条件文は『ボスの体力が１５００以上ならば』という意味になる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ボスの初期体力が３０００で条件が１５００以上だから･･････<br>
+今回のif文の条件は『ボスの体力が半分になったら』if文の中が<br>
+実行されるってことですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通りだ。<br>
+では次に２つの場合に分けて弾幕がどうなるか考えてみよう。<br>
+ボスの体力が半分以上の場合と半分未満の場合だな。<br>
+体力が半分以上のときはif文の中が実行されるから、loop(45) {yield;}が実行される。<br>
+その後さらにloop(15) {yield;}が実行されるという流れになる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+合計して６０回待つってことですから、丁度１秒待ちながら弾を撃つんですね。<br>
+この時点だと『study003.txt』の自機狙いを絶えず撃つのと同じですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+で、次に体力が半分未満になった場合だが･･････<br>
+if文の条件を満たさなくなったため、loop(45) {yield;}の処理が飛ばされる。<br>
+だから待つ時間はloop(15) {yield;}しかない。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+待ち時間が６０から１５になるんだから･･････<br>
+発狂になると実に４倍のペースで弾を出すようになるんですね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+実際に弾幕風で『体力減少による発狂』を選ぶと、ボスの体力が半分になってから<br>
+弾の発射ペースが一気に上がるのがわかると思うわ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+こういう変化のやりかたも使えると、ゲームとしてより一層楽しくできますよね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうね。<br>
+では今回の講座はここで終わりだが、この先でif文についてより詳しく学ぶわ。<br>
+実例を用いたものではないからわかりにくいかもしれないけど、<br>
+よりバラエティに富んだ弾幕を作るなら必修であるし、<br>
+今後紹介するサンプルスクリプトでも応用を使うから覚えておいた方が良いわ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ではこれから先は応用編です～
+</p></td>
+</tr>
+
+</table>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ではここからが応用だ。<br>
+まずif文には『else』という仲間がいる。<br>
+これを使った例を以下に示すぞ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+if(『条件文A』) {
+  『処理A』
+} <font color="red">else {
+  『処理B』
+}</font>
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+上のような場合で条件文Aの条件を満たしているときは、<br>
+<b>『処理A』が行われ、『処理B』は行われない。</b><br>
+逆に条件文Aの条件を満たしていないときは、<br>
+<b>『処理A』は行われず、『処理B』が行われる。</b><br>
+つまり else { } は条件が満たされなかった場合に行われるワケだ。<br>
+では次の例にいくぞ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+if(『条件文A』) {
+  『処理A』
+} <font color="red">else if(『条件文B』) {
+  『処理B』
+}</font>
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+このような書き方をする場合もある。<br>
+この場合は条件文Aの条件を満たしているときは処理Aが行われる。<br>
+そして<b>条件文Bの条件を満たしていると処理Bが行われる。</b><br>
+で、<b>両方の条件を満たしていない場合はどちらの処理も行われない。</b><br>
+といった処理の流れになる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+もし条件文AとBの両方を満たしている場合はどうなるんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+両方の条件を満たしている場合は<b>先の方の処理のみ行われる。</b><br>
+つまり今回の場合は『処理A』のみ実行され、『処理B』は実行されないことになる。<br>
+ここは留意すべき点かな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+じゃあ『処理A』と『処理B』を両方実行したい場合はどうすればいいんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それなら以下のように書き換えれば大丈夫よ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+if(『条件文A』) {
+  『処理A』
+}
+if(『条件文B』) {
+  『処理B』
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+またif, else if, elseを以下のように複合して使うこともできる。<br>
+処理が行われる仕組みは基本的に同じだから、詳細は省略させてもらうぞ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+if(『条件文A』) {
+  『処理A』
+} else if(『条件文B』) {
+  『処理B』
+} else if(『条件文C』) {
+  『処理C』
+} else {
+  『処理D』
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+とまあifとelseの使い方についてはこんな感じかな。<br>
+では次。<br>
+条件文の中身について、他の例を紹介しよう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+今回の例だと &gt;= が登場しましたね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+他にも『&lt;=』『&lt;』『&gt;』 がある。<br>
+意味はまあ、お察しの通り比較式だな。<br>
+あと『==』というものがある。<br>
+これは等価比較だな。<br>
+例えば if(GetLife == 3000) なら、『ボスの体力が３０００ピッタリなら』という<br>
+意味の条件文になるわけだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+『=』１個だと代入でしたもんね。<br>
+２つ重ねて算数でいうイコールの意味になるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ちなみに条件文のところで『=』としてしまうと、やはり代入処理が行われてしまう。<br>
+エラーになったり、代入が実行されただけで条件が満たされた扱いになるなど、<br>
+思わぬ挙動をすることになるから注意するように。<br>
+ちなみに『!=』とするとノットイコール『≠』という意味になる。<br>
+意味は『左辺と右辺が等しくなければ』だな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+慣れていないとついつい『==』にするのを忘れがちになりそうです･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さてこの条件文なんだが、１つのif文で複数の条件を重ねることができる。<br>
+ではその例を見てみよう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+if((『条件文A』) <font color="red">&&</font> (『条件文B』)) {
+  処理A
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+上の例では<b>『条件文A』と『条件文B』の両方を満たしていれば</b>処理Aが実行される。<br>
+どちらか片方だけでは処理Aが実行されないワケだな。<br>
+『&&』は論理積を意味する。<br>
+数学で言うところの積集合 (『∩』キャップ) に相当する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+『&&』を使うことで条件文のバリエーションが一気に増えますね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ちなみに『&&』を『||』とすると論理和になる。<br>
+こちらは和集合 (『∪』カップ) だな。<br>
+その場合<b>『条件文A』と『条件文B』のどちらかを満たしている場合</b>『処理A』が実行される。<br>
+勿論両方の条件を満たしている場合でも『処理A』は実行されるぞ。<br>
+これらを使えば以下のような複雑な条件式が作れたりする。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+if((『条件文A』) || ((『条件文B』) && (『条件文C』))) {
+  処理A
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さあ、上の例で処理Aが実行される条件がわかるかな？<br>
+答えは『条件文A』を満たしている、または『条件文B』と『条件文C』の両方を<br>
+満たしている、のどちらかであれば実行される、だ。<br>
+こうなってくると条件文の判別が難しくなるのは勿論、『(』『)』の組み合わせが<br>
+うまくいかずにエラーになることがあったりする。<br>
+条件文の中で関数を使ったりするとさらに ( ) の数が増えるな。<br>
+そんなときは ( ) が正しくペアになっているかよく確認するようにしよう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+複雑なスクリプトならではの難しさというのが出てくるんですね。<br>
+大変だなぁ･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+大分駆け足になってしまったけれど、if文の応用説明は以上。<br>
+数は多いけど、最初から全部憶える必要はないわ。<br>
+辞書を引くように、必要になったときはまた此処に戻ってくればいいだけ。<br>
+そしてそのうち暗記するようになるでしょう。<br>
+では、また次回の講座でね。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

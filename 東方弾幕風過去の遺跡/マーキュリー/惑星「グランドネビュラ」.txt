@@ -1,0 +1,767 @@
+#東方弾幕風
+#Title[惑星「グランドネビュラ」]
+#Text[永夜抄３面：慧音スペルのクローン]
+#ScriptVersion[2]
+
+script_enemy_main {
+    let name    = "惑星「グランドネビュラ」";
+
+    let csd     = GetCurrentScriptDirectory;
+       let imgBoss   = "script\img\マーキュリー.png";
+	let wIni = 120;
+    let imgFam  =  "script\img\惑星.png";
+
+    // 初期位置
+    let xIni    = GetCenterX;
+    let yIni    = GetClipMinY + 200;
+
+    // 使い魔の配置に必要な時間
+    let wSetFam = 300000;
+
+    @Initialize {
+        CutIn(YOUMU,"惑星「グランドネビュラ」","script\img\画像 098.png",0,0,373,397);//スペルカード名表示
+
+        LoadUserShotData("script\マーキュリー\☆弾黄色.txt");
+        CutIn(YOUMU, name, "", 0, 0, 0, 0);
+
+        SetLife(2000);
+        SetTimer(90);
+        SetScore(20000000);
+        SetDamageRate(5, 5);
+
+        LoadGraphic(imgBoss);
+        LoadGraphic(imgFam);
+        SetTexture(imgBoss);
+
+        setGraphicStop;
+        TMain;
+    }
+
+    @MainLoop {
+        SetCollisionA(GetX, GetY, 32);
+        SetCollisionB(GetX, GetY, 16);
+
+        yield;
+    }
+
+    @DrawLoop {
+        DrawGraphic(GetX, GetY);
+    }
+
+    @Finalize {
+        DeleteGraphic(imgBoss);
+        DeleteGraphic(imgFam);
+    }
+
+    // メインタスク
+    task TMain {
+        yield;
+
+        TRate;
+        standBy;
+        setFam;
+    }
+
+    // ダメージレートの変更
+    task TRate {
+        wait(240);
+        SetDamageRate(60, 60);
+    }
+
+    // 初期位置へ移動し、攻撃開始
+    sub standBy {
+        let wIni = 120 - wSetFam;
+
+        SetMovePosition02(xIni, yIni, wIni);
+        setGraphicMove;
+
+        SetInvincibility(wIni);
+        wait(wIni);
+
+        setGraphicPose;
+    }
+
+    // 使い魔をセット
+    sub setFam {
+        // 使い魔の三角形の中心位置
+        // x 座標は中心からの距離になっています。
+        let xFamCenter = (GetCenterX - GetClipMinX) / 2;
+        let yFamCenter = yIni;
+
+        // 使い魔の位置（中心からの向き）
+        let angleFam   = [-160,-140,-120,-100,-80,-60,-40,-20,0,20,40,60,80,100,120,140,160,180];
+
+        ascent(i in 0..1) {
+            CreateEnemyFromScript("Familiar", GetX , yFamCenter,
+                                  0, angleFam[i], 1);
+        }
+        ascent(i in 0..1) {
+            CreateEnemyFromScript("Familiar3", GetX, yFamCenter,
+                                  0, angleFam[i]  -180, -1);
+        }
+
+        ascent(i in 0..1) {
+            CreateEnemyFromScript("Familiar2", GetX, yFamCenter,
+                                  0, angleFam[i] , 1);
+        }
+        ascent(i in 0..1) {
+            CreateEnemyFromScript("Familiar4", GetX, yFamCenter,
+                                  0, angleFam[i]  -180, -1);
+        }
+        ascent(i in 0..1) {
+            CreateEnemyFromScript("Familiar5", GetX, yFamCenter,
+                                  0, angleFam[i] , 1);
+        }/*
+        ascent(i in 0..35) {
+            CreateEnemyFromScript("Familiar6", GetX, yFamCenter,
+                                  0, angleFam[i]  -180, -1);
+        }*/
+        ascent(i in 0..18) {
+            CreateEnemyFromScript("Familiar7", GetX, yFamCenter,
+                                  0, angleFam[i] , 1);
+        }
+
+        wait(wSetFam);
+    }
+
+    // グラフィックの設定
+    sub setGraphicStop  { SetGraphicRect(  0,   0,  64,  64); }
+    sub setGraphicPose  { SetGraphicRect( 64,   0, 128,  64); }
+    sub setGraphicLeft  { SetGraphicRect(128,   0, 192,  64); }
+    sub setGraphicRight { SetGraphicRect(192,   0, 256,  64); }
+
+    sub setGraphicMove {
+        if(GetSpeedX < 0) {
+            setGraphicLeft;
+        } else {
+            setGraphicRight;
+        }
+    }
+
+    // w フレームだけ待つ
+    function wait(w) {
+        loop(w) { yield; }
+    }
+}
+
+
+// 使い魔
+script_enemy Familiar {
+
+    let csd     = GetCurrentScriptDirectory;
+    let imgFam  = "script\img\惑星.png";
+
+    // 使い魔の中心位置
+    let xCenter = GetX;
+    let yCenter = GetY;
+
+    // 中心位置からの距離と角度
+    // 実際の角度は angBase + angle になります。
+    let r       = 75;
+    let angBase = GetAngle;
+    let angle   = 0;
+
+    // 移動方向（±1）
+    let dir     = GetArgument;
+
+    // 使い魔の配置に必要な時間
+    let wSetFam = 300000;
+
+    @Initialize {
+        SetLife(2000);
+        SetScore(10000);
+        SetDamageRate(50, 50);
+
+        SetTexture(imgFam);
+        setGraphicFast;
+
+        TMain;
+    }
+
+    @MainLoop {
+        SetCollisionA(GetX, GetY, 32);
+
+        yield;
+    }
+
+    @DrawLoop {
+        DrawGraphic(GetX, GetY);
+    }
+
+    task TMain {
+        yield;
+        TNway;
+        standBy;
+    }
+
+    // 初期位置へ移動
+    sub standBy {
+        let dr =  0;    // 動径方向の速度
+        let w  = 0.5;    // 角速度
+
+        loop(wSetFam) {
+            r += dr;
+            move(w);
+            yield;
+        }
+    }
+
+
+
+    task TNway {
+	    loop{
+             CreateShot01(GetX, GetY,1,angBase + angle+180,1,0);
+             wait(10);
+	}
+ }
+    // 次の位置へ移動
+    //   w : 角速度
+    function move(w) {
+        angle += w * dir;
+
+        SetX(xCenter + r * cos(angBase + angle));
+        SetY(yCenter + r * sin(angBase + angle));
+        SetGraphicAngle(0, 0, angle);    // グラフィックを傾けます
+    }
+
+    // グラフィックの設定
+    sub setGraphicFast { SetGraphicRect( 0,  0, 62, 64); }
+
+    // w フレームだけ待つ
+    function wait(w) {
+        loop(w) { yield; }
+    }
+}
+
+//////////////////////////////////////////////////////////////////
+
+script_enemy Familiar2 {
+    let csd     = GetCurrentScriptDirectory;
+    let imgFam  = "script\img\惑星.png";
+
+    // 使い魔の中心位置
+    let xCenter = GetX;
+    let yCenter = GetY;
+
+    // 中心位置からの距離と角度
+    // 実際の角度は angBase + angle になります。
+    let r       = 125;
+    let angBase = GetAngle;
+    let angle   = 0;
+
+    // 移動方向（±1）
+    let dir     = GetArgument;
+
+    // 使い魔の配置に必要な時間
+    let wSetFam = 300000;
+
+    @Initialize {
+        SetLife(2000);
+        SetScore(10000);
+        SetDamageRate(50, 50);
+
+        SetTexture(imgFam);
+        setGraphicFast;
+
+        TMain;
+    }
+
+    @MainLoop {
+        SetCollisionA(GetX, GetY, 32);
+
+        yield;
+    }
+
+    @DrawLoop {
+        DrawGraphic(GetX, GetY);
+    }
+
+    task TMain {
+        yield;
+        TNway;
+
+        standBy;
+    }
+
+    // 初期位置へ移動
+    sub standBy {
+        let dr =  0;    // 動径方向の速度
+        let w  = 3;    // 角速度
+
+        loop(wSetFam) {
+            r += dr;
+            move(w);
+            yield;
+        }
+    }
+    task TNway {
+	    loop{
+             CreateShot01(GetX, GetY,1,angBase + angle+180,2,0);
+             wait(5);
+	}
+ }
+
+    // 次の位置へ移動
+    //   w : 角速度
+    function move(w) {
+        angle += w * dir;
+
+        SetX(xCenter + r * cos(angBase + angle));
+        SetY(yCenter + r * sin(angBase + angle));
+        SetGraphicAngle(0, 0, angle);    // グラフィックを傾けます
+    }
+
+    // グラフィックの設定
+    sub setGraphicFast { SetGraphicRect( 64,  0, 128, 62); }
+
+    // w フレームだけ待つ
+    function wait(w) {
+        loop(w) { yield; }
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+
+script_enemy Familiar3 {
+    let csd     = GetCurrentScriptDirectory;
+    let imgFam  = "script\img\惑星.png";
+
+
+    // 中心位置からの距離と角度
+    // 実際の角度は angBase + angle になります。
+    let r       = 100;
+    let angBase = GetAngle;
+    let angle   = 0;
+
+    // 移動方向（±1）
+    let dir     = GetArgument;
+
+    // 使い魔の中心位置
+    let xCenter = GetX;
+    let yCenter = GetY;
+
+    // 使い魔の配置に必要な時間
+    let wSetFam = 300000;
+
+    @Initialize {
+        SetLife(2000);
+        SetScore(10000);
+        SetDamageRate(50, 50);
+
+        SetTexture(imgFam);
+        setGraphicFast;
+
+        TMain;
+    }
+
+    @MainLoop {
+        SetCollisionA(GetX, GetY, 32);
+
+        yield;
+    }
+
+    @DrawLoop {
+        DrawGraphic(GetX, GetY);
+    }
+
+    task TMain {
+        yield;
+
+        TNway;
+        standBy;
+    }
+
+    // 初期位置へ移動
+    sub standBy {
+        let dr =  0;    // 動径方向の速度
+        let w  = -2;    // 角速度
+
+        loop(wSetFam) {
+            r += dr;
+            move(w);
+            yield;
+        }
+    }
+    task TNway {
+	    loop{
+             CreateShot01(GetX, GetY,1,angBase + angle+180,3,0);
+             wait(5);
+	}
+ }
+
+    // 次の位置へ移動
+    //   w : 角速度
+    function move(w) {
+        angle += w * dir;
+
+        SetX(xCenter + r * cos(angBase + angle));
+        SetY(yCenter + r * sin(angBase + angle));
+        SetGraphicAngle(0, 0, angle);    // グラフィックを傾けます
+    }
+
+    // グラフィックの設定
+    sub setGraphicFast { SetGraphicRect( 128,  0, 192, 62); }
+
+    // w フレームだけ待つ
+    function wait(w) {
+        loop(w) { yield; }
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+
+script_enemy Familiar4 {
+    let csd     = GetCurrentScriptDirectory;
+    let imgFam  = "script\img\惑星.png";
+
+
+    // 中心位置からの距離と角度
+    // 実際の角度は angBase + angle になります。
+    let r       = 150;
+    let angBase = GetAngle;
+    let angle   = 0;
+
+    // 移動方向（±1）
+    let dir     = GetArgument;
+
+    // 使い魔の中心位置
+    let xCenter = GetX;
+    let yCenter = GetY;
+
+    // 使い魔の配置に必要な時間
+    let wSetFam = 300000;
+
+    @Initialize {
+        SetLife(2000);
+        SetScore(10000);
+        SetDamageRate(50, 50);
+
+        SetTexture(imgFam);
+        setGraphicFast;
+
+        TMain;
+    }
+
+    @MainLoop {
+        SetCollisionA(GetX, GetY, 32);
+
+        yield;
+    }
+
+    @DrawLoop {
+        DrawGraphic(GetX, GetY);
+    }
+
+    task TMain {
+        yield;
+
+        TNway;
+        standBy;
+    }
+
+    // 初期位置へ移動
+    sub standBy {
+        let dr =  0;    // 動径方向の速度
+        let w  = 5;    // 角速度
+
+        loop(wSetFam) {
+            r += dr;
+            move(w);
+            yield;
+        }
+    }
+    task TNway {
+	    loop{
+             CreateShot01(GetX, GetY,1,angBase + angle+180,4,0);
+             wait(3);
+	}
+ }
+
+    // 次の位置へ移動
+    //   w : 角速度
+    function move(w) {
+        angle += w * dir;
+
+        SetX(xCenter + r * cos(angBase + angle));
+        SetY(yCenter + r * sin(angBase + angle));
+        SetGraphicAngle(0, 0, angle);    // グラフィックを傾けます
+    }
+
+    // グラフィックの設定
+    sub setGraphicFast { SetGraphicRect( 192,  0, 256, 62); }
+
+    // w フレームだけ待つ
+    function wait(w) {
+        loop(w) { yield; }
+    }
+}
+////////////////////////////////////////////////////////////////////////////
+
+script_enemy Familiar5 {
+    let csd     = GetCurrentScriptDirectory;
+    let imgFam  = "script\img\惑星.png";
+
+
+    // 中心位置からの距離と角度
+    // 実際の角度は angBase + angle になります。
+    let r       = 200;
+    let angBase = GetAngle;
+    let angle   = 0;
+
+    // 移動方向（±1）
+    let dir     = GetArgument;
+
+    // 使い魔の中心位置
+    let xCenter = GetX;
+    let yCenter = GetY;
+
+    // 使い魔の配置に必要な時間
+    let wSetFam = 300000;
+
+    @Initialize {
+        SetLife(2000);
+        SetScore(10000);
+        SetDamageRate(50, 50);
+
+        SetTexture(imgFam);
+        setGraphicFast;
+
+        TMain;
+    }
+
+    @MainLoop {
+        SetCollisionA(GetX, GetY, 32);
+
+        yield;
+    }
+
+    @DrawLoop {
+        DrawGraphic(GetX, GetY);
+    }
+
+    task TMain {
+        yield;
+
+        TNway;
+        standBy;
+    }
+
+    // 初期位置へ移動
+    sub standBy {
+        let dr =  0;    // 動径方向の速度
+        let w  = 5;    // 角速度
+
+        loop(wSetFam) {
+            r += dr;
+            move(w);
+            yield;
+        }
+    }
+    task TNway {
+	    loop{
+             CreateShot01(GetX, GetY,1,angBase + angle-90,4,0);
+             wait(4);
+	}
+ }
+
+    // 次の位置へ移動
+    //   w : 角速度
+    function move(w) {
+        angle += w * dir;
+
+        SetX(xCenter + r * cos(angBase + angle));
+        SetY(yCenter + r * sin(angBase + angle));
+        SetGraphicAngle(0, 0, angle);    // グラフィックを傾けます
+    }
+
+    // グラフィックの設定
+    sub setGraphicFast { SetGraphicRect( 256,  0, 320, 62); }
+
+    // w フレームだけ待つ
+    function wait(w) {
+        loop(w) { yield; }
+    }
+}
+/////////////////////////////////////////////////////////////////////////////////
+/*
+script_enemy Familiar6 {
+    let csd     = GetCurrentScriptDirectory;
+    let imgFam  = "script\img\惑星.png";
+
+
+    // 中心位置からの距離と角度
+    // 実際の角度は angBase + angle になります。
+    let r       = 250;
+    let angBase = GetAngle;
+    let angle   = 0;
+
+    // 移動方向（±1）
+    let dir     = GetArgument;
+
+    // 使い魔の中心位置
+    let xCenter = GetX;
+    let yCenter = GetY;
+
+    // 使い魔の配置に必要な時間
+    let wSetFam = 300000;
+
+    @Initialize {
+        SetLife(2000);
+        SetScore(10000);
+        SetDamageRate(50, 50);
+
+        SetTexture(imgFam);
+        setGraphicFast;
+
+        TMain;
+    }
+
+    @MainLoop {
+        SetCollisionA(GetX, GetY, 32);
+
+        yield;
+    }
+
+    @DrawLoop {
+        DrawGraphic(GetX, GetY);
+    }
+
+    task TMain {
+        yield;
+
+        TNway;
+        standBy;
+    }
+
+    // 初期位置へ移動
+    sub standBy {
+        let dr =  0;    // 動径方向の速度
+        let w  = 1 // 角速度
+
+        loop(wSetFam) {
+            r += dr;
+            move(w);
+            yield;
+        }
+    }
+    task TNway {
+	    loop{
+             CreateShot01(GetX, GetY,1,angBase + angle,4,0);
+             wait(9);
+	}
+ }
+
+    // 次の位置へ移動
+    //   w : 角速度
+    function move(w) {
+        angle += w * dir;
+
+        SetX(xCenter + r * cos(angBase + angle));
+        SetY(yCenter + r * sin(angBase + angle));
+        SetGraphicAngle(0, 0, angle);    // グラフィックを傾けます
+    }
+
+    // グラフィックの設定
+    sub setGraphicFast { SetGraphicRect( 420,  0, 451, 31); }
+
+    // w フレームだけ待つ
+    function wait(w) {
+        loop(w) { yield; }
+    }
+}*/
+/////////////////////////////////////////////////////////////////////////////////
+
+script_enemy Familiar7 {
+    let csd     = GetCurrentScriptDirectory;
+    let imgFam  = "script\img\惑星.png";
+    let flame =0;
+
+    // 中心位置からの距離と角度
+    // 実際の角度は angBase + angle になります。
+    let r       = 100;
+    let angBase = GetAngle;
+    let angle   = 0;
+
+    // 移動方向（±1）
+    let dir     = GetArgument;
+
+    // 使い魔の中心位置
+    let xCenter = GetX;
+    let yCenter = GetY;
+
+    // 使い魔の配置に必要な時間
+    let wSetFam = 300000;
+
+    @Initialize {
+        SetLife(2000);
+        SetScore(10000);
+        SetDamageRate(50, 50);
+
+        SetTexture(imgFam);
+        setGraphicFast;
+
+        TMain;
+    }
+
+    @MainLoop {
+
+        yield;
+    }
+
+    @DrawLoop {
+        DrawGraphic(GetX, GetY);
+    }
+
+    task TMain {
+        yield;
+
+        TNway;
+        standBy;
+    }
+
+    task TNway {
+	    loop{
+             CreateShot01(GetX, GetY,1,angBase + angle,4,0);
+			if(GetEnemyLife >= 1500) {
+             wait(22); 
+			}
+             wait(11); yield;
+		}
+	
+ }
+
+    // 次の位置へ移動
+    //   w : 角速度
+    function move(w) {
+        angle += w * dir;
+
+        SetX(xCenter + r * cos(angBase + angle));
+        SetY(yCenter + r * sin(angBase + angle));
+        SetGraphicAngle(0, 0, angle);    // グラフィックを傾けます
+    }
+
+    // グラフィックの設
+    sub setGraphicFast { SetGraphicRect( 420,  0, 451, 31); }
+
+    // w フレームだけ待つ
+    function wait(w) {
+        loop(w) { yield; }
+    }
+    // 初期位置へ移動
+    sub standBy {
+		loop(20) {yield;}
+        let dr =  0;   
+        let w = -5;   // 動径方向の速度
+
+
+        loop(wSetFam) {
+			if(GetEnemyLife >= 1500) {
+				
+            move(w); 
+			}
+			
+            move(3); yield;
+		}
+	}
+}
+}

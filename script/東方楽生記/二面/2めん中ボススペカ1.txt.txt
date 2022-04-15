@@ -1,0 +1,70 @@
+#東方弾幕風
+#Title[線符「線周華旋」]
+#Text[]
+#PlayLevel[弾幕風教材用]
+#Image[.\img\study001.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+let Boss = "script\img\ExRumia.png";
+let ang = GetAngleToPlayer;
+
+	@Initialize {
+
+        CutIn(YOUMU,"線符「線周華旋」",0,0,0,0,0);//スペルカード名表示
+
+                SetTimer(60);
+
+    SetX(GetCenterX);
+    SetY(GetClipMinY + 120);
+		SetLife(3000);
+
+		LoadGraphic(Boss);
+		SetTexture(Boss);
+		SetGraphicRect(1, 1, 64, 64);
+		mainTask;
+
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+
+        LoadUserShotData("script\東方楽生記\二面\新しいフォルダ\レーザー.txt");
+	
+		CreateLaser01(GetX, GetY, 2, ang*61*2, 100,5,1, 50);
+		CreateLaser01(GetX, GetY, 2, ang*-61*2, 100,5,1, 50);
+ang++;
+
+
+	}
+	@DrawLoop {
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(Boss);
+	}
+
+	task mainTask {        
+        LoadUserShotData("script\東方楽生記\二面\新しいフォルダ\tamade-ta.txt");
+		loop(60) {yield;}
+
+		loop {
+			let speed = 0.5;
+			let angle =0 ;
+			let t = 0 ;
+			loop(999) {
+        LoadUserShotData("script\東方楽生記\二面\新しいフォルダ\tamade-ta.txt");
+	
+		CreateLaser01(GetX, GetY, 2, angle*-20, 300,30,1, 50);
+            t++;
+					angle += 11;
+				speed += 0.3;
+				loop(4) {yield;}
+			}
+			loop(60) {yield;}
+		}
+	}
+}

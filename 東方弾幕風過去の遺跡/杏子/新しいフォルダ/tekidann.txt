@@ -1,0 +1,33 @@
+/*
+#UserShotData
+task 1{
+ShotImage="script\img\杏子2.png"
+
+//Shotの定義
+
+ShotData
+{
+    id = 1 //ID
+    rect =(0,0,64,64)//描画
+    render = ADD//描画方法
+    delay_color = (255,128,255)//遅延時間の光の色
+    angular_velocity = 0//回転速度
+}
+}*/
+
+
+#UserShotData
+task 2{
+ShotImage="script\img\無題8.png"
+
+//Shotの定義
+
+ShotData
+{
+    id = 2 //ID
+    rect =(0,0,64,64)//描画
+    render = ADD//描画方法
+    delay_color = (255,128,255)//遅延時間の光の色
+    angular_velocity = 0//回転速度
+}
+}

@@ -1,0 +1,104 @@
+#“Œ•û’e–‹•—
+#Title[‚S‚RFŽžŠÔ‚ðŽ~‚ß‚é]
+#Text[]
+#PlayLevel[’e–‹•—‹³Þ—p]
+#Image[.\img\study043.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		loop(60) {yield;}
+
+		loop {
+			Concentration01(60);
+			loop(60) {yield;}
+
+			TimeStop(120, 1, 0, 0);
+			let count = 0;
+			loop(120) {
+				let angle = rand(0, 360);
+				let px = GetPlayerX + (count+60)*cos(angle);
+				let py = GetPlayerY + (count+60)*sin(angle);
+				while((px < GetClipMinX) || (px > GetClipMaxX) || (py < GetClipMinY) || (py > GetClipMaxY)) {
+					angle = rand(0, 360);
+					px = GetPlayerX + (count+60)*cos(angle);
+					py = GetPlayerY + (count+60)*sin(angle);
+				}
+				let knife = 1;
+				CreateShotA(knife, px, py, 0);
+				SetShotDataA(knife, 0, 0, atan2(GetPlayerY-py, GetPlayerX-px), 0, 0, 0, WHITE32);
+				SetShotDataA(knife, 120-count, 0, NULL, 0, 0, 0, BLUE32);
+				SetShotDataA(knife, 240-count, 0, NULL, 0, 0.05, 4, RED32);
+				FireShot(knife);
+
+				if(count < 60) {
+					let angle2 = 62;
+					loop(6) {
+						CreateShot01(GetX, GetY, 7, GetAngleToPlayer+angle2+4*count, RED32, 0);
+						angle2 += 360/6;
+					}
+				}
+				count++;
+				yield;
+			}
+			loop(240) {yield;}
+
+			count = 0;
+			loop(840) {
+				if((count%60 == 0) && (count < 600)) {
+					let px = GetClipMinX;
+					while(px < GetClipMaxX+20) {
+						CreateShot01(px, GetClipMinY-20, 1.5, 90, WHITE22, 0);
+						px += 6;
+					}
+				}
+				if(count%90 == 70) {
+					TimeStop(60, 0, 1, 0);
+					MotionBlur(ALL, 60, 150);
+					loop(60) {yield;}
+				}
+				count++;
+				yield;
+			}
+			loop(120) {yield;}
+		}
+	}
+}

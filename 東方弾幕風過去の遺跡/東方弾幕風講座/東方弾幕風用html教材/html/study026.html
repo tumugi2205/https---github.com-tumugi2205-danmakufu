@@ -1,0 +1,207 @@
+<html>
+<head>
+<title>オブジェクト弾</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０２６回　オブジェクト弾<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回は特殊な弾を作る上で必須とも言える、オブジェクト弾を学ぶ。<br>
+今までCreateShotA系統の関数で特殊な弾を作ってきたが、<br>
+オブジェクト弾を学べばもっとバリエーションに富んだ弾を作ることができるぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それは楽しみですね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあ今回は基礎の基礎だから普通の挙動をするオブジェクト弾しか作らないけどね。<br>
+次回以降に様々な弾を作る例を紹介していきましょう。<br>
+では今回のスクリプトの中身を見てみようか。<br>
+『study026.txt』を開いてちょうだい。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {<font color="red">
+      objectBullet;</font>
+      loop(60) {yield;}
+    }
+  }
+<font color="red">
+  task objectBullet {
+    let obj = Obj_Create(OBJ_SHOT);
+    Obj_SetX(obj, GetX);
+    Obj_SetY(obj, GetY);
+    Obj_SetSpeed(obj, 3);
+    Obj_SetAngle(obj, GetAngleToPlayer);
+    ObjShot_SetGraphic(obj, RED01);
+    ObjShot_SetDelay(obj, 0);
+
+  }</font>
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+mainTaskの中身は基本的に『study003』のスクリプトとほとんど同じだ。<br>
+ただCreateShot01の代わりにobjectBulletと書かれている。<br>
+mainTaskの下を見ればわかるけれどobjectBulletとはマイクロスレッドの名前だ。<br>
+そうそう、今後マイクロスレッドのことは『タスク』と呼ぶことにする。<br>
+そっちの方が短いし、記述もtaskだし、通りもいい。<br>
+それでそのタスクの中身にオブジェクト弾についての記述があり、<br>
+今回はそれについて学ぶ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen01.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なんだか初めて見る関数がいっぱいあるんですけれど･･････<br>
+こんなに一気に憶えられないかもしれないです･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それについては大丈夫。<br>
+CreateShot01の引数をしっかり理解していれば問題ない。<br>
+ではまずObj_Createについてだ。<br>
+これがオブジェクト弾を作りたいときに最初に呼ぶべき関数だ。<br>
+引数は１つで、中身はOBJ_SHOTと書いてある。<br>
+実はオブジェクトには弾だけでなくレーザーやエフェクトを作ることができるんだ。<br>
+今回は弾だからOBJ_SHOTと書くことでオブジェクト弾を作ることができる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そういえば今まで見たことない書き方をしていますね。<br>
+let obj = Obj_Create(OBJ_SHOT); っていう書き方なんですけど、<br>
+これはどういう意味なんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+Obj_Createを正しく実行すると、ある数字が生成される。<br>
+この生成された数字が『作ったオブジェクト弾を示す』数値なんだ。<br>
+要するに弾にＩＤを割り当てる作業をしているワケ。<br>
+その数字を変数objに格納している。<br>
+今後この変数を使うことで先ほど作ったオブジェクト弾を識別し、<br>
+指定したオブジェクトを操作することができる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そしてその次も新しい関数が大量にありますけれど･･････<br>
+あれ？<br>
+でももしかしてSetXとかSetSpeedとか書いてありますから、もしかして<br>
+これってCreateShot01の引数を意味する設定なんじゃ？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通り。<br>
+Obj_SetX以下６つの関数はCreateShot01のそれぞれの引数と同じ設定なんだ。<br>
+<br>
+Obj_SetX　オブジェクト弾のX座標を指定する。<br>
+Obj_SetY　オブジェクト弾のY座標を指定する。<br>
+Obj_SetSpeed　オブジェクト弾の弾速を指定する。<br>
+Obj_SetAngle　オブジェクト弾の角度を指定する。<br>
+ObjShot_SetGraphic　オブジェクト弾のグラフィックを指定する。<br>
+ObjShot_SetDelay　オブジェクト弾の遅延時間を指定する。<br>
+<br>
+第１引数にObj_Createの値を入れた変数を書くことに注意するくらいで、<br>
+第２引数の書き方はCreateShot01と全く同じ書き方でOKだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+これがオブジェクト弾の基本設定なんですね。<br>
+設定が終わった後は何もないからobjectBulletのタスクはすぐに破棄されて<br>
+しまうんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうね。<br>
+今回は基本設定だけだからただの普通の弾となんら変わらないわ。<br>
+実際に弾幕風で『オブジェクト弾』を選んでも、<br>
+ただの自機狙い弾が撃たれるだけね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+本格的なオブジェクト弾については次回以降ですね。<br>
+今から楽しみですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうそう。<br>
+オブジェクト弾を作るときは今回のように<b>オブジェクト弾１つ毎に<br>
+タスクを割り当てるような書き方をするといい。</b><br>
+もちろんmainTaskの中でオブジェクト弾を作ってもいいが、今後複数の<br>
+オブジェクト弾を操作するようになることを考えると専用のタスクを<br>
+作った方が遥かに楽だ。<br>
+何を言っているのかよくわからないなら、深く考えずにサンプル通りの<br>
+書き方をしていけばいい。<br>
+後々意味がわかってくるだろう。<br>
+ではまた次回の講座で会うとしよう。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

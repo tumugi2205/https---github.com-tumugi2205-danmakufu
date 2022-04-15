@@ -1,0 +1,123 @@
+#東方弾幕風
+#Title[九曜弾の例]
+#Text[]
+#BackGround[User()]
+#ScriptVersion[2]
+
+script_enemy_main{
+
+    //グローバル変数
+	let imgBoss = GetCurrentScriptDirectory() ~ "ExRumia.png";
+	let wIni = 120;
+	
+	///////////////////////////////////////////////////////////
+
+	@Initialize{
+	    LoadGraphic(imgBoss);
+	    
+        SetMovePosition02(GetCenterX(), GetClipMinY() + 120, wIni);
+        SetLife(4000);
+        SetTimer(60);
+        SetInvincibility(wIni);
+        SetDamageRate(100, 100);
+	    
+	    TMain();
+	}
+		
+	@MainLoop{
+		SetCollisionA(GetX(), GetY(), 32);
+		SetCollisionB(GetX(), GetY(), 24);
+	    yield;
+	}
+	
+	@DrawLoop{
+	    SetTexture(imgBoss);
+	    SetGraphicRect(1, 1, 64, 64);
+	    DrawGraphic(GetX(), GetY());
+	}
+		
+	@Finalize{
+	    DeleteGraphic(imgBoss);
+	}
+	
+	//////////////////////////////////////////////////////////
+	
+	task TMain{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    
+	    //処理
+	    loop{
+	        let pos = [rand(GetClipMinX(), GetClipMaxX()), rand(GetClipMinY(), GetClipMinY()+120)];
+	        CreateNavagrahaShot(pos[0], pos[1], rand(1, 2), atan2(GetPlayerY() - pos[1], GetPlayerX() - pos[0]), 10, 18, rand(-3, 3), rand(-18, 18), WHITE02, WHITE05, 20);
+	        
+	        loop(20){ yield; }
+	    }
+	}
+	
+	//////////////////////////////////////////////////////////
+
+    //九曜弾の例
+    //n:周りの弾の数, r:半径, om:角速度, arg:位相
+    task CreateNavagrahaShot(let x, let y, let speed, let angle, let n,
+             let r, let om,let arg, let graphic1, let graphic2, let delay) {
+        
+        //オブジェクト弾の作成
+        let obj = Obj_Create(OBJ_SHOT);
+        
+        //パラメータの設定
+        Obj_SetPosition(obj, x, y);
+        Obj_SetSpeed(obj, speed);
+        Obj_SetAngle(obj, angle);
+        ObjShot_SetGraphic(obj, graphic1);
+        ObjShot_SetDelay(obj, delay);
+        
+        //周りの弾を作成
+        ascent(let i in 0..n){
+            CreateNavagrahaChild(obj, r, om, arg + i*360/n, graphic2, delay);
+        }
+        
+        loop(delay){ yield; }
+        
+        while(!Obj_BeDeleted(obj))
+        {
+            //何もしない
+            yield;
+        }
+    }
+
+    //周りの弾
+    task CreateNavagrahaChild(let parent, let r, let om, 
+                            let arg, let graphic, let delay){ 
+
+        //オブジェクト弾の作成
+        let obj = Obj_Create(OBJ_SHOT);
+        
+        //パラメータの設定
+        Obj_SetPosition(obj, Obj_GetX(parent) + r*cos(arg),
+                             Obj_GetY(parent) + r*sin(arg));
+        Obj_SetSpeed(obj, 0);
+        Obj_SetAngle(obj, arg);
+        Obj_SetAutoDelete(obj, false);
+        ObjShot_SetGraphic(obj, graphic);
+        ObjShot_SetDelay(obj, delay);
+        
+        
+        loop(delay){ yield; }
+        
+        let t=0;
+        while(!Obj_BeDeleted(parent)){
+            Obj_SetPosition(obj, Obj_GetX(parent) + r*cos(om*t + arg),
+                                 Obj_GetY(parent) + r*sin(om*t + arg));
+            Obj_SetAngle(obj, om*t + arg);
+        
+            t++;
+            yield;
+        }
+        
+        //中心の弾が削除されたら周りも削除する
+        Obj_Delete(obj);
+    }
+}

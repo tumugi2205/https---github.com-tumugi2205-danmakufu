@@ -1,0 +1,78 @@
+#“Œ•û’e–‹•—
+#Title[‚T‚QFƒŒ[ƒU[ (Ý’uŒ^)]
+#Text[]
+#PlayLevel[’e–‹•—‹³Þ—p]
+#Image[.\img\study052.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 100, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		loop(60) {yield;}
+
+		CreateLaserA("laser", GetX, GetY, 400, 20, YELLOW11, 30);
+		SetLaserDataA("laser", 0, 270, 0, 0, 0, 0);
+		FireShot("laser");
+		loop(120) {yield;}
+
+		let angle = 40;
+		loop(14) {
+			CreateLaserA("laser", GetX+50*cos(angle), GetY+50*sin(angle), 400, 20, PURPLE11, 30);
+			SetLaserDataA("laser", 0, angle, 0, 0, 0, 0);
+			FireShot("laser");
+			angle -= 20;
+		}
+		loop(120) {yield;}
+
+		let sign = 1;
+		loop {
+			let angle1 = rand(0, 360);
+			let angle2 = GetAngleToPlayer + rand(-40, 40);
+			loop(3) {
+				CreateLaserA("laser", GetX, GetY, 20, 10, RED11, 30);
+				SetLaserDataA("laser", 0, angle1, 1.5*sign, 0.5, 2, angle2);
+				FireShot("laser");
+				angle1 += 360/3;
+			}
+			sign *= -1;
+			loop(45) {yield;}
+		}
+	}
+}

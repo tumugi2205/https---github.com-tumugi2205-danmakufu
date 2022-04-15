@@ -1,0 +1,46 @@
+#PlayerShotData
+
+ShotImage=".\’e3.png"
+
+ShotData
+{
+    id = 1 //ID
+    rect =(0,0,16,16)//•`‰æ
+    render = ADD//•`‰æ•û–@
+	alpha=100
+    angular_velocity = rand(-5,5)//‰ñ“]‘¬“x
+}
+
+
+ShotData
+{
+    id = 2 //ID
+    rect =(16,16,32,32)//•`‰æ
+    render = ADD//•`‰æ•û–@
+	alpha=100
+    angular_velocity = rand(-5,5)//‰ñ“]‘¬“x
+}
+ShotData
+{
+    id = 3 //ID
+    rect = (32,32,48,48)//•`‰æ
+    render = ADD//•`‰æ•û–@
+	alpha=100
+    angular_velocity = rand(-5,5)//‰ñ“]‘¬“x
+}
+ShotData
+{
+    id = 4 //ID
+    rect =(48,48,66,66)//•`‰æ
+    render = ADD//•`‰æ•û–@
+	alpha=100
+    angular_velocity = rand(-5,5)//‰ñ“]‘¬“x
+}
+ShotData
+{
+    id = 5 //ID
+    rect =(66,66,82,82)//•`‰æ
+    render = ADD//•`‰æ•û–@
+	alpha=100
+    angular_velocity = 0//‰ñ“]‘¬“x
+}

@@ -1,0 +1,128 @@
+#東方弾幕風
+#Title[星符「ミッドナイトレヴァリエ」]
+#Text[Exルーミア最初のスペルカード：星符「ミッドナイトレヴァリエ」]
+#Image[.\img\ExRumia(星符「ミッドナイトレヴァリエ」).png]
+#BackGround[Default]
+#Player[FREE]
+#ScriptVersion[2]
+
+script_enemy_main
+{
+	let count=0;
+	let cx=GetCenterX();//STGシーンの中心x座標を取得;
+	let imgExRumia=GetCurrentScriptDirectory~"img\ExRumia.png";
+	let imgExRumiaBack=GetCurrentScriptDirectory~"img\ExRumiaBack.png";
+	@Initialize
+	{
+		SetScore(30000);//スペルカードボーナスを30000に設定
+		SetLife(300);//ライフを300に設定
+		SetDamageRate(10,10);//披ダメージを10%に設定
+		SetTimer(60);//時間制限を60秒に設定
+
+		SetGraphicRect(1,1,64,64);//描画元矩形を設定
+		SetInvincibility(30);//敵を30フレーム無敵にする
+		
+		LoadGraphic(imgExRumia);//画像「img\ExRumia.png」を読みこむ		
+		LoadGraphic(imgExRumiaBack);
+
+		SetMovePosition02(cx,60,60);//座標(cx,60)へ60フレームかけて移動する
+		Concentration01(150);
+		CutIn(YOUMU,"星符「ミッドナイトレヴァリエ」",0,0,0,0,0);//スペルカード名表示
+	}
+	
+	@MainLoop
+	{
+		if(count==90)
+		{//青弾
+			let shotA=0;
+			CreateShotA(shotA,GetX(),GetY(),0);//shotAを作製
+			SetShotDataA(shotA,0,5,0,0,-0.08,0,BLUE03);//shotAにデータを登録;
+			SetShotDataA(shotA,60,5,135,0,0,5,BLUE03);
+			let i=60;
+			while(i<360)
+			{//360回繰り返す
+				let shotSpeed=rand(0.5,1.5);
+				let ta=1;
+				CreateShotA(ta,0,0,60);//taを作製
+				SetShotDataA(ta,0,shotSpeed,rand(0,360),0,0,0,BLUE01);
+				AddShot(i,shotA,ta,0);//shotAにtaを登録;
+				i++;
+			}
+			FireShot(shotA);
+
+			i=60;
+			CreateShotA(shotA,GetX(),GetY(),0);
+			SetShotDataA(shotA,0,5,180,0,-0.08,0,BLUE03);
+			SetShotDataA(shotA,60,5,45,0,0,5,BLUE03);
+			while(i<360)
+			{
+				let shotSpeed=rand(0.5,1.5);
+				let ta=1;
+				CreateShotA(ta,0,0,60);
+				SetShotDataA(ta,0,shotSpeed,rand(0,360),0,0,0,BLUE01);
+				AddShot(i,shotA,ta,0);
+				i++;
+			}
+			FireShot(shotA);		
+		}
+	
+		if(count==250)
+		{//赤弾
+			let shotA=0;
+			CreateShotA(shotA,GetX(),GetY(),0);
+			SetShotDataA(shotA,0,5,0,0,-0.08,0,RED03);
+			SetShotDataA(shotA,60,5,90,0,0,5,BLUE03);
+			let i=60;
+			while(i<360)
+			{
+				let shotSpeed=rand(0.5,1.5);
+				let ta=1;
+				CreateShotA(ta,0,0,60);
+				SetShotDataA(ta,0,shotSpeed,rand(0,360),0,0,0,RED01);
+				AddShot(i,shotA,ta,0);
+				i++;
+			}
+			FireShot(shotA);
+			
+			i=60;
+			CreateShotA(shotA,GetX(),GetY(),0);
+			SetShotDataA(shotA,0,5,180,0,-0.08,0,RED03);
+			SetShotDataA(shotA,60,5,90,0,0,5,BLUE03);
+			while(i<360)
+			{
+				let shotSpeed=rand(0.5,1.5);
+				let ta=1;
+				CreateShotA(ta,0,0,60);
+				SetShotDataA(ta,0,shotSpeed,rand(0,360),0,0,0,RED01);
+				AddShot(i,shotA,ta,0);
+				i++;
+			}
+			FireShot(shotA);
+		}
+		if(count==300){Concentration01(120)};
+		if(count==400){count=89;};
+		SetCollisionA(GetX(),GetY(),32);//当たり判定(自弾)登録
+		SetCollisionB(GetX(),GetY(),24);//当たり判定(体当たり)登録
+		count++;
+	}
+	
+	@Finalize
+	{//読みこんだファイルを削除
+		DeleteGraphic(imgExRumia);	
+		DeleteGraphic(imgExRumiaBack);
+		loop(8)
+		{
+			CreateItem(ITEM_SCORE,cx+rand(-100,100),rand(20,100));
+		}
+	}
+	
+	@DrawLoop
+	{
+		//Exルーミア描画
+		if(count<270){SetGraphicRect(64,64,127,127)};
+		if(count>=270){SetGraphicRect(1,1,64,64);}
+		SetAlpha(255);
+		SetTexture(imgExRumia);
+		DrawGraphic(GetX(),GetY());
+	}
+}

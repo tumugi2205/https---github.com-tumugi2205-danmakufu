@@ -1,0 +1,127 @@
+#東方弾幕風
+#Title[蝕符「トータルエクリプス」]
+#Text[Exルーミア：蝕符「トータルエクリプス」]
+#Image[.\img\ExRumia(蝕符「トータルエクリプス」).png]
+#BackGround[Default]
+#Player[FREE]
+#ScriptVersion[2]
+
+script_enemy_main
+{
+	let count=0;
+	let cx=GetCenterX();//STGシーンの中心x座標を取得;
+	let step=0;
+	let imgExRumia=GetCurrentScriptDirectory~"img\ExRumia.png";;
+	let imgExRumiaBack=GetCurrentScriptDirectory~"img\ExRumiaBack.png";
+	@Initialize
+	{
+		SetScore(50000);;//スペルカードボーナスを50000に設定
+		SetLife(240);//ライフを240に設定
+		SetDamageRate(10,10);//披ダメージを10%に設定
+		SetTimer(60);//時間制限を60秒に設定
+
+		SetGraphicRect(1,1,64,64);//描画元矩形を設定
+		SetInvincibility(30);//敵を30フレーム無敵にする
+		LoadGraphic(imgExRumia);//画像「img\ExRumia.png」を読みこむ		
+		LoadGraphic(imgExRumiaBack);
+		
+		SetColor(255,64,255);
+		SetMovePosition02(cx,160,60);//座標(cx,160)へ60フレームかけて移動する
+		CutIn(YOUMU,"蝕符「トータルエクリプス」",0,0,0,0,0);//スペルカード名表示
+	}
+	
+	@MainLoop
+	{
+		SetColor(255,255,128);
+		SetShotDirectionType(ABSOLUTE);
+		if(count==0)
+		{
+			Concentration01(120);
+			SetMovePosition02(cx,160,60);
+		}
+		else if((count>90)&&(count<=150)&&(count%10==0))
+		{//黄色の楔弾
+			let i=0;
+			while(i<6)
+			{
+        let F = Obj_Create(OBJ_LASER);
+CreateLaserB(F,100,20,RED04,10);
+SetLaserDataB(F,10,10,10,5,-90,20,GetAngleToPlayer,3);
+				let ts=0;
+
+				CreateShotA(ts,GetX(),GetY(),0);
+				SetShotDataA(ts,0,3,i*60+(count-90)+step*2,6,0,3,YELLOW21);
+				SetShotDataA(ts,30,3,NULL,3,0,3,YELLOW21);
+				SetShotDataA(ts,60,3,NULL,-3,0,3,NULL);
+				SetShotDataA(ts,120,3,NULL,-1,0,3,YELLOW21);
+				SetShotDataA(ts,180,1,NULL,0,0,3,YELLOW21);
+				FireShot(ts);
+				
+				CreateShotA(ts,GetX(),GetY(),0);
+				SetShotDataA(ts,0,3,-(i*60+(count-90)+step*2),-6,0,3,YELLOW21);
+				SetShotDataA(ts,30,3,NULL,-3,0,3,YELLOW21);
+				SetShotDataA(ts,60,3,NULL,3,0,3,YELLOW21);
+				SetShotDataA(ts,120,3,NULL,1,0,3,YELLOW21);
+				SetShotDataA(ts,180,1,NULL,0,0,3,YELLOW21);
+				FireShot(ts);			
+				i++;
+			}
+		}/*
+		if(count>=90&&count<120&&count%10==0)
+		{//紫の大弾
+			let tCount=(count-90)*2+90;
+			let ts=0;
+			CreateShotA(ts,GetX(),GetY(),0);
+			SetShotDataA(ts,0,3,180,0,0,3,PURPLE03);
+			SetShotDataA(ts,60,0,NULL,0,0,0,PURPLE03);
+			SetShotDirectionType(PLAYER);
+			SetShotDataA(ts,tCount,2,0,0,0,2,PURPLE03);
+			FireShot(ts);
+		}
+		if(count>=120&&count<150&&count%10==0)
+		{//紫の大弾
+			let tCount=(count-120)*2+90;
+			let ts=0;
+			CreateShotA(ts,GetX(),GetY(),0);
+			SetShotDataA(ts,0,3,0,0,0,3,PURPLE03);
+			SetShotDataA(ts,60,0,NULL,0,0,0,PURPLE03);
+			SetShotDirectionType(PLAYER);
+			SetShotDataA(ts,tCount,2,0,0,0,2,PURPLE03);
+			FireShot(ts);
+		}*/
+		
+		if(count==180)
+		{
+			step++;
+			count=89;
+			SetMovePositionRandom01(50,3,10,GetClipMinX()+100,90,GetClipMaxX()-100,100);
+		}
+		SetCollisionA(GetX(),GetY(),32);//当たり判定(自弾)登録
+		SetCollisionB(GetX(),GetY(),24);//当たり判定(体当たり)登録
+		count++;	
+	}
+	
+	@Finalize
+	{//読みこんだファイルを削除
+		DeleteGraphic(imgExRumia);	
+		DeleteGraphic(imgExRumiaBack);
+		loop(8)
+		{
+			CreateItem(ITEM_SCORE,cx+rand(-100,100),rand(20,100));
+		}
+		CreateItem(ITEM_BOMB,cx+rand(-100,100),rand(20,100));
+	}
+	
+	@DrawLoop
+	{
+		//Exルーミア描画
+		SetColor(255,255,255);
+		SetAlpha(255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(int(GetSpeedX())==0){SetGraphicRect(64,1,127,64);}
+		else if(GetSpeedX()>0){SetGraphicRect(192,1,255,64);}
+		else if(GetSpeedX()<0){SetGraphicRect(128,1,191,64);}
+		DrawGraphic(GetX(),GetY());
+	}
+}

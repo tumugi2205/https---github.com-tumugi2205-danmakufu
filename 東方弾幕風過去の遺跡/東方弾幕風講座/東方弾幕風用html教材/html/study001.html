@@ -1,0 +1,545 @@
+<html>
+<head>
+<title>単発弾</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第００１回　単発弾<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+じゃあ、記念すべき最初の講座だ。<br>
+準備はいいかい、橙。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+はいっ、藍さま！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それじゃあまずは練習用のファイルを開いてみよう。<br>
+東方弾幕風のフォルダ『th_dnh』を出して、『script』フォルダをクリックする。<br>
+その後『東方弾幕風教材用スクリプト』を開いて、『study001.txt』をメモ帳などで開くんだ。<br>
+普通にダブルクリックすれば開けると思うぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+開けました！！<br>
+･･････なんだか難しそうな英単語とか並んでますよ？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それが弾幕を作る大元のファイルなんだ。<br>
+これを<b>スクリプト</b>と呼ぶ。<br>
+では、そのスクリプトの中身を見てみようか。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+#東方弾幕風
+#Title[単発弾]
+#Text[]
+#PlayLevel[弾幕風教材用]
+#Image[.\img\study001.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+  let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+  @Initialize {
+    SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+    SetLife(3000);
+
+    LoadGraphic(imgExRumia);
+    SetTexture(imgExRumia);
+    SetGraphicRect(1, 1, 64, 64);
+
+    mainTask;
+  }
+
+  @MainLoop {
+    SetCollisionA(GetX, GetY, 24);
+    SetCollisionB(GetX, GetY, 24);
+    yield;
+  }
+
+  @DrawLoop {
+    SetColor(255,255,255);
+    SetRenderState(ALPHA);
+    SetTexture(imgExRumia);
+    if(GetSpeedX == 0) {
+      SetGraphicRect(64, 1, 127, 64);
+    } else if(GetSpeedX > 0) {
+      SetGraphicRect(192, 1, 255, 64);
+    } else if(GetSpeedX < 0) {
+      SetGraphicRect(128, 1, 191, 64);
+    }
+    DrawGraphic(GetX, GetY);
+  }
+
+  @Finalize  {
+    DeleteGraphic(imgExRumia);
+  }
+
+  task mainTask {
+    loop(60) {yield;}
+<font color="red">
+    CreateShot01(GetX, GetY, 2, 90, RED01, 0);</font>
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/chen01.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+も、もしかしてこれ全部憶えなくちゃいけないんですか！？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そんな心配しなくてもいいよ橙。<br>
+今回憶えるのは１行だけなんだ。<br>
+下から３行目のCreateShot01(GetX, GetY, 2, 90, RED01, 0)だけよ。<br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+１行だけで良いんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回は、ね。<br>
+他の部分は弾幕とは直接的に関係無い記述だから。<br>
+まずは弾幕に直接関係している部分から始めて、<br>
+モチベーションを高めてもらおうと思ってね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そうなんですか！<br>
+いきなり弾幕作りから始めることができるんですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうこと。<br>
+それじゃあここから気を引き締めて憶えてね。<br>
+弾を撃たせる時はCreateShot01関数に６つの引数を与える必要があるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+かんすう？<br>
+ひきすう？<br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+関数っていうのは、要は弾を出すときに必要なおまじないのようなものよ。<br>
+数学で言えば公式ね。<br>
+で、その関数を正しく動かすには引数っていう数字や文字を与えなくてはいけないの。<br>
+中には引数が無くても機能するものもあるけどね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen01.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+実例が無いとちょっと分かりにくいです･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだな、じゃあ今回の例を見てみよう。<br>
+CreateShot01(GetX, GetY, 2, 90, RED01, 0) の場合だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+このGetXとかが引数なんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、全部で６つあるでしょう？<br>
+それぞれ何番目の引数に数値や文字が当てられているかが重要なの。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+引数の順番がばらばらだったら意味が違ってしまうんですね。
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それで引数の説明についてなんだけど･･････<br>
+今回の講座では３番目、４番目、５番目の引数についてだけ<br>
+説明することにするわ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+じゃあ１，２，６番目の引数は説明しないんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+基本的な弾を撃つ場合は第１，２，６引数って大体同じなのよ。<br>
+だから第１引数は『GetX』と書く。<br>
+第２引数には『GetY』と書く。<br>
+第６引数には『0』と書く。<br>
+今は意味とか深く考えずに決まった書き方をするだけでいいわ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+初心者が混乱しないようにあまり重要でない情報は<br>
+カットしちゃおうってコトですね。<br>
+じゃあ３番目の引数は･･････？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+３番目の引数は弾速の設定だ。<br>
+<font color="black">CreateShot01(GetX, GetY, <font color="red">2</font>, 90, RED01, 0)</font><br>
+呼んで字の如く、発射する弾のスピードを設定するんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+今回の例だと２になっていますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+数字が大きいほど速い弾になり、小さい数値だと遅い弾になる。<br>
+大体２～３くらいが一般的な弾幕シューティングの弾の速さかな。<br>
+１だと流石に遅く感じるし、４～５くらいになると結構速い弾になるな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+弾速はゲームの難易度に直結しますから、慎重に設定しないといけないですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだな。<br>
+それじゃ次、４番目の引数だ。<br>
+<font color="black">CreateShot01(GetX, GetY, 2, <font color="red">90</font>, RED01, 0)</font><br>
+４番目の引数では弾を発射する角度を設定するんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+じゃあ今回の例だと９０になっていますから、９０°の方向に撃つってことですね！<br>
+でも、あれ？<br>
+９０°ってどこから数え始めて９０°なんだろ？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+いい所に気が付いたね橙。<br>
+東方弾幕風では<b>右方向を０°とし、時計回り方向に数を刻んでいくんだ。</b><br>
+このことは重要だからよ～く憶えておくようにね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+分かりました、憶えておきます！<br>
+えっと、右方向が０°でそこから時計回りだから･･････<br>
+９０°にすると真下に弾を撃つってことですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通り。<br>
+今回の例だと真下に弾を撃つわ。<br>
+ちなみに１８０°だと左、２７０°だと真上、３６０°だと１周回って右方向になるわね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+弾の角度も重要な設定になりそうですね。<br>
+それじゃ５番目の引数は？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+５番目の引数は弾のグラフィックの設定だ。<br>
+<font color="black">CreateShot01(GetX, GetY, 2, 90, <font color="red">RED01</font>, 0)</font><br>
+ここに入力する文字によって、出される弾の見た目が変わるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+好きな色や形に設定できるってことですね。<br>
+どんな色や形にできるんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+弾の色はRED、GREEN、BLUE、YELLOW、PURPLE、AQUA、ORANGE、WHITEの８種類ある。<br>
+弾の形状は01, 02, 03, 04, 05, 11, 12, 21, 22, 23, 31, 32の１２種類だ。<br>
+それぞれどんな形状なのか知りたかったら東方弾幕風に付属されている<br>
+ヘルプの『弾の画像について』を参照してくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+自分で用意した画像を弾の画像として使うこともできるみたいです！<br>
+凄いですね！！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあ弾画像の追加は難しいから、ここでは語らないけれどね。<br>
+これで６つの引数のうち、重要なもの３つの説明はこれで終わり。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+　３番目の引数：　弾のスピード<br>
+　４番目の引数：　弾の発射角度<br>
+　５番目の引数：　弾のグラフィック<br>
+の３つですね！！<br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+もっと言えば、弾の見た目は弾幕の構成要素としてそこまで重要ではないから、<br>
+弾速と発射角度の２つだけと見てもいいわね。<br>
+じゃあ実際にこのスクリプトを起動してみようか。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+東方弾幕風を起動した後、メニュー画面の『Directory』を『Zキー』で選択して、<br>
+『[DIR.] 東方弾幕風教材用スクリプト』を選んだ後、『０１：単発弾』と書かれた<br>
+スクリプトを選択するんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+自機の選択は適当にね。<br>
+ここではボスが出す弾幕の仕組みについて学ぶワケだから。<br>
+で、実際に動かしてみると･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen06.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+宵闇妖怪が赤弾を真下に撃ってきましたよ！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その真下に撃ってきた弾が、今回CreateShot01で設定した弾なんだ。<br>
+ちゃんと引数で指定した通りに弾を撃っていることを確認するんだ。<br>
+そうそう、今回の講座で使用するボスの画像は東方弾幕風に付属されている<br>
+Exルーミアのサンプルスクリプトで用いられた画像を使用させていただいている。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+この１発の弾が弾幕作りの第一歩になるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+では今回の講座のまとめだ。<br>
+　１．基本的な弾の出し方はCreateShot01関数を用いる。<br>
+　２．CreateShot01関数を動かすためには、６つの引数を正しく指定しなければならない。<br>
+　３．６つの引数で特に重要なのが、３番目 (弾速) と４番目 (発射角度) である。<br>
+万の弾で構成される弾幕も１発の弾から。<br>
+先は長いがしっかりと学んでいくんだぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+はいっ、頑張ります！！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ではここから宿題だ。<br>
+実際にテキストエディタにある『study001.txt』を自分で書き換えてみよう。<br>
+まずはCreateShot01関数の引数を自分で好きな数値に設定してみるんだ。<br>
+最初は弾速と発射角度をいじってみるのが良いだろう。<br>
+ただし書き換えるときは<b>必ず半角で入力すること。</b>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+書き換えた後はちゃんとファイルを上書き保存しないと反映されないんですよね。<br>
+それから弾幕風をプレイしているときに『BackSpaceキー』を押すと<br>
+即座に最初からやり直せるんです。<br>
+ファイルを書き換えた後、BackSpaceを使うと書き換え後の変化がすぐチェックできるんです！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+興味があるなら弾のグラフィックもいじってみて構わない。<br>
+ただし弾グラフィックの指定には十分注意するんだ。<br>
+全部大文字でなくてはいけないし、スペルミスにも気をつけなくちゃいけない。<br>
+それから01, 02, 03, 04, 05, 11, 12, 21, 22, 23, 31, 32以外の<br>
+数字を指定してもダメだぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen05.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+自分で書き換えた後に実際のスクリプトがちゃんと思うとおりに<br>
+弾を撃っていることを確認しないとこの宿題の意味がありませんよ！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さらにもう一つ宿題。<br>
+一度CreateShot01関数が書かれている行を全て消し、一から自分で入力してみるんだ。<br>
+引数等は今回の例と同じ内容で構わない。<br>
+だからといってコピーペーストするのはダメだぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+最終的には自分で関数をタイピングしなくちゃいけないですもんね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+もしスクリプトが実行できなくてエラーがでたら自分で書いた関数をよく見るんだ。<br>
+全て半角で入力しているか？<br>
+全角空白が混じっていないか？<br>
+関数のスペルは間違っていないか？<br>
+大文字と小文字はしっかりできているか？<br>
+引数の数はちゃんと６つになっているか？<br>
+引数の区切りはちゃんとコンマ (,) で区切られているか？<br>
+()でちゃんと閉じられているか？<br>
+最後のセミコロン (;) を忘れていないか？<br>
+今回の例と比較してどこに間違いがあるか見つけ出すんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+最後のセミコロンを忘れるっていうのは初心者にありがちなミスですね。<br>
+実は今回の例だとセミコロンが無くても問題無く動いちゃうんですけど。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+プログラミングに慣れないうちは色々と抜けがあったりしてエラーが出たりするの。<br>
+そしてどこが間違えているか自分で気づきにくいのよね。<br>
+だから間違いに気づけなくてイライラする。<br>
+それが重なって挫折してしまったりするの。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+一発の弾すら満足に出せないのかって劣等感を感じたりしますよね。<br>
+でもここで挫折したりしちゃダメですよ！<br>
+だいたいみんな同じミスをして成長しているんですから！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+だからここでの講座はシンプルな弾幕のサンプルスクリプトを用意して、<br>
+少しでも理解しやすくなるようにしている。<br>
+ちょっとでも弾幕作成における理解の助けになれば幸いだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それじゃ次の講座でお会いしましょう！
+</p></td>
+</tr>
+
+</table>
+
+</body>
+</html>

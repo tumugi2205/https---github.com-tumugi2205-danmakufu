@@ -1,0 +1,18 @@
+#東方弾幕風[Plural]
+#Title[サンライトディステニー]
+#Text[血塗られた過去に
+君はいったい何を眼にするだろう]
+#ScriptVersion[2]
+#BGM[bgm\bgm.wav\イマジンブレイク.mp3]
+
+
+#ScriptPathData
+   #ScriptPath[.\通常1.txt]
+   #ScriptPath[.\桜舞い散る流星群.txt]
+   #ScriptPath[.\通常2.txt]
+   #ScriptPath[.\惑星「グランドネビュラ」.txt]
+   #ScriptPath[.\通常3.txt]
+   #ScriptPath[.\アブソリュートストーカー.txt]
+   #ScriptPath[.\通常4.txt]
+   #ScriptPath[.\真理「外宇宙航行」.txt]
+#EndScriptPathData

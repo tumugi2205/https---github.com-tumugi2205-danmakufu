@@ -1,0 +1,40 @@
+#“Œ•û’e–‹•—
+#Title[‚Ğ‚È‚È‚¢—ûK]
+#Text[]
+#PlayLevel[’e–‹•—‹³Ş—p]
+#Image[.\img\study001.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+let Boss = "script\img\ExRumia.png";
+let ang = GetAngleToPlayer;
+
+	@Initialize {
+
+
+    SetX(GetCenterX);
+    SetY(GetClipMinY + 120);
+		SetLife(3000);
+
+		LoadGraphic(Boss);
+		SetTexture(Boss);
+		SetGraphicRect(1, 1, 64, 64);
+		CreateLaser01(GetX, GetY, 2, ang, 1000,1300,RED22, 50);
+
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+
+
+	}
+	@DrawLoop {
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(Boss);
+	}
+}

@@ -1,0 +1,141 @@
+#“Œ•û’e–‹•—
+#Title[’Ç‚¢‰z‚µ5way]
+#Text[]
+#PlayLevel[’e–‹•—‹³Þ—p]
+#Image[.\img\study008.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+		mainTask2;
+		mainTask3;
+		mainTask4;/*
+		mainTask5;*/
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		loop(60) {yield;}
+
+		loop {
+			let speed = 0.1+rand(0.5,0.9);
+			loop(13) {
+             CreateShotA("S1",GetClipMaxX-20, GetClipMinY,10);
+          SetShotDataA("S1",0,speed,90,0,0,5,AQUA01);
+          SetShotDataA("S1",60,0,90,0,0,0,AQUA01);
+          SetShotDataA("S1",80,2,180,0,0,0,AQUA01);
+SetShotDirectionType(PLAYER);
+          SetShotDataA("S1",110,2,0,0,0,0,AQUA01);
+SetShotDirectionType(ABSOLUTE);
+          FireShot("S1");
+				speed += 0.5;
+			}
+			loop(60) {yield;}
+		}
+        }
+	task mainTask2 {
+		loop(60) {yield;}
+
+		loop {
+			let speed = 0.1+rand(0.5,0.9);
+			loop(13) {
+             CreateShotA("S2",GetClipMinX+20, GetClipMinY,10);
+          SetShotDataA("S2",0,speed,90,0,0,5,AQUA01);
+          SetShotDataA("S2",60,0,90,0,0,0,AQUA01);
+          SetShotDataA("S2",80,2,0,0,0,0,AQUA01);
+SetShotDirectionType(PLAYER);
+          SetShotDataA("S2",110,2,0,0,0,0,AQUA01);
+SetShotDirectionType(ABSOLUTE);
+          FireShot("S2");
+				speed += 0.5;
+			}
+			loop(60) {yield;}
+		}
+	}
+	task mainTask3 {
+		loop(60) {yield;}
+
+		loop {
+			let speed = 0.1+rand(0.5,0.9);
+			loop(13) {
+             CreateShotA("S3",GetClipMaxX-20, GetClipMinY,10);
+          SetShotDataA("S3",0,speed,180,0,0,5,AQUA01);
+          SetShotDataA("S3",60,0,90,0,0,0,AQUA01);
+          SetShotDataA("S3",80,2,90,0,0,0,AQUA01);
+SetShotDirectionType(PLAYER);
+          SetShotDataA("S3",110,2,0,0,0,0,AQUA01);
+SetShotDirectionType(ABSOLUTE);
+          FireShot("S3");
+				speed += 0.5;
+			}
+			loop(60) {yield;}
+		}
+	}
+	task mainTask4 {
+		loop(60) {yield;}
+
+		loop {
+			let speed = 0.1+rand(0.5,0.9);
+			loop(13) {
+             CreateShotA("S1",GetClipMinX+20, GetClipMaxY,10);
+          SetShotDataA("S1",0,speed,0,0,0,5,AQUA01);
+          SetShotDataA("S1",60,0,90,0,0,0,AQUA01);
+          SetShotDataA("S1",80,2,-90,0,0,0,AQUA01);
+SetShotDirectionType(PLAYER);
+          SetShotDataA("S1",110,2,0,0,0,0,AQUA01);
+SetShotDirectionType(ABSOLUTE);
+          FireShot("S1");
+				speed += 0.5;
+			}
+			loop(60) {yield;}
+		}
+	}
+	task mainTask5 {
+		loop(60) {yield;}
+
+		loop {
+			let angle = 90-40 ;
+			loop(9999) {
+                    CreateShot01(GetX, GetY, rand(0.5,2), angle, RED01, 0);
+					angle += 11;
+				loop(1) {yield;}
+			}
+			loop(60) {yield;}
+		}
+}
+
+}

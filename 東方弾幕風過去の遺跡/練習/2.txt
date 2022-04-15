@@ -1,0 +1,114 @@
+#“Œ•û’e–‹•—
+#Title[’Ç‚¢‰z‚µ5way]
+#Text[]
+#PlayLevel[’e–‹•—‹³Þ—p]
+#Image[.\img\study008.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+		mainTask2;
+		mainTask3;
+		mainTask4;
+		mainTask5;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		loop(60) {yield;}
+
+		loop {
+			let speed = 1;
+			loop(6) {
+				CreateShot01(GetX, GetY, speed, GetAngleToPlayer+30, RED01, 0);
+				speed += 0.5;
+			}
+			loop(60) {yield;}
+		}
+        }
+	task mainTask2 {
+		loop(60) {yield;}
+
+		loop {
+			let speed = 1;
+			loop(6) {
+				CreateShot01(GetX, GetY, speed, GetAngleToPlayer-30, RED01, 0);
+				speed += 0.5;
+			}
+			loop(60) {yield;}
+		}
+	}
+	task mainTask3 {
+		loop(60) {yield;}
+
+		loop {
+			loop(60) {
+             CreateShotA("S1",GetX, GetY,10);
+          SetShotDataA("S1",0,rand(0.5,2),rand(0,360),0,0.01,5,AQUA01);
+          FireShot("S1");
+			}
+			loop(60) {yield;}
+		}
+	}
+	task mainTask4 {
+		loop(60) {yield;}
+
+		loop {
+			let speed = 5;
+			loop(1) {
+SetShotDirectionType(PLAYER);
+				CreateShot01(GetX-120, GetY, speed, 0, AQUA32, 10);
+			}
+SetShotDirectionType(ABSOLUTE);
+			loop(10) {yield;}
+		}
+	}
+	task mainTask5 {
+		loop(60) {yield;}
+
+		loop {
+			let speed = 5;
+			loop(1) {
+SetShotDirectionType(PLAYER);
+				CreateShot01(GetX+120, GetY, speed, 0, AQUA32, 10);
+			}
+SetShotDirectionType(ABSOLUTE);
+			loop(10) {yield;}
+		}
+	}
+
+}

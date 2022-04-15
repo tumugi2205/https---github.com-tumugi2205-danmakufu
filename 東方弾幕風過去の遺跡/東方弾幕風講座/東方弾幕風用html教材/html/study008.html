@@ -1,0 +1,188 @@
+<html>
+<head>
+<title>連弾 (一斉発射)</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第００８回　連弾 (一斉発射)<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+連弾の講座その３、今回は一斉発射型の連弾だ。<br>
+今までは弾と弾の間に待ち時間を作っていたが、今回は文字通り一斉に発射する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+全く同じタイミングで弾を撃ってちゃんと線のような形になるんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+発想の転換、というほど大袈裟ではないが、アプローチ法が違うな。<br>
+まずはスクリプトの中身から見てみよう。<br>
+『study008.txt』だ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {<font color="red">
+      let speed = 1;</font>
+      loop(6) {
+	CreateShot01(GetX, GetY, <font color="red">speed</font>, GetAngleToPlayer, RED01, 0);<font color="red">
+	speed += 0.5;</font>
+      }
+      loop(60) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+スクリプトを見ればわかるように、今回loop(6) { } の中にはyieldがない。<br>
+ついでに全ての弾がGetAngleToPlayerで撃たれている。<br>
+が、その代わり･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+変数speedというのを宣言して使っていますね。<br>
+ってことは弾の弾速をそれぞれ変えるってことですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうこと。<br>
+弾を撃つたびにspeed += 0.5の処理が毎回加わるワケだ。<br>
+これにより一斉に撃たれる弾の弾速はそれぞれ、<br>
+１、　１．５、　２、　２．５、　３、　３．５<br>
+となるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+だから一斉に発射しても弾幕が線の形になるんですね！<br>
+実際に『連弾 (一斉発射)』のスクリプトを動かしても<br>
+ちゃんと線になるのがわかります～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+話が変わるけれど、この一斉発射型の連弾は敵に回すと非常に厄介よ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+どうしてですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まず先頭の弾が速いわ。<br>
+それだけで不注意によるミスの確率が高いの。<br>
+それに驚いてつい無駄に大きく動いて避けがちだから、その動きによるミスも誘えるわ。<br>
+さらに後ろの弾が遅いから、長く画面に残ることになるの。<br>
+この遅い弾がプレイヤーの足を鈍らせる効果もあるの。<br>
+とまぁプレイヤー側からすれば色々と厄介な弾幕ね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なるほど～<br>
+でも、その分他の連弾と違って弾と弾の間が広がるから、<br>
+潜って避ける選択肢があるのでは？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+確かにそうだけど、弾の間隔が広くなるためには待たなくてはならないわ。<br>
+他の弾幕が混ざってそれを簡単に許してくれない場合もあるから。<br>
+それに弾の間隔がかなり広がらない限り、プレイヤーの心情的に<br>
+潜りに行きたくないでしょうね。<br>
+だから連弾の一番の目的である、『プレイヤーの移動方向を長い間制限する』という<br>
+使命を果たすことができるワケ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+一斉発射型連弾の強さが良くわかりました！<br>
+じゃあとにかく強い弾幕を作りたいなら一斉発射を作ればいいんですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+流石に同じような弾幕ばかりだとプレイヤーも飽きるでしょう？<br>
+それに難しい弾幕ばかりでもプレイヤーがうんざりするわ。<br>
+弾幕のバランス調整は他に幾らでもやりようがあるから。<br>
+１つ良い弾幕が作れたからといって、そればかりに固執すると<br>
+新しい弾幕が作れなくなるわよ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen01.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+弾幕作りって難しいんですね･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+次回の講座では最後の連弾について学ぶわ。<br>
+それではまたね。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

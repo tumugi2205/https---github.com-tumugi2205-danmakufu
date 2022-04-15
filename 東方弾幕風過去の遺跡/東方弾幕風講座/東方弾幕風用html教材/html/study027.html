@@ -1,0 +1,287 @@
+<html>
+<head>
+<title>オブジェクト弾 (AddShotではない弾吐き弾)</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０２７回　オブジェクト弾 (AddShotではない弾吐き弾)<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回の講座ではオブジェクト弾を用いた弾吐き弾を作る。<br>
+これまではCreateShotAに対してAddShotを使うことで弾吐き弾を作ったが、<br>
+前回学んだオブジェクト弾に書き足して弾吐き弾を作る。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+『study020』のときにAddShotよりオブジェクト弾の方が<br>
+弾吐き弾を作りやすいかもしれないって話でしたよね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあどちらの方がやりやすいかは今回の講座を終えた後に各自判断してほしい。<br>
+では今回のスクリプトを見てみよう。<br>
+『study027.txt』を開こう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    let angle = rand_int(0, 1)*180;
+    loop {
+      objectBullet<font color="red">(angle)</font>;
+      angle = (angle+180) % 360;
+      loop(60) {yield;}
+    }
+  }
+
+  task objectBullet <font color="red">(let angle)</font> {
+    let obj = Obj_Create(OBJ_SHOT);
+    Obj_SetX(obj, GetX);
+    Obj_SetY(obj, GetY);
+    Obj_SetSpeed(obj, 6);
+    Obj_SetAngle(obj, angle);
+    ObjShot_SetGraphic(obj, RED02);
+    ObjShot_SetDelay(obj, 0);
+<font color="red">
+    let speed = 3;
+    while(!Obj_BeDeleted(obj)) {
+      CreateShot01(Obj_GetX(obj), Obj_GetY(obj), speed, 90, RED11, 0);</font>
+      speed += 0.2;
+      yield;<font color="red">
+    }</font>
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まずはmainTask、こちらはサクッと説明しよう。<br>
+変数angleにはrand_intを使って０か１８０の値を入れているな。<br>
+そして次にobjectBulletタスクを呼び出している。<br>
+このときに引数としてangleを使っているな。<br>
+今回の例のように『study024』と同じ要領でタスクにも引数を与えることができる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+下のobjectBulletの中身を見る限り、与えた引数を受ける変数の書き方も<br>
+同じみたいですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+objectBulletのタスクを呼び出した後はangleに＋１８０して６０フレーム待つ。<br>
+後はこれをひたすら繰り返すだけだな。<br>
+angleの数値は剰余を使っているから３６０以上の数値にはならない。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そしてobjectBulletの中身は･･････<br>
+最初の７行で目立って変わった部分はObj_SetAngleの中にangleを<br>
+使っていることくらいですかね。<br>
+angleの中身は０か１８０ですから、このオブジェクト弾は右か左に<br>
+弾が発射されることになりますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そして変数speedの次にあるwhile文の条件が今回の一番のポイントといえる。<br>
+条件は、(!Obj_BeDeleted(obj)) となっているな。<br>
+この新しく出たObj_BeDeleted関数は、オブジェクトが削除されているか<br>
+それともまだ存在しているかどうかを調べる関数なんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+あれ？<br>
+でもこの条件文って > とか == みたいな比較式がありませんけど。<br>
+どういう理屈で条件を満たすのかよくわかりません･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それに答えるにはObj_BeDeletedの返り値について説明する必要があるな。<br>
+Obj_BeDeletedを実行すると、boolean型の値が返ってくる。<br>
+booleanというと何やら難しそうな印象を受けるかもしれないが、<br>
+要するに０か１のどちらかしか表現できない型のことだ。<br>
+Obj_BeDeleted関数はオブジェクトが削除されているかどうかを調べる関数だから、<br>
+引数で指定したオブジェクト･･････つまりオブジェクト弾が既に削除されている<br>
+ならば１が返り、まだ存在しているなら０が返ってくる。<br>
+そしてwhileの条件文が最終的に１になれば条件を満たしていることになり、<br>
+０だったら条件を満たしていないことになるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なるほど～<br>
+でもそれじゃあオブジェクト弾がまだ存在していたら０が返るんですよね？<br>
+それだとwhileループの条件を満たさなくなって、すぐにタスクの処理が<br>
+終わってしまうのではないんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+確かにそれだけではその通り。<br>
+そこで ! の出番だ。<br>
+この ! はbooleanの値を反転させる処理を行う。<br>
+つまり０を１に、１を０に変えるということだな。<br>
+以上を踏まえると、今回のwhileループの条件は『オブジェクト弾がまだ<br>
+存在しているならば』ループの中身を実行するということだ。<br>
+弾が画面端まで行って自然消滅したり、自機のボムによって消されたりしたら<br>
+whileループを抜けてタスクを終了するという流れになるワケだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+よくできているんですね～<br>
+でもこれまでmainTaskの中で使っていたloop { }じゃダメなんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran05.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+<b>それはダメだ。</b><br>
+それだとオブジェクト弾が消えても<b>タスクが何時まで経っても終了しない。</b><br>
+mainTaskの方で第２、第３のobjectBulletのタスクを呼び出していくから、<br>
+<b>終わらないタスクがどんどん増えていくことになる。</b><br>
+これは際限無く増えていくから起動しているタスクの数が何百、何千と<br>
+増える場合もありうる。<br>
+それはつまりパソコンの負担を大きくし、やがて処理落ちを招く。<br>
+そういった事態はプログラマとしては避けたい。<br>
+だから役目を終えたタスクは終了させるようにスクリプトを書こう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そういうことにも気を配らなくてはいけないんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+オブジェクト弾専用タスクを作るときには<b>loop { }の代わりに<br>
+while(!Obj_BeDeleted(変数)) { }</b>を使うと憶えておこう。<br>
+ループの中にyieldを挟むことを忘れずにな。<br>
+もちろんこのような書き方が必ず正解ではないから、<br>
+自分の目的通りの処理ができるように適宜変更していこう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+whileループの中身はCreateShot01とyieldだけですから単純ですね。<br>
+う～ん、でもCreateShot01の中身にまた新しい関数がありますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+新しい関数はCreateShot01の第１第２引数、<br>
+つまり弾が出る座標を指定する場所にあるな？<br>
+今回はオブジェクト弾に弾を吐かせるのだから、<br>
+オブジェクト弾が存在する座標から弾を出さなくてはいけない。<br>
+そこでObj_GetXとObj_GetYの出番だ。<br>
+意味は大体わかるだろうが、この２つの関数はオブジェクトが存在している<br>
+X, Y座標の位置を取得する関数なんだ。<br>
+これでオブジェクト弾がある位置から弾を出すことができる。<br>
+この２つの関数と前に出たObj_BeDeletedは<b>引数指定を忘れがちだから注意しよう。</b>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+オブジェクト弾で弾吐き弾を作るときはObj_GetXとObj_GetYは必須みたいですね。<br>
+これで今回のスクリプトの説明は終わりですね。<br>
+実際にスクリプトを動かしてみると･･････<br>
+左右に撃たれたオブジェクト弾が、凄い勢いで真下に針弾を撃つ弾幕になりました！<br>
+変数も使ってますから追い越し連弾のようにしなるような弾になってますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+これでAddShotを使わない弾吐き弾を作ることができたな。<br>
+AddShotのときとは違って、<b>CreateShot01などいつもの弾幕作りと同じ感覚で<br>
+弾を撃たせることができる</b>のがオブジェクト弾の良い所の１つだ。<br>
+今回のspeedのように変数も使えるし、またmainTaskとは別の場所で<br>
+新しく変数を使えるという自由度もある。<br>
+CreateShotAを使うと引数の数が多いSetShotDataAを書かなくてはいけないし、<br>
+オブジェクト弾ほど多彩な特殊弾を作りにくい。<br>
+だったらいつも通りの書き方ができて、かつより複雑な挙動ができる<br>
+オブジェクト弾を使う方がやりやすいと思うんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+最初に書かなくちゃいけないオブジェクト弾の初期設定も、<br>
+コピペすれば済む話ですものね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ということで、弾吐き弾をはじめ特殊な弾を作りたかったら<br>
+CreateShotAとオブジェクト弾のどちらを使うのかは、<br>
+自分のやりやすい方で作ってみてね。<br>
+次回ではCreateShotAでは表現できない特殊な弾を作ってみるわ。<br>
+それじゃ、またね。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

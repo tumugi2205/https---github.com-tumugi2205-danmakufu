@@ -1,0 +1,374 @@
+<html>
+<head>
+<title>自機狙い弾を絶えず撃つ</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第００３回　自機狙い弾を絶えず撃つ<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さて、今までの講座ではボスが１発しか弾を撃たないスクリプトだったが、<br>
+今回からは連続してどんどん弾を撃つようにしてみるぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+これでシューティングゲームっぽくなってきますね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それじゃまずはスクリプトの中身から見てみようか。<br>
+『study003.txt』を探して開いてみてくれ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+<font color="red">
+    loop {</font>
+      CreateShot01(GetX, GetY, 2, GetAngleToPlayer, RED01, 0);<font color="red">
+      loop(60) {yield;}
+    }</font>
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+CreateShot01の前後に新たな記述がありますね。<br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まずはCreateShot01の下にある<br>
+<font color="black">loop(60) {yield;}</font><br>
+から説明していこう。<br>
+loopとは、同じ処理を複数回繰り返したいときに使う。<br>
+loop(60)とあるから６０回同じ処理を繰り返すというわけだ。<br>
+繰り返される対象は { } で閉じられている処理になる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+じゃあ今回の場合は yield を６０回繰り返すって意味になるんですね。<br>
+ところで、この『いーるど』ってなんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+あ～･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+藍さま？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+あぁ、つまり yield というのは即ち wait という意味であると思っていい。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+うぇいと？<br>
+待つってことですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう。<br>
+本来の yield という単語の意味は『譲る』、『明け渡す』といった意味だけど、<br>
+最初のうちは wait という意味で捉えたほうがわかりやすいでしょう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そうなんですか～わかりました！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+あぁそうだ。<br>
+これを見ている貴方が既に弾幕作成に慣れているのに興味本位で見に来ているなら<br>
+言っておくことがあったんだ。<br>
+もしそうならCtrl＋Aで全体反転させて以下の文を読んでくれ。<br>
+全くの弾幕作成初心者であるならスルーしてくれていい。<br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"></td>
+<td><p class="ran"><font color="#ccccff", size="2">
+第００１回のスクリプトを見てもわかるように、マイクロスレッド即ちタスクを使っている。<br>
+これには２つの意味合いがある。<br>
+まず１つは今回のようにloop(60) {yield;}のような形で処理の待機ができること。<br>
+マイクロスレッドを使わない形だと、変数countを用意したりして、<br>
+if(count == xx) {処理} といった形で弾を撃たせるのが主流になる。<br>
+この方法だとプログラムの処理の流れが初心者にとっては掴みにくいと思う。<br>
+また変数の概念やif文の意味も同時に理解しなくてはならない。<br>
+個人的にそれがプログラミング初心者には酷だと思う。<br>
+そういう意味では今回のような形式の方がわかりやすいと思うんだ。<br>
+最終的にマイクロスレッドを多用するようになると、count管理よりyield待機の方が<br>
+上級者も好んで使うだろうと信じて、最初の頃から慣れさせることにした。<br>
+２つめの意味はマイクロスレッドに対する抵抗を無くしてもらうためだ。<br>
+マイクロスレッドは複数の処理を平行してできるというメリットが絶大なため、<br>
+ほぼ誰もが使うことになるだろう。<br>
+もしマイクロスレッドを使わずに弾幕の勉強を続け、いざマイクロスレッドの勉強を<br>
+しようとしてもyieldなどの新しい概念を敬遠するかもしれない。<br>
+だったらいっそ最初からマイクロスレッドを知らず知らずのうちに使っていた方が<br>
+後々のためになるのではないかと思ったんだ。<br>
+中には色々言いたい方もいるだろうが、ここの講座ではこういう方針で行かせてもらう。
+</font>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+つまり、loop(60) {yield;}というのは６０回待つってことですね！<br>
+･･････あれ？<br>
+６０回待つってどういう意味なんだろう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+正しくは『６０フレーム待つ』という意味なのよ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+フレームってなんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+フレームとは、ゲームでよく使われる時間の単位と思ってくれていい。<br>
+１フレームは１／６０秒という非常に短い時間のことを指す。<br>
+つまり６０フレームで１秒になるということだな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+じゃあloop(60) {yield;}は１秒待つって意味になるんですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうこと。<br>
+じゃあ次はCreateShot01の外にあるloop { } の説明になるけれど･･････<br>
+これも以前のloopの説明と同じ要領で考えて大丈夫よ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ということは、loop { } のかっこの中身を繰り返すってことだから･･････<br>
+CreateShot01とloop(60) {yield;}を繰り返すってことになるんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通り。<br>
+要するに『弾を撃つ』→『１秒待つ』→『弾を撃つ』→『１秒待つ』→･･････<br>
+というサイクルを繰り返すことになるんだ。<br>
+では実際にスクリプトを動かしてみよう。<br>
+弾幕風で『０３：自機狙い弾を絶えず撃つ』を選んで実行してみよう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen06.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ボスが１秒間隔で弾を撃ってきましたよ！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ちゃんとスクリプト通りに弾を撃っていることを確認できたね。<br>
+これでようやくシューティングらしい攻撃になってきたかな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そういえばloop { } って、ループ回数が書いてないですね。<br>
+この場合は何回ループしたら終わるんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+この場合、いくらループしても終わることがない。<br>
+つまり無限ループというやつだな。<br>
+だから今回のスクリプトだとボスは死ぬまで弾を撃ち続けるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen06.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+無限ループって怖くね？<br>
+ってやつですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+どこでそんな言葉を覚えてきたのかはこの際置いておくとして、<br>
+ことプログラミングの世界では無限ループは本当に怖いぞ。<br>
+今回のスクリプトの場合でloop(60) {yield;}を取り除くと危険なことが起きる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+どんなことが起きるんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+loop { } の中の yield が消えることで、無限ループ間の『待ち』が無くなる。<br>
+つまりスクリプトは１フレームという一瞬の間に無限回弾を撃とうとする。<br>
+こうなると弾幕風がフリーズし、一切の操作を受け付けなくなる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen01.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そ、それは怖いです～！？<br>
+もしそうなっちゃったらどうすればいいんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+弾幕風ウィンドウ右上の閉じるをクリックしたり、Ctrl+Alt+DeleteかCtrl+Shift+Escで<br>
+タスクマネージャーを使って弾幕風を終了させるなどするしかないな。<br>
+どちらにせよ無限ループのせいでパソコンに極端な負担がかかっているから<br>
+すぐには終了してくれない。<br>
+そのうち『このプログラムは応答していません』とか出るから、<br>
+今すぐ終了を選べばいい。<br>
+･･････まあそこから本当に終了するまでさらに時間がかかったりするがな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+できるなら起こしたくない現象ですよね。<br>
+なんとか起こさないコツとかあるんでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだな。<br>
+自分でスクリプトを作っているとき、もしloop { } を作る箇所があったら<br>
+まず真っ先にループ処理の中に yield を挟むといい。<br>
+それを心がければ弾幕風がフリーズする危険性は減る、と思う。<br>
+後は慣れるしかない、ってところかな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+無限ループを扱うときは慎重に、ってことですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+では宿題だ。<br>
+スクリプト中にあるloop(60) {yield;} の６０という数値を変えてみるんだ。<br>
+この数値を変えることで弾を撃つときの待ち時間が変わるわけだ。<br>
+小さい数値を入れると短い間隔で弾を撃ち、逆に大きい数値を入れると間隔が長くなる。<br>
+３とか２とか小さい数値を入れると愉快なことになるが･･････色々試してみてくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+待ち時間の按配によって弾幕の難易度は大きく変わりますね。<br>
+バランス調整するときは気を使わないとですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さらにいじってみたいというのなら、無限ループのところを書き換えてみるといい。<br>
+loop { } となっているところをloop(5) { } とかにしてみるんだ。<br>
+この場合ボスは５回弾を撃ったらもう弾を出さなくなるようになる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ループ処理はプログラミングの基礎にして根幹ですね。<br>
+これからもいっぱい出てくるから頑張らないといけませんね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうね。<br>
+まだまだ基礎中の基礎の話だから。<br>
+この程度でつまづいてもらっては困るわ。<br>
+それでは次の講座でまた会うとしましょう。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

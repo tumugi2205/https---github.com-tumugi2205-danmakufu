@@ -1,0 +1,233 @@
+#東方弾幕風
+#Title[結界の例]
+#Text[]
+#BackGround[User()]
+#ScriptVersion[2]
+
+script_enemy_main{
+
+    //グローバル変数
+    let imgBoss = GetCurrentScriptDirectory() ~ "ExRumia.png";
+    let wIni = 120;
+    let arrayObj = [];
+    
+    ///////////////////////////////////////////////////////////
+
+    @Initialize{
+        LoadGraphic(imgBoss);
+        
+        SetMovePosition02(GetCenterX(), GetCenterY(), wIni);
+        SetLife(4000);
+        SetTimer(60);
+        SetInvincibility(wIni);
+        SetDamageRate(100, 100);
+        
+        TMain();
+    }
+        
+    @MainLoop{
+        SetCollisionA(GetX(), GetY(), 32);
+        SetCollisionB(GetX(), GetY(), 24);
+        yield;
+    }
+    
+    @DrawLoop{
+        SetTexture(imgBoss);
+        SetGraphicRect(1, 1, 64, 64);
+        DrawGraphic(GetX(), GetY());
+    }
+        
+    @Finalize{
+        DeleteGraphic(imgBoss);
+    }
+    
+    //////////////////////////////////////////////////////////
+    
+    task TMain{
+        //初期化
+        yield;
+        loop(wIni){ yield; }
+        
+        //処理
+        CreateBorder();
+        
+        loop(120){ yield; }
+        
+        let count = 0;
+        loop{
+            ascent(let i in 0..4){
+                CreateWarpShot(GetX, GetY, 1.5, -count + i*90 - 22.5, WHITE12, 10);
+            }
+            ascent(let i in 0..8){
+                CreateWarpShot(GetX, GetY, 1.5, count*1.5 + i*45 + 22.5, RED12, 10);
+            }
+            count++;
+            loop(5){ yield; }
+        }
+    }
+    
+    //////////////////////////////////////////////////////////
+
+    //結界の例
+
+	//当たり判定をとるためオブジェクトIDはグローバル変数にする
+	let arrayInBorder = [];
+	let arrayOutBorder = [];
+	let arraySideBorder = [];
+
+	//結界
+	task CreateBorder() {
+		let inBorderSize = 180;
+		let outBorderSize = 300;
+	    
+		ascent(let i in 0..4){
+			CreateBorderLaser(0, GetX(), GetY(),
+					GetX() + inBorderSize*cos(i*90 - 45), 
+					GetY() + inBorderSize*sin(i*90 - 45),
+					GetX() + inBorderSize*cos(i*90 + 45),
+					GetY() + inBorderSize*sin(i*90 + 45), 
+					120, BLUE11, 127);
+			CreateBorderLaser(1, GetX(), GetY(),
+					GetX() + outBorderSize*cos(i*90 - 45), 
+					GetY() + outBorderSize*sin(i*90 - 45), 
+					GetX() + outBorderSize*cos(i*90 + 45), 
+					GetY() + outBorderSize*sin(i*90 + 45),
+					120, WHITE11, 127);
+			CreateBorderLaser(2, GetX(), GetY(), 
+					GetX() + inBorderSize*cos(i*90 - 45),
+					GetY() + inBorderSize*sin(i*90 - 45), 
+					GetX() + outBorderSize*cos(i*90 - 45), 
+					GetY() + outBorderSize*sin(i*90 - 45), 
+					120, RED11, 127);
+		}
+	}
+
+	//結界の一辺
+	//type:結界の種類(0:内側, 1:外側, 2:サイド)
+	//(x,y):発射位置
+	//(x1,y1)-(x2,y2):設置される位置
+	//setTime:設置されるまでの時間
+	task CreateBorderLaser(let type, let x, let y, let x1, let y1
+				 , x2, let y2, let setTime, let graphic, let alpha) {
+
+		let angle = atan2(y2 - y1, x2 - x1);
+		let maxLength = ((x2 - x1)^2 + (y2 - y1)^2)^0.5;
+	    
+		//設置型オブジェクトレーザーの作成
+		let obj = Obj_Create(OBJ_LASER);
+	    
+		//パラメータの設定
+		Obj_SetPosition(obj, x, y);
+		Obj_SetSpeed(obj, 0);
+		Obj_SetAngle(obj, angle);
+		Obj_SetAlpha(obj, alpha);
+		Obj_SetAutoDelete(obj, false);
+		Obj_SetCollisionToPlayer(obj, false);
+		Obj_SetCollisionToObject(obj, true);
+		ObjShot_SetGraphic(obj, graphic);
+		ObjShot_SetDelay(obj, 0);
+		ObjShot_SetBombResist(obj, true);
+		ObjLaser_SetLength(obj, 0);
+		ObjLaser_SetWidth(obj, 10);
+		ObjLaser_SetSource(obj, false);
+	    
+		//オブジェクトIDの登録
+		alternative(type)
+		case(0){
+			arrayInBorder = arrayInBorder ~ [obj];
+		}
+		case(1){
+			arrayOutBorder = arrayOutBorder ~ [obj];
+		}
+		case(2){
+			arraySideBorder = arraySideBorder ~ [obj];
+		}
+		others{
+			//例外処理
+			Obj_Delete(obj);
+			return;
+		}
+	    
+		yield;
+
+		//結界の配置
+		ascent(let t in 1..setTime + 1){
+			Obj_SetPosition(obj, x + (x1 - x)*t/setTime,
+								 y + (y1 - y)*t/setTime);
+			ObjLaser_SetLength(obj, maxLength*t/setTime);
+	        
+			yield;
+		}
+	}
+
+	//結界の影響を受ける弾
+	task CreateWarpShot(let x, let y, let speed, let angle,
+										let graphic, let delay){
+
+		//弾の状態
+		let phase = 0;
+
+		//オブジェクト弾の作成
+		let obj = Obj_Create(OBJ_SHOT);
+	    
+		//パラメータの設定
+		Obj_SetPosition(obj, x, y);
+		Obj_SetSpeed(obj, speed);
+		Obj_SetAngle(obj, angle);
+		Obj_SetAutoDelete(obj, false);
+		ObjShot_SetGraphic(obj, graphic);
+		ObjShot_SetDelay(obj, delay);
+	    
+		loop(delay){ yield; }
+	    
+		while(!Obj_BeDeleted(obj)) {
+	    
+			//状態によって場合分け
+			alternative(phase)
+			case(0){
+				//発射～内側の結界に当たるまで
+				ascent(let i in 0..length(arrayInBorder)){
+	            
+					//内側の結界に当たったら、外側の結界の対応位置にワープ
+					if(Collision_Obj_Obj(obj, arrayInBorder[i])){
+						let ratio = ObjLaser_GetLength(arrayOutBorder[i])
+										/ObjLaser_GetLength(arrayInBorder[i]);
+						let newX = Obj_GetX(arrayOutBorder[i]) + (Obj_GetX(obj) 
+										- Obj_GetX(arrayInBorder[i]))*ratio;
+						let newY = Obj_GetY(arrayOutBorder[i]) + (Obj_GetY(obj) 
+										- Obj_GetY(arrayInBorder[i]))*ratio;
+	                                    
+						Obj_SetPosition(obj, newX, newY);
+						Obj_SetAngle(obj, 180 + Obj_GetAngle(obj));
+	                    
+						phase = 1;
+						break;
+					}
+				}
+			}
+			case(1){
+				//外側の結界～内側またはサイドの結界に当たるまで
+				ascent(let i in 0..length(arrayInBorder)){
+					//内側の結界に当たったら、弾を削除
+					if(Collision_Obj_Obj(obj, arrayInBorder[i])){
+						Obj_Delete(obj);
+						break;
+					}
+				}
+				ascent(let i in 0..length(arraySideBorder)){
+					//サイドの結界に当たったら、弾を削除
+					if(Collision_Obj_Obj(obj, arraySideBorder[i])){
+						Obj_Delete(obj);
+						break;
+					}
+				}
+			}
+			others{
+				//例外処理
+				Obj_Delete(obj);
+				break;
+			}
+			yield;
+		}
+	}
+}

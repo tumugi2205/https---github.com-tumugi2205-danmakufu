@@ -1,0 +1,386 @@
+<html>
+<head>
+<title>カーブ弾</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０１８回　カーブ弾<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回はカーブ弾を作る。<br>
+名前の如く、直線ではなく曲がりながら飛ぶ弾のことだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+カーブができると弾幕のバリエーションがまた広がりますね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+でもカーブ弾はどのように弾が拡がるかイメージしにくいから、<br>
+満足のいく弾幕を作るにはより多くの試行錯誤がいるだろうね。<br>
+まあそういった話は置いておくとして、スクリプトの解説をしましょう。<br>
+今回は『study018.txt』よ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+<font color="red">
+    CreateShotA("curve", GetX, GetY, 0);
+    SetShotDataA("curve", 0, 2, GetAngleToPlayer, 0.8, 0.05, 8, RED01);
+    FireShot("curve");
+</font>
+    loop(180) {yield;}
+    let sign = rand_int(0, 1)*2 - 1;
+    loop {
+      let angle = rand(0, 360);
+      loop(5) {
+        loop(16) {
+          CreateShotA("curve", GetX, GetY, 0);
+          SetShotDataA("curve", 0, 2, angle, 0.8*sign, 0.05, 8, RED01);
+          FireShot("curve");
+          angle += 360/16;
+        }
+        loop(4) {yield;}
+      }
+      sign *= -1;
+      loop(40) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+例によって今回も自習枠がある。<br>
+自分の勉強に使ってくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+見たところ、初めて見る関数が３つ並んでいますね。<br>
+CreateShotAとSetShotDataA、それにFireShotの３つがあります。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まさしくその３つがカーブ弾を撃つために必要な関数だ。<br>
+順を追って説明しよう。<br>
+まずCreateShotAだな。<br>
+これは特殊な弾を撃ちたいときに最初に宣言する必要がある。<br>
+必要な引数は４つだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+引数の中身を見ると、２番目と３番目の引数はGetXとGetYになっていますね。<br>
+ということはこの２つはCreateShot01と同じなのかな？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通り。<br>
+CreateShotAの２番目と３番目の引数は弾の出現位置のX、Y軸を指定する。<br>
+ちなみに４番目の引数は遅延時間の設定だから、CreateShot01の６番目の引数と一緒だ。<br>
+だから今回は０に設定している。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+でも最初の引数が "curve" になっているのがわからないです。<br>
+ダブルクォーテーション 『"』で括られているのも初めて見ますし。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+CreateShotAの最初の引数は、ズバリ『名前』だ。<br>
+これから設定する特殊弾を色々細かい設定したいときに使う名前を自分で付けるんだ。<br>
+どんな名前でも大丈夫だが、変数のようにわかりやすい名前が良いだろう。<br>
+そして『"』は、括った部分を『文字列』として扱うようにできるんだ。<br>
+普通に半角文字にするとそれは変数等として扱われてしまうのだが、<br>
+文字列として扱うと数字と同じように使うことができるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ということは、let angle = "abc" とかできるんですね。<br>
+"curve" の代わりに "カーブ" とか全角文字を使っても大丈夫なんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ええ、どちらでも大丈夫。<br>
+まあ変数に文字列を入れる機会は弾幕風だとそうそうないかな。<br>
+弾幕以外の演出に凝りたいときとか、相当慣れてからでないと使うことは無いでしょう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+これでCreateShotAの引数は解説終了ですね。<br>
+それで、次の関数のSetShotDataA関数は･･････<br>
+１、２･･････うわぁ、引数が８個もあります～！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+確かに多いが、今回は引数の解説を１つ後回しにする。<br>
+そして３つはCreateShot01で使ったものと同じもので、<br>
+さらにもう２つが前回のCreateShot02で新しく登場した引数だ。<br>
+だから新しく学ぶのは実質２つで、あとは８つの引数の順番を<br>
+注意するくらいだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そう考えれば気が楽かもですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+では第１引数、"curve"となっているな？<br>
+最初の引数は設定したい特殊弾の指定になる。<br>
+ここでCreateShotAで使った"curve"という名前をここで使うことによって、<br>
+"curve"と名付けた特殊弾の設定ができるようになるワケだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+２つめの引数は０ってなってますね。<br>
+これはなんなんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それは今回説明を後回しにする引数だ。<br>
+ちなみに、<b>必ず０に設定するように。</b><br>
+では３番目の引数、これは弾速だ。<br>
+CreateShot01の３番目の引数と同じ要領で設定してくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+４番目の引数はGetAngleToPlayerってなっていますね。<br>
+じゃあCreateShot01の４番目の引数と同じ、角度設定ですかね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうことだ。<br>
+５番目の引数、これも今回の肝となるカーブの設定なんだが、<br>
+今回の講座の最後に説明しよう。<br>
+まずは既に学んだことのある引数から説明していく。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+６番目の引数が０．０５で、７番目の引数が８･･････<br>
+コレはもしかしてCreateShot02で出てきた<br>
+加速度と最大速度の設定でしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、CreateShot02と同じだ。<br>
+そして最後の第８引数では弾のグラフィックを設定する。<br>
+これは引数の文字を見れば一目瞭然だな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+これでSetShotDataAの引数が全部わかりましたね！<br>
+じゃあ以下の表にまとめてみましょうか。
+</p></td>
+</tr>
+
+</table>
+
+<table cellspacing="1" cellpadding="10" border="1">
+
+<tr>
+<td>引数の順番</td>
+<td>引数の意味</td>
+</tr>
+<tr>
+<td>１</td>
+<td>設定したい弾の名前 (ID)</td>
+</tr>
+<tr>
+<td>２</td>
+<td>(study019で解説)</td>
+</tr>
+<tr>
+<td>３</td>
+<td>弾速</td>
+</tr>
+<tr>
+<td>４</td>
+<td>発射角度</td>
+</tr>
+<tr>
+<td>５</td>
+<td>カーブの設定 (以下で解説)</td>
+</tr>
+<tr>
+<td>６</td>
+<td>加速量</td>
+</tr>
+<tr>
+<td>７</td>
+<td>速度の限界値</td>
+</tr>
+<tr>
+<td>８</td>
+<td>弾の見た目</td>
+</tr>
+
+</table>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ではカーブ弾作りで重要な第５引数について説明しよう。<br><br>
+第５引数では『角速度』を設定する引数なんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+角速度って聞き慣れない言葉ですけれど、どういう意味なんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+弾幕風の角速度は、１フレームにどれだけ角度が変化していくかを意味している。<br>
+例えば弾の発射角度が９０°で、角速度が１だとしよう。<br>
+この場合は弾が発射されてから１フレーム経つと進行方向が９１°になり、<br>
+２フレーム経つと９２°、３フレーム経つと９３°･･････<br>
+と、このように進行方向右手側にどんどんカーブしていくようになる。<br>
+角速度を大きくするとより急にカーブするようになり、<br>
+逆に小さくすると緩やかにカーブするんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+角速度をマイナスにすると、進行方向左手側にカーブするってことですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうことだな。<br>
+ただ、角速度を設定するときは加速度も設定した方が良い。<br>
+そうしないと弾が常に画面をグルグル回ってしまい、<br>
+いつまでも弾が消えない事態になってしまうからだ。<br>
+加速させたくない場合は、角速度を小さくして画面端で消えやすくしたり、<br>
+一定時間経ったらカーブをやめて直進するようにしたりと工夫が必要だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そういうことにも気を遣わなくちゃいけないんですね。<br>
+というかカーブ弾の講座なのに加速度を設定していたのは<br>
+そのためだったんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そして最後に使う関数がFireShot関数だ。<br>
+ここで名付けた弾の名前を引数として指定することで、弾が発射される。<br>
+これを忘れると弾が出ないから注意しよう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+これでカーブ弾の設定は以上ですね。<br>
+弾１発の発射だけでもだいぶ面倒な設定をしなくちゃいけないのか～<br>
+でもこれで弾幕の表現の幅がグッと広がりましたね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それはそうだけど、さっき言ったカーブ弾が画面端に消えてくれないとか<br>
+思いもよらない弊害が出てきたりすることもあるわ。<br>
+そういった事態をうまく収拾するのもプログラマの役目よ。<br>
+じゃあ残りは自習。<br>
+今回の自習枠はループが多くて少しややこしいかもね。<br>
+変数を宣言している場所や、ループ処理の順番などに注目してみて。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それではまた、次回の講座で！
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

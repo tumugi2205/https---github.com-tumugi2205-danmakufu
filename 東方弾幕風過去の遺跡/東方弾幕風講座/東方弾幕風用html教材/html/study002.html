@@ -1,0 +1,377 @@
+<html>
+<head>
+<title>自機狙い弾</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第００２回　自機狙い弾<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回の講座では自機狙い弾の撃ち方を学ぶ。<br>
+相手を狙って弾を撃つのは基本中の基本だな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+自機狙いってことは、弾を発射する角度が重要になりそうですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通り。<br>
+ではここで問題だ、橙。<br>
+自機がボスの真下に居たときは発射角度をどうすればいいと思う？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+前回と同じで、９０°で撃てばいいと思います！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうね、じゃあボスの右下に自機がいたらどうする？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+え、え～っと･･････<br>
+４５°くらい･･････？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+このように、自機がどこにいるかによって発射すべき角度が違ってくるんだ。<br>
+じゃあCreateShot01関数の４つ目の引数をどうすればいいのか？<br>
+これが今回の講座のカギになる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen01.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+数値をそのまま引数にするんじゃ毎回同じ方向に撃っちゃいますから、<br>
+数字を入れるだけじゃダメみたいですね･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+つまり弾を発射する瞬間に相手の自機の位置を知り、その上で発射角度を計算し、<br>
+計算した数値を引数に与えなくちゃいけないんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なんだかやることが急に高度になってきた気がします～！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+でも安心していいんだ。<br>
+何故なら東方弾幕風には自動的にボスと相手の角度を計算してくれる関数がある！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それはありがたいですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+では今回のスクリプトの中身を見てみよう。<br>
+東方弾幕風のスクリプトの中から『study002.txt』を見つけて開いてくれ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+#東方弾幕風
+#Title[自機狙い弾]
+#Text[]
+#PlayLevel[弾幕風教材用]
+#Image[.\img\study002.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+～　中略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    CreateShot01(GetX, GetY, 2, <font color="red">GetAngleToPlayer</font>, RED01, 0);
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+CreateShot01の４番目の引数にGetAngleToPlayerっていうのがありますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+このGetAngleToPlayerというのが自機への角度を自動的に取得してくれる関数なんだ。<br>
+ちなみこれもGetXのように引数を与えずに機能するタイプの関数だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+関数の中に関数が入っているんですね。<br>
+なんかちょっとヘンな感じがします～<br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあ最初のうちは違和感があるかもしれないね。<br>
+でももっと高度で複雑な弾幕を作るようになってくると当たり前になってくる。<br>
+そのうち慣れるから気にしなくていいわ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+わかりました！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+じゃあ今度は実際にスクリプトを動かしてどうなるのか試してみよう。<br>
+東方弾幕風を起動して、『自機狙い弾』の項目を選ぶんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+自機を動かさないままだと、前回と同じで真下に撃ってきますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+じゃあボスが弾を撃つ前に自機の位置を適当に動かしてみよう。<br>
+そうするとボスはどの方向に弾を出すかな？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+自機が居る位置に撃ってくるようになってます！<br>
+自機を動かしてみると、左下や右下とかにも撃ってきますね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+前回のように引数に数値を入れるやり方だと決まった方向にしか撃てないけれど、<br>
+今回のように関数等を使ったりすると毎回違った角度で弾を撃てたりできるのよ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+関数って使いこなせると便利なんですね。<br>
+面倒な計算もすぐにこなしてくれるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今後も色々な関数が出たりするけれど、ちゃんと憶えていくようにね。<br>
+まあ最初のうちは関数の名前や効果を憶えるのに時間がかかると思うけれど･･････<br>
+頻繁に使うものは自然と憶えていくから、そんな深刻に悩む必要はないわ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+とりあえず今は練習あるのみってカンジですね～<br>
+習うより慣れろ！　ってところでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうこと。<br>
+もし自分で「こうしてみたら面白そうじゃないか？」って思うところがあったら<br>
+どんどん試してみた方がいいよ。<br>
+それでエラーが出ることも多々ある思うけれど、<br>
+そうやって色々試そうとするのはとても良い事なの。<br>
+弾幕風のようにクリエイティブなものだったら尚更ね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+みなさんも失敗を恐れずにチャレンジしてみてくださいね。<br>
+それじゃまた次の講座で会いましょうね！
+</p></td>
+</tr>
+
+</table>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さて、今回自機狙いの弾の作り方を学んだわけだが実は他にも方法がある。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そうなんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ああ、SetShotDirectionTypeという関数を使うんだ。<br>
+実際の使い方としては以下のようになる。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+<font color="red">
+    SetShotDirectionType(PLAYER);</font>
+    CreateShot01(GetX, GetY, 2, 0, RED01, 0);
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+CreateShot01の前にSetShotDirectionTypeを書くんですね。<br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+SetShotDirectionTypeに『PLAYER』という引数を与えることで機能する。<br>
+こうすると今まで右方向だった０°の基準位置が、常に自機への角度となるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+だからCreateShot01の第４引数 (発射角度の設定) が０になっているのに<br>
+自機へ向けて弾を飛ばすことができるんですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+だけど自機狙い弾を作るときにこのやり方をするのは正直お勧めしないわ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それはどうしてですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今後複雑な弾幕、つまりスクリプトを作るとき、今作っている弾幕の発射角度の基準が<br>
+右方向なのか自機方向なのか忘れてしまうことがあったりするからよ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+じゃあSetShotDirectionTypeを使うときは発射角度の基準を常に把握していなくちゃ<br>
+いけなくなるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうこと。<br>
+だから面倒でもなるべくGetAngleToPlayerを使うことを推奨するわ。<br>
+勿論SetShotDirectionTypeを使っても悪くないけれど、混乱しないよう注意してね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+便利な関数でも使い方を一歩間違えると大変なことになるんですね。<br>
+私も気をつけます！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ちなみに一度発射角度の基準を自機への角度にした後、また右方向基準に戻したいなら<br>
+<font color="black">SetShotDirectionType(<font color="red">ABSOLUTE</font>);</font><br>
+とすれば元に戻るぞ。<br>
+他にも引数としてSEQUENCEというのがあるが、ここでは割愛する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それじゃ今度こそ次の講座で会いましょう！
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+#“Œ•û’e–‹•—
+#Title[‚O‚PF‰æ‘œ‚Ì•`‰æ]
+#Text[]
+#PlayLevel[’e–‹•—‹³Ş—p]
+#Image[.\img\study001.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(0, 0, 63, 63);
+
+		mainTask;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		loop(60) {yield;}
+
+		CreateShot01(GetX, GetY, 2, 90, RED01, 0);
+	}
+}

@@ -1,0 +1,164 @@
+#東方弾幕風
+#Title[梢失「ブラット・リメイク」]
+#Text[血塗られた過去は
+変えることはできない。]
+#ScriptVersion[2]
+script_enemy_main {
+       let imgBoss   = "script\img\杏子.png";
+       let frame     = 0;
+       let angleBase = 90;
+
+    @Initialize {
+
+
+       
+       SetX(GetCenterX);
+       SetY(GetClipMinY + 120);
+       SetLife(2000);
+
+       LoadGraphic(imgBoss);
+       SetTexture(imgBoss);
+       SetGraphicRect(0,0,63,63);
+
+        SetDamageRate(50,50);
+        SetScore(4000);
+       CutIn(YOUMU,"梢失「ブラット・リメイク」",0,0,0,0,0);//スペルカード名表示
+
+        TMove; 
+    }
+
+    @MainLoop {
+
+       SetCollisionA(GetX,GetY,24);
+       SetCollisionB(GetX,GetY,24);
+
+       frame++;
+       if(frame == 30) {
+           let angle = angleBase - 10;
+           loop(5) {
+               CreateShot01(GetX+rand(-50,50),GetY+rand(-100,150),2,angle,RED21,0);
+               angle += 75;
+           }
+      }else  if(frame == 60) {
+           let angle = angleBase - 10;
+           loop(5) {
+               CreateShot01(GetX+rand(-50,50),GetY+rand(-100,150),0.5,angle,AQUA21,0);
+               angle += 75;
+           }
+      }else  if(frame == 90) {
+           let angle = angleBase - 10;
+           loop(5) {
+               CreateShot01(GetX+rand(-50,50),GetY+rand(-100,150),2,angle,RED32,0);
+               angle += 75;
+           }
+      }else  if(frame == 120) {
+           let angle = angleBase - 10;
+           loop(5) {
+               CreateShot01(GetX+rand(-50,50),GetY+rand(-100,150),0.5,angle,AQUA01,0);
+               angle += 75;
+           }
+      }else  if(frame == 150) {
+           let angle = angleBase - 10;
+           loop(5) {
+               CreateShot01(GetX+rand(-50,50),GetY+rand(-100,150),2,angle,RED23,0);
+               angle += 75;
+           }
+      }else  if(frame == 180) {
+           let angle = angleBase - 10;
+           loop(5) {
+               CreateShot01(GetX+rand(-50,50),GetY+rand(-100,150),0.5,angle,AQUA02,0);
+               angle += 75;
+           }
+      }else  if(frame == 210) {
+           let angle = angleBase - 10;
+           loop(5) {
+               CreateShot01(GetX+rand(-50,50),GetY+rand(-100,150),2,angle,RED32,0);
+               angle += 75;
+           }
+      }else  if(frame == 240) {
+           let angle = angleBase - 10;
+           loop(5) {
+               CreateShot01(GetX+rand(-50,50),GetY+rand(-100,150),0.5,angle,AQUA03,0);
+               angle += 75;
+           }
+      }else  if(frame == 270) {
+           let angle = angleBase - 10;
+           loop(5) {
+               CreateShot01(GetX+rand(-50,50),GetY+rand(-100,150),2,angle,RED23,0);
+               angle += 75;
+           }
+
+      }else  if(frame == 300) {
+            CreateLaser01(GetX,GetY,10,GetAngleToPlayer,25000000,20,RED02,20);
+
+
+           angleBase += 50;
+           frame = 0;
+       }
+
+        yield;
+    }
+
+    @DrawLoop {
+       DrawGraphic(GetX,GetY);
+    }
+    
+    @Finalize {
+       DeleteGraphic(imgBoss);
+    }
+   
+// キャラを移動させるタスク
+    task TMove {
+        yield;
+
+        loop {
+            loop(120) { yield; }
+            moveToPlayer(rand(40, 80), rand(-40, 40), 60,
+                         GetClipMinX + 32, GetClipMinY + 32,
+                         GetClipMaxX - 32, GetClipMinY + 160);
+        }
+    }
+    // なるべくプレイヤーの方向に移動
+    //   xMove  : x 方向の移動量（正の数）
+    //   yAdd   : y 方向の移動量
+    //   frame  : 移動に要するフレーム数
+    //   left   : 以下、可動範囲
+    //   top    :
+    //   right  :
+    //   bottom :
+    function moveToPlayer(xMove, yAdd, frame, left, top, right, bottom) {
+        let x;
+        let y;
+
+        if(GetPlayerX < GetX) {
+            // プレイヤーより右に敵がいれば、敵は左に動きます。
+            x = GetX - xMove;
+
+            // 但し、敵が可動領域の左端よりも左にいくようなら、右に動きます。
+            if(x < left) {
+                x = GetX + xMove;
+            }
+        } else {
+            // さもなくば、敵は右に動きます。
+            x = GetX + xMove;
+
+            // 但し、敵が可動領域の右端よりも右にいくようなら、左に動きます。
+            if(right < x) {
+                x = GetX - xMove;
+            }
+        }
+
+        // 可動領域の外に行く場合は、端っこで止めます。
+        y = GetY + yAdd;
+        if(y < top) {
+            y = top;
+        } else if(bottom < y) {
+            y = bottom;
+        }
+
+        SetMovePosition02(x, y, frame);
+
+
+    }
+
+}

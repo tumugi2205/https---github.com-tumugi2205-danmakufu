@@ -1,0 +1,281 @@
+<html>
+<head>
+<title>オブジェクト弾 (オブジェクト弾からの自機狙い弾)</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０３１回　オブジェクト弾 (オブジェクト弾からの自機狙い弾)<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回はオブジェクト弾から自機狙いを出す方法を学ぶ。<br>
+基本的なことのようだが、ある重要なやり方を学ぶことになる。<br>
+それを学ぶためわざわざ自機狙いという基本に触れる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+普通のやり方では自機狙い弾を出せないってことですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあそこは実際にスクリプトを見てみることにしよう。<br>
+今回開くスクリプトは『study031.txt』だ。
+</p></td>
+</tr>
+
+</table>
+
+<pre>
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {
+      let sign = rand_int(0, 1)*2 - 1;
+      loop(4) {
+        objectBullet1(GetAngleToPlayer + 60*sign);
+        sign *= -1;
+        loop(60) {yield;}
+      }
+      loop(120) {yield;}
+
+      objectBullet2(GetAngleToPlayer-20);
+      objectBullet2(GetAngleToPlayer+20);
+      loop(600) {yield;}
+    }
+  }
+
+  task objectBullet1 (let angle) {
+    let obj = Obj_Create(OBJ_SHOT);
+    Obj_SetX(obj, GetX);
+    Obj_SetY(obj, GetY);
+    Obj_SetSpeed(obj, 4);
+    Obj_SetAngle(obj, angle);
+    ObjShot_SetGraphic(obj, RED04);
+    ObjShot_SetDelay(obj, 0);
+
+    let count = 0;
+    while(!Obj_BeDeleted(obj)) {
+      if(count%3 == 0) {
+        angle = <font color="red">atan2(GetPlayerY-Obj_GetY(obj), GetPlayerX-Obj_GetX(obj));</font>
+        CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 2+count*0.1, angle, RED11, 0);
+      } else if(count >= 30) {
+        Obj_Delete(obj);
+      }
+      count++;
+      yield;
+    }
+  }
+
+  task objectBullet2 (let angle) {
+    let obj = Obj_Create(OBJ_SHOT);
+    Obj_SetX(obj, GetX);
+    Obj_SetY(obj, GetY);
+    Obj_SetSpeed(obj, 12);
+    Obj_SetAngle(obj, angle);
+    ObjShot_SetGraphic(obj, RED04);
+    ObjShot_SetDelay(obj, 0);
+
+    while(!Obj_BeDeleted(obj)) {
+      angle = <font color="red">atan2(GetPlayerY-Obj_GetY(obj), GetPlayerX-Obj_GetX(obj));</font>
+      CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 1, angle, RED11, 0);
+      yield;
+    }
+  }
+}
+</pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回は基本的な説明については全て省き、<br>
+重要な部分だけ学ぶことにするわ。<br>
+だからそれ以外は自主勉強枠としましょう。<br>
+実際にスクリプトを動かして弾幕を見てから学ぶも良し。<br>
+自信があるならスクリプトを読んで弾幕で答え合わせしても良いわね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+では今回学ぶところって何処なんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+２つのオブジェクト弾専用のタスクに書かれている、<br>
+<font color="black">angle = atan2(GetPlayerY-Obj_GetY(obj), GetPlayerX-Obj_GetX(obj));</font><br>
+この１行だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+変数に値を入れるだけなのに、凄く長い行になっていますね。<br>
+これが自機狙いを撃つ上で重要なポイントなんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう。<br>
+このように書くことでオブジェクト弾から自機狙い弾を撃つことができるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+今まで使ってきたGetAngleToPlayerじゃダメなんでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それがダメなんだ。<br>
+『study020』でも同じように触れたがもう一度復習しよう。<br>
+GetAngleToPlayerは<b>『ボスから』自機への角度を取得する関数だ。</b><br>
+だから『オブジェクト弾から』自機への角度とは異なる。<br>
+そのためGetAngleToPlayerでは自機狙い弾を撃つことができないんだ。<br>
+これがオブジェクト弾から弾を撃たせるとき、間違いやすい例だな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それでは『study020』と同じようにSetShotDirectionTypeを使うのは<br>
+ダメなんでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それだったら大丈夫。<br>
+ちゃんとオブジェクト弾からの自機狙いの弾を撃たせることができるぞ。<br>
+ただこれまでずっとSetShotDirectionTypeを使わない方法できたから、<br>
+それを使わずに表現する方法も学ぶ必要があるだろう。<br>
+あと数値として角度を知ることができると何かと便利だからな。<br>
+そう思って今回のスクリプトを例題として用意したんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それで出てきたのがこの長い１行なんですね。<br>
+atan2という記述がありますがこれは関数なんでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう。<br>
+そのatan2関数を使って自機への角度を求めるワケだ。<br>
+ところで橙。<br>
+ある座標から別の座標を求めたい場合、どうすればいいと思う？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ええっ！？<br>
+うう～～～ん･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあこの問題は数学に強くないと難しい問題になるな。<br>
+答えはアークタンジェントを使うんだ。<br>
+アークタンジェントとは、三角関数で出てくる正接関数の逆関数だ。<br>
+タンジェントは角度を与えると数字がわかるというものだが、<br>
+アークタンジェントは数字を与えると角度がわかるというものだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ただの三角関数ならまだしも、逆関数については普段使いませんよね。<br>
+理解するのは結構大変そうですが･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+だから前回の講座のように、今回の内容も公式として憶えてしまおう。<br>
+普通にアークタンジェントを使うatanという関数も弾幕風にあるが、<br>
+自機狙い弾を作るならatan2の方が良い。<br>
+それで、ある座標への角度を求めたい場合は以下のように憶えよう。<br>
+第１引数は　『狙い先のY座標』－『狙い元のY座標』<br>
+第２引数は　『狙い先のX座標』－『狙い元のX座標』<br>
+このように憶えてしまうと楽だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+今回の例ですと、狙い先の座標が自機の座標で、<br>
+狙い元の座標がオブジェクト弾の座標そのものになりますから、<br>
+<font color="black">atan2(GetPlayerY-Obj_GetY(obj), GetPlayerX-Obj_GetX(obj))</font><br>
+と、このようになるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうことだ。<br>
+今回のように、ボス以外の地点から自機狙い弾を撃たせたい場合だと<br>
+GetAngleToPlayerは使えない。<br>
+その点、atan2を用いる方法ならばどんな角度でも求めることができる。<br>
+自機狙い以外にもランダムな位置から弾を撃たせる場合や<br>
+画面中央に向けて弾を撃たせたい場合などにも応用できる。<br>
+多少複雑な弾幕でないと使う機会が少ないし、使い慣れないうちは<br>
+面倒に感じるかもしれないが、この先必ず役に立つはずだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+この先ハイレベルな弾幕を作りたいときには必須になりそうなカンジですね。<br>
+みなさんも頑張って憶えましょう！<br>
+それではまた次回の講座で会いましょう！
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

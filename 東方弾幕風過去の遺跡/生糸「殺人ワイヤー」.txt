@@ -1,0 +1,76 @@
+#東方弾幕風
+#Title[生糸「殺人ワイヤー」」]
+#Text[咲き乱れ、散り行く桜今見れば、儚き命今に散り行く]
+#ScriptVersion[2]
+
+script_enemy_main {
+       let imgBoss   = "script\img\杏子.png";
+       let frame     = 0;
+       let angleBase = 90;
+
+    @Initialize {
+       SetX(GetCenterX);
+       SetY(GetClipMinY + 120);
+       SetLife(2000);
+
+       LoadGraphic(imgBoss);
+       SetTexture(imgBoss);
+       SetGraphicRect(0,0,63,63);
+        SetScore(3000);
+        SetDamageRate(70,50);
+   CutIn(KOUMA,"生糸「殺人ワイヤー」",0,0,0,0,0);//スペルカード名表示
+    }
+
+    @MainLoop {
+       SetCollisionA(GetX,GetY,24);
+       SetCollisionB(GetX,GetY,24);
+
+       frame++;
+       if(frame == 1) {
+           let angle = angleBase + 120;
+           loop(5) {
+               CreateShot01(GetX,GetY,1,-angle,RED23,0);
+               angle +=7 ;
+           }
+       }else  if(frame == 2) {
+           let angle = angleBase +5;
+           loop(5) {
+               CreateShot01(GetX,GetY,1,angle,BLUE23,0);
+               angle += 7;
+           }
+       }else  if(frame == 3) {
+           let angle = angleBase +5;
+           loop(36) {
+               CreateShot01(GetX-150,GetY,3,angle,BLUE23,0);
+               angle += 5;
+           }
+       }else  if(frame == 4) {
+           let angle = angleBase +5;
+           loop(36) {
+               CreateShot01(GetX,GetY-75,3,angle,RED23,0);
+               angle += 5;
+           }
+       }else  if(frame == 5) {
+           let angle = angleBase +5;
+           loop(36) {
+               CreateShot01(GetX,GetY-75,3,-angle,RED23,0);
+               angle += 5;
+           }
+       }else  if(frame == 6) {
+           let angle = angleBase +5;
+           loop(36) {
+               CreateShot01(GetX+150,GetY,3,angle,BLUE23,0);
+               angle += 5;
+           }
+           angleBase += 10;
+           frame = 0;
+      }
+    }
+
+    @DrawLoop {
+       DrawGraphic(GetX,GetY);
+    }
+    @Finalize {
+       DeleteGraphic(imgBoss);
+    }
+}

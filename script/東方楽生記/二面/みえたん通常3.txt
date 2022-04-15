@@ -1,0 +1,100 @@
+#東方弾幕風
+#Title[囲い「箱の中の死活線」]
+#Text[]
+#PlayLevel[弾幕風教材用]
+#Image[.\img\study008.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = "script\img\きょーこ.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+		SetLife(3000);
+        SetDamageRate(70,50);
+        SetInvincibility(240);
+        CutIn(YOUMU,"囲い「箱の中の死活線」",0,0,0,0,0);//スペルカード名表示
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+        SetScore(3500);
+
+                SetTimer(60);
+mainTask;
+mainTask2;
+TMove;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+
+	task mainTask {
+		loop(60) {yield;}
+
+		loop {
+			loop(13) {
+                        let ag = 0+rand(30,-30);
+				CreateLaserA("ss",GetClipMinX+10 ,GetClipMinY+rand(500,0),500,10,RED03, 60);
+				SetLaserDataA("ss",100, NULL, 0, 0, 4,ag);
+				SetLaserDataA("ss",0, ag,0, 0, 0, ag);
+				FireShot("ss");
+			}
+			loop(100) {yield;}
+		}
+        }
+	task mainTask2 {
+		loop(60) {yield;}
+
+		loop {
+			loop(13) {
+                        let ag2 = 180+rand(30,-30);
+				CreateLaserA("s",GetClipMaxX ,GetClipMinY+rand(400,0),500,10,RED03, 60);
+				SetLaserDataA("s",100, NULL, 0, 0, 4,ag2);
+				SetLaserDataA("s",0, ag2,0, 0, 0, ag2);
+				FireShot("s");
+			}
+			loop(100) {yield;}
+		}
+        }
+
+// キャラを移動させるタスク
+    task TMove {
+        yield;
+
+        loop {
+            loop(120) { yield; }
+            moveToPlayer(rand(40, 80), rand(-40, 40), 60,
+                         GetClipMinX + 32, GetClipMinY + 32,
+                         GetClipMaxX - 32, GetClipMinY + 160);
+        }
+    }
+    // なるべくプレイヤーの方向に移動
+    //   xMove  : x 方向の移動量（正の数）
+    //   yAdd   : y 方向の移動量
+    //   frame  : 移動に要するフレーム数
+    //   left   : 以下、可動範囲
+    //   top    :
+    //   right  :
+    //   bottom :
+    function moveToPlayer(xMove, yAdd, frame, left, top, right, bottom) {
+        let x;
+        let y;
+
+    }
+}
+
+}

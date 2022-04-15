@@ -1,0 +1,157 @@
+<html>
+<head>
+<title>連弾 (追い越し)</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第００９回　連弾 (追い越し)<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+では今回は連弾最後の講座、追い越し型についてだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+じゃあまずはいつも通りスクリプトを開くところからですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+いや、今回は先にどんな弾幕になるのか見てみよう。<br>
+弾幕風を動かして『連弾 (追い越し)』を選んでみよう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen01.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+た、弾がしなるように飛んできます～！？<br>
+これって今までの連弾とは全然性質が違うんじゃないですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+追い越し弾の最大の特徴はなんといっても見た目のインパクトだな。<br>
+だがスクリプトの中身は今までの連弾とほとんど変わらない。<br>
+では今度こそスクリプトの中身を見てみようか。<br>
+『study009.txt』を開いてみよう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {<font color="red">
+      let speed = 1;</font>
+      loop(6) {
+        CreateShot01(GetX, GetY, <font color="red">speed</font>, GetAngleToPlayer, RED01, 0);<font color="red">
+        speed += 0.5;
+        loop(10) {yield;}</font>
+      }
+      loop(60) {yield;}
+    }
+  }
+}
+<font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+これって、前回の一斉発射型の連弾のスクリプトとほとんど同じですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通り。<br>
+前回のスクリプトと違うところはloop(10) {yield;}が新たに加わっただけだ。<br>
+といってもその追加分も最初の２種類の連弾で出てきたな。<br>
+つまりこのインパクト大な弾幕は今までの弾幕のちょっとした応用にすぎないワケだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それなのに弾幕の印象がこんなにも変わるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それもまた弾幕作りの面白いところの１つさ。<br>
+ちなみにこの弾幕が加速して見える原理だが･･････<br>
+この弾幕のミソは最初に撃つ弾ほど遅く、後に出す弾ほど速くなっていることだ。<br>
+だから最初は弾が遅く感じるが、後から出た弾がいずれ追い越してくる。<br>
+だから弾全体が加速しているように錯覚するワケだな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+だから追い越し弾って読んでるんですね。<br>
+そっか～、弾自体が加速しているワケじゃないのか～･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+弾幕の構造自体は極めて原始的であるにも関わらず、視覚的にインパクトのある<br>
+弾幕を作れているという素晴らしい弾幕だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+作り方によってはこんなに面白い弾幕が作れるんですね～<br>
+私もこんな弾幕が作れたらな～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それは各自の頑張り次第よ。<br>
+ではまた次の講座で会うとしましょう。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

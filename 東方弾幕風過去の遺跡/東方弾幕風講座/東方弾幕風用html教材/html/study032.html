@@ -1,0 +1,442 @@
+<html>
+<head>
+<title>オブジェクト弾 (当たり判定の消失)</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０３２回　オブジェクト弾 (当たり判定の消失)<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回は当たり判定を無くすやり方を学ぶ。<br>
+普通どんな弾にも当たり判定を持っているが、<br>
+その当たり判定を消すことで当たってもミスにならない弾を作れる。<br>
+今回用いる実例では、当たり判定を出したり消したりするという<br>
+応用パターンで学ぶぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+当たり判定が無い弾っていうのはかなり珍しいですね。<br>
+どんな弾幕になるのか見当つきませんね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それは実際の弾幕を見ればわかる。<br>
+が、まずはいつも通りスクリプトから見ようか。<br>
+『study032.txt』を開こう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    SetMovePosition02(GetCenterX, GetCenterY - 40, 60);
+    loop(60) {yield;}
+    loop {
+      loop(4) {
+        let angle = rand(0, 360);
+        let cycle = rand_int(0, 119);
+        loop(120) {
+          objectBullet(angle, cycle);
+          angle += 360/120;
+        }
+        loop(120) {yield;}
+      }
+      loop(180) {yield;}
+
+      let count = 0;
+      let sign = rand_int(0, 1)*2 - 1;
+      loop(16) {
+        let type = 1 + <font color="red">truncate(count/4)</font>;
+        let angle = rand(0, 360);
+        let cycle = rand_int(0, 119);
+
+        loop(120) {
+          objectBullet(angle, cycle);
+          angle += 360/120;
+          cycle = (cycle + type*sign + 120) % 120;
+        }
+
+        sign *= -1;
+        count++;
+        loop(120) {yield;}
+      }
+      loop(180) {yield;}
+    }
+  }
+
+  task objectBullet (let angle, let cycle) {
+    let obj = Obj_Create(OBJ_SHOT);
+    Obj_SetX(obj, GetX);
+    Obj_SetY(obj, GetY);
+    Obj_SetSpeed(obj, 1);
+    Obj_SetAngle(obj, angle);
+    ObjShot_SetGraphic(obj, RED02);
+    ObjShot_SetDelay(obj, 0);
+
+    while(!Obj_BeDeleted(obj)) {
+      let alpha = 15 + 240*cycle/60;
+      if(cycle >= 60) {
+        alpha = 255 - 240*(cycle-60)/60;
+      }
+<font color="red">
+      Obj_SetAlpha(obj, alpha);</font>
+      if(alpha >= 192) {<font color="red">
+        Obj_SetCollisionToPlayer(obj, true);</font>
+        ObjShot_SetGraphic(obj, RED02);
+      } else {<font color="red">
+        Obj_SetCollisionToPlayer(obj, false);</font>
+        ObjShot_SetGraphic(obj, ORANGE02);
+      }
+
+      cycle = (cycle+1) % 120;
+      yield;
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+かなり長いが、１つずつ順に流れを追っていこう。<br>
+mainTaskの最初、120way全方位弾でオブジェクト弾を発射している。<br>
+それを１２０フレーム間隔で４回撃っている。<br>
+またここで重要なのが変数cycleで、<br>
+０から１１９までの数値をランダムで作り、<br>
+その数値を全てのオブジェクト弾に共通して与えている。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+タスクに引数を２つ与えるのはこれが初めてですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ではここでobjectBulletのタスクを見てみよう。<br>
+オブジェクト弾の初期設定やwhileループの条件は普通だな。<br>
+だがループの中身の処理がかなり複雑だ。<br>
+真剣な気持ちで臨んでほしい。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+はいっ！<br>
+頑張ります！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まずここの処理で重要なのは引数として与えた変数cycleだ。<br>
+このcycleの役目は、これまで習ったcountと同じような役目をしている。<br>
+ただしwhileループの最後を見ればわかるように、<br>
+剰余を使って１２０以上の数値にならないようにしている。<br>
+０から１１９までの数値をフレーム単位で１ずつ増えていくということだ。<br>
+このことをまず頭に入れておいてくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+１２０になったら０に戻るカウント処理ですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それを踏まえてwhileループの最初を見てみよう。<br><font color="black">
+let alpha = 15 + 240*cycle/60;<br>
+if(cycle >= 60) {<br>
+　alpha = 255 - 240*(cycle-60)/60;<br>
+}</font><br>
+かなり複雑だな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+変数alphaなんて名前も初めて見ましたけれど、<br>
+変数を作るだけなのにここまで複雑なのも初めてですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まず変数cycleが６０未満である場合と、<br>
+６０以上である場合の２つにわけて考えよう。<br>
+何故ならcycleが６０以上のときは直後のif文によって<br>
+alphaが書き換えられてしまうからだ。<br>
+だからcycleが６０未満のときは alpha = 15 + 240*cycle/60 で、<br>
+cycleが６０以上のときは alpha = 255 - 240*(cycle-60)/60 の<br>
+計算結果がalphaに入る、まずはそう考えよう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+この形だったら、２つのif文条件を使って６０未満と６０以上の<br>
+２つで分けたほうがわかりやすいような気がするんですが･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+確かにわかりやすさなら橙の言う書き方の方が上でしょう。<br>
+でもこちらの方がif文条件が１つで済み、行数も短くなるわ。<br>
+効率の面で言えばこの例のような書き方の方が上よ。<br>
+わかりやすさを重視したり、効率を重視したり、<br>
+スクリプトの書き方は作者によって千差万別だからね。<br>
+自分が日頃しない表現の仕方などを見ると一見理解できなかったりするわ。<br>
+見慣れない表現を見かけたときは慎重にスクリプトの流れを見ましょう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+他の方から助言を貰えるのはありがたいですけれど、<br>
+自分の書き方のクセとか一致することなんてまずありませんからね･･････<br>
+新しい形を理解する努力が必要になるということですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+では話を戻して、cycleが６０未満の場合を考えよう。<br>
+計算式は 15 + 240*cycle/60 となっている。<br>
+これはcycleが大きくなるほどalphaの値が増えていくことを意味している。<br>
+もしcycleの値が０なら、alphaは最低値の１５になる。<br>
+そして５９になったときに最大値の２５１になるんだ。<br>
+これがもしcycleの値が６０だったら２５５になるな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+240*cycle/60なんて書き方をしているのは、<br>
+cycleが６０のときに２４０になることをわかりやすくするためなんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+では逆にcycleが６０以上の場合だ。<br>
+こちらはif文の条件を満たすことでalphaの書き換えを行っているから、<br>
+255 - 240*(cycle-60)/60 の計算結果がalphaの値となる。<br>
+こちらはcycleの値が６０より大きくなればなるほどalphaが小さくなっていく。<br>
+cycleが６０のとき最大値の２５５になり、<br>
+cycleが１１９のとき最小値の１９になる。<br>
+もしcycleが１２０だったら最小値になる計算になるが、<br>
+実際のcycleの値は０に戻り、最初の計算が適用されてalphaが１５になる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+つまりalphaの値は１５から２５５に増えて、それからまた１５に戻るという<br>
+流れを繰り返すということですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、alphaの値が一定範囲で増減を周期的に繰り返すという<br>
+流れをしているということだ。<br>
+そして次にObj_SetAlphaという新しい関数がある。<br>
+これはオブジェクトのα値を設定する関数だ。<br>
+オブジェクトの透明度を設定する関数として用いる。<br>
+第２引数に２５５を最大とする数値を与え、<br>
+この数値が小さくなるほど透明に近くなっていく。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+もし第２引数を０にしたら、完全に見えない弾を作ることも<br>
+できるということになるんでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+できるぞ。<br>
+見えない弾でありながら、当たったらミスになる弾も作れる。<br>
+面白い弾幕が作れそうではあるが、下手に理不尽な弾幕を作っては<br>
+プレイヤーから批判が来るのは目に見えている。<br>
+どうやったら見えない弾を作っても遊べる弾幕になるか、<br>
+その工夫についても頭を悩ませることになるな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なるほど～<br>
+それでこのObj_SetAlphaに先ほどの変数alphaを使っているのですから、<br>
+このオブジェクト弾は透明に近くなったり色が濃くなったりを<br>
+周期的に繰り返しているということなんですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通りだ。<br>
+それで次のif文は変数alphaを条件に用いている。<br>
+alphaが１９２以上のとき、つまりオブジェクト弾の色が濃いときに<br>
+実行される部分だな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+if文の中にはObj_SetCollisionToPlayerという長い名前の関数が･･････<br>
+これがオブジェクト弾の当たり判定を消すための関数なんでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、これが自機への当たり判定を消すときに使う関数だ。<br>
+ちなみにcollisionは『衝突』という意味だな。<br>
+第２引数でtrueと書くと自機への当たり判定を持たせ、<br>
+falseと書くと自機への当たり判定を消せる。<br>
+ここではtrueと書いているが、後のelse処理、<br>
+つまり弾の色が薄いときには第２引数をfalseとしている。<br>
+このスクリプトでは弾の色の濃淡を使い分けることで<br>
+弾の当たり判定の有無をプレイヤーに示しているというワケだな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それなら初見プレイヤーでも見当がつくようになりますね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあ今回の例ではObjShot_SetGraphicを使って弾の色分けをすることで、<br>
+より当たり判定の有無をわかりやすくしている。<br>
+色の濃淡だけだと、どのくらいの濃さになったら当たり判定を<br>
+持つようになるのかわかりにくいからな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+中々に複雑な処理でしたが、弾の当たり判定を消したいなら<br>
+Obj_SetCollisionToPlayerを使えってことですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ああ。<br>
+それでmainTaskの後半部分だが、これは宿題とすることにしよう。<br>
+前半部分はcycleの値を全て一律にして全方位弾を撃っていたが、<br>
+こちらはcycleの値をずらして全方位弾を撃っている。<br>
+そのcycleの値をずらすためにsignやらtypeといった変数を使っている。<br>
+その変数の意味、変化の仕方がヒントだな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+truncateという新しい関数がありますけど･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それは小数点以下の数値を切り捨てる処理をする関数だ。<br>
+小数点以下切り捨てというのはプログラミングの世界でよく見るから、<br>
+憶えておくといいだろう。<br>
+ちなみにintという関数もあるが、これも同じ処理を行う。<br>
+ただしtruncateの方が精度の高い処理を行えるので、<br>
+なるべくtruncateを使用するようにしたい。<br>
+ちなみにtruncと略して書いてもちゃんと動くようだ。<br>
+その他、小数点を四捨五入したり切り上げたりする処理をする<br>
+関数もあるから気になったら弾幕風のヘルプを見てくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+実際にこのスクリプトを動かしてみると、<br>
+物凄くインパクトのある弾幕ですね～<br>
+特に後半の弾幕は派手です～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+後半の弾幕は地底の覚姉妹の妹の方のスペルカード、<br>
+「サブタレイニアンローズ」を参考にしている。<br>
+無論本家より圧倒的に簡単にしているが。<br>
+今回のスクリプトではObjShot_SetGraphicで弾の色を変えているが、<br>
+弾の形を０３に変えて大きくしたりするとより本家に近くなるかな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+同じ全方位弾なのに、cycleの周期をずらすだけで<br>
+こんなにも印象が変わるものなんですね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+このようにちょっとした工夫で弾幕の印象が一変するものもあるわ。<br>
+もし自分で作ったスクリプトがあれば、ちょっとした変数を使うだけで<br>
+ガラッと弾幕を変えることができることもあるでしょう。<br>
+もし何か良い案が思いついたら試してみるといいわね。<br>
+それではまた次回の講座で。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

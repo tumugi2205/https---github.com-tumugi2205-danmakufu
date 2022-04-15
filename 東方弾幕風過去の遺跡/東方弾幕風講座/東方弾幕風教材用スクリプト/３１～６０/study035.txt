@@ -1,0 +1,112 @@
+#“Œ•û’e–‹•—
+#Title[‚R‚TFƒIƒuƒWƒFƒNƒg’e (‰ñ“]ƒrƒbƒg@‚»‚Ì‚R)]
+#Text[]
+#PlayLevel[’e–‹•—‹³Þ—p]
+#Image[.\img\study035.png]
+#BackGround[User]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		loop(60) {yield;}
+		SetShotAutoDeleteClip(10, 10, 10, 10);
+
+		let sign = rand_int(0, 1)*2 - 1;
+		loop {
+			let angle = rand(0, 360);
+			loop(3) {
+				objectBullet(angle, sign);
+				angle += 360/3;
+			}
+
+			sign *= -1;
+			loop(300) {yield;}
+			loop(600) {
+				if(GetEnemyShotCount < 50) {
+					break;
+				}
+				yield;
+			}
+		}
+	}
+
+	task objectBullet (let angle, let sign) {
+		let obj = Obj_Create(OBJ_SHOT);
+		Obj_SetX(obj, GetX);
+		Obj_SetY(obj, GetY);
+		Obj_SetSpeed(obj, 0);
+		Obj_SetAngle(obj, angle);
+		ObjShot_SetGraphic(obj, RED02);
+		ObjShot_SetDelay(obj, 0);
+		ObjShot_SetBombResist(obj, true);
+
+		let count = 0;
+		let distance = 0;
+		let px = GetX;
+		let py = GetY;
+		let aim = 0;
+		while(!Obj_BeDeleted(obj)) {
+			Obj_SetX(obj, px+distance*cos(angle));
+			Obj_SetY(obj, py+distance*sin(angle));
+
+			if(count < 60) {
+				distance += 60/60;
+			}
+
+			if(count == 120) {
+				aim = GetAngleToPlayer;
+			} else if(count > 120) {
+				px += 2*cos(aim);
+				py += 2*sin(aim);
+			}
+
+			if((count >= 120) && (count%2 == 0)) {
+				CreateShotA("shot", Obj_GetX(obj), Obj_GetY(obj), 30);
+				SetShotDataA("shot", 0, 0, angle+count*4*sign, 0, 0, 0, RED11);
+				SetShotDataA("shot", 240, NULL, NULL, 0, 0.02, 1, RED11);
+				FireShot("shot");
+			}
+
+			angle += 2.2*sign;
+			count++;
+			yield;
+		}
+	}
+}

@@ -1,0 +1,240 @@
+#東方弾幕風
+#Title[影閃「ストゥームブリンガー」]
+#Text[Exルーミア：影閃「ストゥームブリンガー」]
+#Image[.\img\ExRumia(影閃「ストゥームブリンガー」).png]
+#BackGround[Default]
+#Player[FREE]
+#ScriptVersion[2]
+
+
+script_enemy_main
+{
+	let count=0;
+	let cx=GetCenterX();//STGシーンの中心x座標を取得;
+	let step=1;
+	let imgExRumia=GetCurrentScriptDirectory~"img\ExRumia.png";;
+	let imgExRumiaBack=GetCurrentScriptDirectory~"img\ExRumiaBack.png";
+	@Initialize
+	{
+		SetScore(50000);//スペルカードボーナスを50000に設定
+		SetLife(280);//ライフを280に設定
+		SetDamageRate(10,10);//披ダメージを10%に設定
+		SetTimer(60);//時間制限を60秒に設定
+
+		SetGraphicRect(1,1,64,64);//描画元矩形を設定
+		SetInvincibility(30);//敵を30フレーム無敵にする
+		LoadGraphic(imgExRumia);//画像「img\ExRumia.png」を読みこむ		
+		LoadGraphic(imgExRumiaBack);
+		
+		SetColor(255,64,255);
+		SetMovePosition02(cx-60*step,120,60);//座標(cx-60*step,120)へ60フレームかけて移動する
+		Concentration01(120);
+		CutIn(YOUMU,"影閃「ストゥームブリンガー」",0,0,0,0,0);//スペルカード名表示
+	}
+	
+	@MainLoop
+	{
+		SetColor(255,64,255);
+		if(count==90)
+		{
+			SetMovePosition02(cx-60*step,120,60);
+			Concentration01(120);
+		}
+		if(count==150)
+		{//レーザーを出現させる
+			let laser=0;
+			CreateLaserB(laser,0,30,PURPLE01,0);
+			SetShotKillTime(laser,180);
+			if(step==1){SetLaserDataB(laser,0,10,0,0,0,0,0,0);}
+			else if(step==-1){SetLaserDataB(laser,0,10,0,0,180,0,180,0)};		
+			SetLaserDataB(laser,60,0,NULL,0,NULL,0,NULL,0);
+			SetLaserDataB(laser,90,0,NULL,0,NULL,-3.0*step,NULL,-3.0*step);
+				
+			let i=60;
+			while(i<90)
+			{
+				let j=0;
+				while(j<400)
+				{//レーザーに弾を登録する
+					let shot=1;
+					CreateShotA(shot,0,0,30);
+					if(step==1){SetShotDataA(shot,0,1.5,90,0,0,1.5,PURPLE12);}
+					else if(step==-1){SetShotDataA(shot,0,1.5,270,0,0,1.5,PURPLE12);}
+					AddShot(i,laser,shot,j);
+					j+=40;
+				}
+				i+=5;
+			}
+			SetLaserDataB(laser,180,0,NULL,0,NULL,0,NULL,0);
+			
+			i=90;
+			while(i<180)
+			{
+				let j=0;
+				while(j<400)
+				{
+					let shot=1;
+					CreateShotA(shot,0,0,30);
+					if(step==1){SetShotDataA(shot,0,1.5,270,0,0,1.5,PURPLE12);}
+					else if(step==-1){SetShotDataA(shot,0,1.5,90,0,0,1.5,PURPLE12);}
+					AddShot(i,laser,shot,j);
+					j+=40;
+				}
+				i+=4;
+			}		
+			FireShot(laser);
+		}
+		if(count==210)
+		{
+			SetMovePosition03(cx,240,15,10);
+		}	
+		if(count==300)
+		{
+			SetMovePosition03(cx+60*step,120,15,10);
+			Concentration01(120);
+		}
+		if(count==360)
+		{
+			let laser=0;
+			CreateLaserB(laser,0,30,PURPLE01,0);
+			SetShotKillTime(laser,180);
+			if(step==1){SetLaserDataB(laser,0,10,0,0,180,0,180,0);}
+			else if(step==-1){SetLaserDataB(laser,0,10,0,0,0,0,0,0)};		
+			SetLaserDataB(laser,60,0,NULL,0,NULL,0,NULL,0);
+			SetLaserDataB(laser,90,0,NULL,0,NULL,3.0*step,NULL,3.0*step);
+				
+			let i=60;
+			while(i<90)
+			{
+				let j=0;
+				while(j<400)
+				{
+					let shot=1;
+					CreateShotA(shot,0,0,30);
+					if(step==1){SetShotDataA(shot,0,1.5,270,0,0,1.5,PURPLE12);}
+					else if(step==-1){SetShotDataA(shot,0,1.5,90,0,0,1.5,PURPLE12);}
+					AddShot(i,laser,shot,j);
+					j+=40;
+				}
+				i+=5;
+			}
+			SetLaserDataB(laser,180,0,NULL,0,NULL,0,NULL,0);
+			
+			i=90;
+			while(i<180)
+			{
+				let j=0;
+				while(j<400)
+				{
+					let shot=1;
+					CreateShotA(shot,0,0,30);
+					if(step==1){SetShotDataA(shot,0,1.5,90,0,0,1.5,PURPLE12);}
+					else if(step==-1){SetShotDataA(shot,0,1.5,270,0,0,1.5,PURPLE12);}
+					AddShot(i,laser,shot,j);
+					j+=40;
+				}
+				i+=4;
+			}		
+			FireShot(laser);
+		}
+		if(count==420)
+		{
+			SetMovePosition03(cx,240,15,10);
+		}	
+		if(count==540)
+		{
+			SetMovePosition03(cx-180*step,16,15,10);
+			Concentration01(120);
+		}
+		if(count==600)
+		{
+			let laser=0;
+			CreateLaserB(laser,0,30,PURPLE01,0);
+			SetShotKillTime(laser,90);
+			if(step==1){SetLaserDataB(laser,0,10,0,0,0,0,0,0);}
+			else if(step==-1){SetLaserDataB(laser,0,10,0,0,180,0,180,0);}	
+			SetLaserDataB(laser,60,0,NULL,0,NULL,0,NULL,0);			
+			let i=60;
+			while(i<90)
+			{
+				let j=0;
+				while(j<400)
+				{
+					let shot=1;
+					CreateShotA(shot,0,0,30);
+					if(step==1){SetShotDataA(shot,0,1.5,90,0,0,1.5,PURPLE12);}
+					else if(step==-1){SetShotDataA(shot,0,1.5,270,0,0,1.5,PURPLE12);}
+					AddShot(i,laser,shot,j);
+					j+=40;
+				}
+				i+=4;
+			}
+			FireShot(laser);
+		}
+		if(count==660)
+		{
+			SetMovePosition03(cx-180*step,400,15,10);
+		}
+		if(count==660)
+		{
+			let laser=0;
+			CreateLaserB(laser,0,30,PURPLE01,0);
+			SetShotKillTime(laser,170);
+			if(step==1){SetLaserDataB(laser,0,3,0,0,45,0,45,0);}
+			else if(step==-1){SetLaserDataB(laser,0,3,0,0,135,0,135,0);}		
+			SetLaserDataB(laser,60,2.5,NULL,0,NULL,-3*step,NULL,-3*step);			
+			let i=120;
+			while(i<170)
+			{
+				let j=0;
+				while(j<400)
+				{
+					let shot=1;
+					CreateShotA(shot,0,0,30);
+					if(step==1){SetShotDataA(shot,0,1.5,270,0,0,1.5,PURPLE12);}
+					else if(step==-1){SetShotDataA(shot,0,1.5,90,0,0,1.5,PURPLE12);}
+					AddShot(i,laser,shot,j);
+					j+=40;
+				}
+				i+=5;
+			}
+			FireShot(laser);
+		}
+		if(count==720)
+		{
+			SetMovePosition02(cx+180*step,18,60);
+		}
+		if(count==810)
+		{
+			step*=-1;
+			count=89;
+		}
+		SetCollisionA(GetX(),GetY(),32);//当たり判定(自弾)登録
+		SetCollisionB(GetX(),GetY(),24);//当たり判定(体当たり)登録
+		count++;			
+	}
+	
+	@Finalize
+	{//読みこんだファイルを削除
+		DeleteGraphic(imgExRumia);	
+		DeleteGraphic(imgExRumiaBack);
+		loop(8)
+		{
+			CreateItem(ITEM_SCORE,cx+rand(-100,100),rand(20,100));
+		}
+		CreateItem(ITEM_1UP,cx+rand(-100,100),rand(20,100));
+	}
+	
+	@DrawLoop
+	{
+		//Exルーミア描画
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetAlpha(255);
+		SetTexture(imgExRumia);
+		if(int(GetSpeedX())==0){SetGraphicRect(64,1,127,64);}
+		else if(GetSpeedX()>0){SetGraphicRect(192,1,255,64);}
+		else if(GetSpeedX()<0){SetGraphicRect(128,1,191,64);}
+		DrawGraphic(GetX(),GetY());
+	}
+}

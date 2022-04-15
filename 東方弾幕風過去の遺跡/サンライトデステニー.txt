@@ -1,0 +1,17 @@
+#東方弾幕風[Plural]
+#Title[サンライトディステニー]
+#Text[血塗られた過去に
+君はいったい何を眼にするだろう]
+#ScriptVersion[2]
+#BGM[bgm\bgm.wav\イマジンブレイク.mp3]
+
+
+#ScriptPathData
+   #ScriptPath[\script\幻惑「夢幻高峰」.txt]
+     #ScriptPath[\script\幻符「影縫い」.txt]
+     #ScriptPath[\script\桜華「百花繚乱乱れ撃ち」.txt]
+     #ScriptPath[\script\綺符「嬉々爛満」.txt]
+     #ScriptPath[\script\輝符「ダイレクトサンライト」.txt]
+     #ScriptPath[\script\梢失「ブラット・リメイク」.txt]
+     #ScriptPath[\script\縫威「鎖縛結界」.txt]
+#EndScriptPathData

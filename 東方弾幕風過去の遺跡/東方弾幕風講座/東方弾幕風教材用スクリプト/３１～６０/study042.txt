@@ -1,0 +1,78 @@
+#“Œ•û’e–‹•—
+#Title[‚S‚QFƒ‚[ƒVƒ‡ƒ“ƒuƒ‰[‚ÆƒXƒ[]
+#Text[]
+#PlayLevel[’e–‹•—‹³Þ—p]
+#Image[.\img\study042.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		loop(60) {yield;}
+
+		let count = 0;
+		loop {
+			CreateShot01(GetX, GetY, 2, GetAngleToPlayer+rand(-120, 120), RED04, 0);
+			if(count%360 == 270) {
+				MotionBlur(ALL, 30, 100);
+				let angle1 = GetAngleToPlayer - 40;
+				loop(5) {
+					let angle2 = -8;
+					loop(17) {
+						let speed = 3;
+						loop(5) {
+							CreateShot01(GetX, GetY, speed, angle1+angle2, RED23, 0);
+							speed += 0.5;
+						}
+						angle2 += 1;
+					}
+					angle1 += 20;
+				}
+			} else if(count%360 == 300) {
+				MotionBlur(ALL, 60, 200);
+				Slow(2);
+			} else if(count%360 == 0) {
+				Slow(0);
+			}
+			count++;
+			yield;
+		}
+	}
+}

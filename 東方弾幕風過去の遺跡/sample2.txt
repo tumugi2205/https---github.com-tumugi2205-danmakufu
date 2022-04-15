@@ -1,0 +1,112 @@
+#東方弾幕風
+#Title[反射弾の例]
+#Text[]
+#BackGround[User()]
+#ScriptVersion[2]
+
+script_enemy_main{
+
+    //グローバル変数
+       let imgBoss   = "script\img\マーキュリー.png";
+	let wIni = 120;
+	
+	///////////////////////////////////////////////////////////
+
+	@Initialize{
+	    LoadGraphic(imgBoss);
+	    
+        SetMovePosition02(GetCenterX(), GetClipMinY() + 120, wIni);
+        SetLife(4000);
+        SetTimer(60);
+        SetInvincibility(wIni);
+        SetDamageRate(100, 100);
+	    
+	    TMain();
+	}
+		
+	@MainLoop{
+		SetCollisionA(GetX(), GetY(), 32);
+		SetCollisionB(GetX(), GetY(), 24);
+	    yield;
+	}
+	
+	@DrawLoop{
+	    SetTexture(imgBoss);
+	    SetGraphicRect(1, 1, 64, 64);
+	    DrawGraphic(GetX(), GetY());
+	}
+		
+	@Finalize{
+	    DeleteGraphic(imgBoss);
+	}
+	
+	//////////////////////////////////////////////////////////
+	
+	task TMain{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    
+	    //処理
+	    loop{
+	        let pos = [GetX() + rand(-100, 100), GetY() + rand(-50, 50)];
+	        ascent(let i in 0..36){
+	            CreateReflectShot(pos[0], pos[1], 2, i*10, RED11, 10, 2);
+	        }
+	        loop(240){ yield; }
+	    }
+	}
+	
+	//////////////////////////////////////////////////////////
+	
+	//反射弾の例
+    //count回反射します
+    task CreateReflectShot(let x, let y, let speed,
+                 let angle, let graphic, let delay, let count) {
+        
+        //オブジェクト弾の作成
+        let obj = Obj_Create(OBJ_SHOT);
+        
+        //パラメータの設定
+        Obj_SetPosition(obj, x, y);
+        Obj_SetSpeed(obj, speed);
+        Obj_SetAngle(obj, angle);
+        ObjShot_SetGraphic(obj, graphic);
+        ObjShot_SetDelay(obj, delay);
+        
+        loop(delay){ yield; }
+        
+        while(!Obj_BeDeleted(obj)) {
+
+            //左端反射
+            if(Obj_GetX(obj)<GetClipMinX){
+                Obj_SetX(obj, GetClipMinX*2 - Obj_GetX(obj));
+                Obj_SetAngle(obj, 180 - Obj_GetAngle(obj));
+                count--;
+            }
+            //右端反射
+            if(Obj_GetX(obj)>GetClipMaxX){
+                Obj_SetX(obj, GetClipMaxX*2 - Obj_GetX(obj));
+                Obj_SetAngle(obj, 180 - Obj_GetAngle(obj));
+                count--;
+            }
+            //上端反射
+            if(Obj_GetY(obj)<GetClipMinY){
+                Obj_SetY(obj, GetClipMinY*2 - Obj_GetY(obj));
+                Obj_SetAngle(obj, 360 - Obj_GetAngle(obj));
+                count--;
+            }
+            //下端反射
+            if(Obj_GetY(obj)>GetClipMaxY){
+                Obj_SetY(obj, GetClipMaxY*2 - Obj_GetY(obj));
+                Obj_SetAngle(obj, 360 - Obj_GetAngle(obj));
+                count--;
+            }
+            
+            if(count<=0){ break; }
+        
+            yield;
+        }
+    }
+}

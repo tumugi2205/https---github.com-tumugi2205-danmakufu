@@ -1,0 +1,280 @@
+<html>
+<head>
+<title>ボスの移動</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０２１回　ボスの移動<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さて、これまでは様々な弾の出し方を学んできたワケだが、<br>
+今回学ぶのはボスを動かすことだ。<br>
+実際のシューティングだとボスが棒立ちであるケースは稀だ。<br>
+よりゲームを『生きている』ように見せるためにはボスを動かすべきだろう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+学ぶ内容が全く新しい分野になりますから、結構大変そうですね･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+いや、関数の使い方に慣れている以上ゼロからのスタートではない。<br>
+使いやすい関数が多いから、今回は一気に様々な移動方法を学ぶぞ。<br>
+ではスクリプトを開こう。<br>
+『study021.txt』だ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(120) {yield;}
+
+    loop {<font color="red">
+      SetSpeed(1);
+      SetAngle(90);</font>
+      loop(60) {yield;}<font color="red">
+      SetSpeed(0);</font>
+
+      loop(60) {yield;}
+<font color="red">
+      SetMovePosition01(GetX + 120, GetY, 2);
+</font>
+      loop(120) {yield;}
+<font color="red">
+      SetMovePosition02(GetX, GetY - 60, 60);
+</font>
+      loop(120) {yield;}
+<font color="red">
+      SetMovePosition03(GetX - 120, GetY, 20, 4);
+</font>
+      loop(120) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回は４種類の移動方法を学ぶ。<br>
+まず１つめ、最も原始的な移動方法だ。<br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+SetSpeedとかが名前的に移動に関係しそうですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、SetSpeed関数は『移動の速さ』を決める関数だ。<br>
+このスクリプトは敵 (ボス) を作るスクリプトだから、ボスの動く速さを指定する。<br>
+同様にSetAngle関数は『移動する方向』を決める関数だ。<br>
+この２つの関数を使うことで、ボスが移動する情報を入力できたことになる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+角度は９０°だから真下に移動することになりますね。<br>
+速さは１になっていますけど、これは弾の速度設定と同じなんですかね？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+全く同じだな。<br>
+ボスを１つの弾と考えて、CreateShot01の第３，４引数を設定する要領で<br>
+SetSpeedとSetAngleを設定すると考えてもいいな。<br>
+ボスの速さと角度を指定した後はloop(60) {yield;}で６０フレーム処理を待つ。<br>
+ボスが動くように設定したから、この６０フレームの間にボスが動くことになる。<br>
+その後SetSpeedで速さを０に、つまりボスが止まるようにしている。<br>
+これでボスの移動、停止の流れが実現できる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+移動の仕方を設定するだけで終わりじゃなくて、移動した後いつ止まるかを<br>
+指定しなくちゃいけないんですね。<br>
+これは弾幕を撃つ処理と合わせるとなると結構面倒そうです･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そこで移動専用の関数が出てくるワケだ。<br>
+そのうちの１つがSetMovePosition01。<br>
+３つの引数のうち２つが移動先の目的座標X, Yを指定し、第３引数で<br>
+移動する速さを指定する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+こっちは移動する方向を決めるんじゃなくて、行き先を指定するんですね。<br>
+ボスを移動させたいときはこっちの方が都合が良さそうな気がします～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回の例では目的の座標がGetX + 120とGetYになっているな。<br>
+言うまでもなく、GetX, Yはボスが今居る座標を教えてくれる関数だ。<br>
+Y座標の移動先がGetYだから、Y座標つまり縦軸の移動はない。<br>
+X座標は今居る位置からさらに＋１２０の場所へ移動することになる。<br>
+まとめると、『画面右方向へ１２０の距離 (pixel) の位置へ移動する』処理を<br>
+行うことになるワケだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+SetMovePosition01を使うときはCreateShot01のようにGetXとGetYが活躍しそうですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+この関数が便利なのは、<b>指定した座標にたどり着いたら自動的に止まってくれる</b>ところだ。<br>
+だから一度設定すれば停止処理を入れるタイミングを気にせず他の処理を書けるんだ。<br>
+そういう意味でもボスの移動は移動専用関数の方を使うべきだろう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+敵を動かすときはSetMovePosition01を使うべきなんですね。<br>
+その次に似たようなSetMovePosition02というのがありますけれどこちらは？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+こちらは第３引数の意味が違っている。<br>
+02の方は『指定した座標に到達するまでの時間』を指定する。<br>
+つまりボスの動く速さは、指定した座標までの距離と時間から勝手に計算してくれる。<br>
+タイミングを重視した弾幕を作りたいならこちらの方が良いだろう。<br>
+この関数もボスは自動的に停止してくれるぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+速度の数値ってわかりにくいですから02の方がいいかもですね。<br>
+時間の管理がしやすい意味でも。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そして今回もう１つ使っている関数がSetMovePosotion03。<br>
+これは01の応用版と言える。<br>
+第１，２引数はこれまで通りで、第４引数に速さを指定する。<br>
+第３引数が速さではないことに注意だな。<br>
+そして第３引数は『重み』を指定する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+重みってなんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+実はSetMovePosition03は目標の座標に近づくにつれて減速する移動をするんだ。<br>
+そしてこの減速する強さが『重み』。<br>
+重みの数値が大きいとより強く減速するようになる。<br>
+だから第４引数の速さはあくまで最初の最も速いときの数値になるということだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen06.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+第３，４引数を両方大きめの数値にすると･･････<br>
+素早く移動しつつ最後はゆっくりになって停止するんですね。<br>
+それってなんかカッコイイです！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+確かに格好は付くが、02と違って時間の把握が難しい。<br>
+弾幕処理とのタイミングを気にするなら注意した方がいいだろう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+いやあ移動１つ取るだけでも色んな方法があるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さらにエルミートスプライト曲線を使ったSetMovePositionHermiteというものもある。<br>
+･･････が、これはよほど移動に拘りがある場合だけの方が無難だ。<br>
+弾幕風のヘルプを見ればわかるが、かなり複雑な移動方式だからな。<br>
+それから一定の範囲内でランダムに動くSetMovePositionRandom01というものもある。<br>
+とにかく適当に動かしたい場合はこれを使うのもいいだろう。<br>
+こちらも詳しくはヘルプを見て各自学んでくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ボスが移動するとボスから放たれる弾の位置が変わりますから、一風変わった<br>
+弾幕の形が見えたりするものです。<br>
+ときには移動によって崩れる弾幕の方が面白みがあったり、<br>
+新しい弾幕のインスピレーションがあるかもしれません。<br>
+たまには自分で作った弾幕を移動で崩してみるのも一興かもしれませんね。<br>
+それではまた次の講座で会いましょう！
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

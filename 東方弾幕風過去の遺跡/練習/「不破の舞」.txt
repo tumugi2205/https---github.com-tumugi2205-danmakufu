@@ -1,0 +1,94 @@
+#“Œ•û’e–‹•—
+#Title[u•s”j‚Ì•‘v]
+#Text[]
+#PlayLevel[’e–‹•—‹³Þ—p]
+#Image[.\img\study008.png]
+#BackGround[Default]
+#ScriptVersion[2]
+#BGM[bgm\bgm.wav\‚n ‚t ‚s ‚r ‚h ‚c ‚d ‚q.wav]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+		mainTask2;
+		mainTask3;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		loop(60) {yield;}
+
+		loop {
+			loop(13) {
+             CreateShotA("S1",GetCenterX+20, GetCenterY,10);
+          SetShotDataA("S1",0,2,90,rand(1,5),0,5,AQUA01);
+          SetShotDataA("S1",200,0,90,0,0,0,AQUA01);
+          SetShotDataA("S1",250,2,90,rand(-1,-5),0,0,AQUA01);
+          SetShotDataA("S1",400,2,NULL,0,0,0,AQUA01);
+          FireShot("S1");
+			}
+			loop(60) {yield;}
+		}
+}
+	task mainTask2 {
+		loop(1200) {yield;}
+
+		loop {
+			loop(13) {
+             CreateShotA("S2",GetCenterX-20, GetCenterY,10);
+          SetShotDataA("S2",0,2,90,rand(-1,-5),0,5,AQUA01);
+          SetShotDataA("S2",200,0,90,0,0,0,AQUA01);
+          SetShotDataA("S2",250,2,90,rand(1,5),0,0,AQUA01);
+          SetShotDataA("S2",400,2,NULL,0,0,0,AQUA01);
+          FireShot("S2");
+			}
+			loop(60) {yield;}
+		}
+}
+	task mainTask3 {
+		loop(60) {yield;}
+
+		loop {
+			loop(1) {
+             CreateShotA("S3",GetPlayerX+rand(-50,50), GetPlayerY+rand(-50,50),50);
+          SetShotDataA("S3",0,0,0,0,0,0,RED03);
+          SetShotDataA("S3",250,2,rand(0,360),0,0,0,AQUA03);
+          FireShot("S3");
+			}
+			loop(30) {yield;}
+		}
+}
+        }
+}

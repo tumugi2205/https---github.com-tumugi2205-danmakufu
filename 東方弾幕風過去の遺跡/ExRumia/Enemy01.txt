@@ -1,0 +1,78 @@
+script_enemy_main
+{//Enemy01
+	let count=0;
+	let cx=GetCenterX();//STGシーンの中心x座標を取得
+	let imgEnemy=GetCurrentScriptDirectory~"img\Enemy.png";
+	let imgAngle=0;
+	let shotAngle=0;
+	@Initialize
+	{
+		SetLife(1500);//ライフを1500に設定
+		SetGraphicRect(1,1,32,32);//描画元矩形を設定	
+		SetMovePosition02(cx+0,60,60);//座標(cx,60)へ60フレームかけて移動する
+	}
+	
+	@MainLoop
+	{
+		if(count%9==0)
+		{
+			let tAngle=0;
+			loop(8)
+			{
+				CreateShot01(GetX(),GetY(),3,shotAngle+tAngle,BLUE12,10);
+				CreateShot01(GetX(),GetY(),3,-shotAngle+tAngle,BLUE12,10);
+				tAngle+=45;
+			}
+			shotAngle+=1;
+		}
+	
+		if(count%120==0)
+		{
+			let tAngle=0;
+			loop(18)
+			{
+				CreateShot02(GetX(),GetY(),5,GetAngleToPlayer()+tAngle,-0.2,2.0,RED01,30);
+				tAngle+=20;
+			}
+		}
+	
+		if(count%720==0&&count<4000)
+		{
+			SetMovePosition02(cx-50,100,270);
+		}
+		if(count%720==360&&count<4000)
+		{
+			SetMovePosition02(cx+50,100,270);
+		}
+		if(count==1800)
+		{
+			SetLife(0);
+		}
+
+		SetCollisionA(GetX(),GetY(),24);//当たり判定(自弾)登録
+		SetCollisionB(GetX(),GetY(),24);//当たり判定(体当たり)登録
+		count++;
+	}
+	
+	@Finalize
+	{//読みこんだファイルを削除
+		loop(8)
+		{
+			CreateItem(ITEM_SCORE,cx+rand(-100,100),rand(20,100));
+		}
+	}
+	
+	@DrawLoop
+	{//描画
+		SetTexture(imgEnemy);
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetGraphicAngle(0,0,imgAngle);
+		DrawGraphic(GetX(),GetY());
+		SetRenderState(ADD);
+		SetGraphicAngle(0,0,-imgAngle);
+		DrawGraphic(GetX(),GetY());
+		imgAngle+=4;
+		if(imgAngle>360){imgAngle=0;}
+	}
+}

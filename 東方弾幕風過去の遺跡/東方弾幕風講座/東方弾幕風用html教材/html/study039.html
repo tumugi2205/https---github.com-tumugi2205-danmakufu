@@ -1,0 +1,381 @@
+<html>
+<head>
+<title>噴水弾幕</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０３９回　噴水弾幕<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回は噴水に見立てた弾幕を作ってみる。<br>
+このスクリプトはまずどんな弾幕か見てみようか。<br>
+弾幕風を起動して『３９：噴水弾幕』を選んでみよう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+おお～！<br>
+上に飛ばした弾が重力に引かれるみたいに<br>
+下に落ちてくるんですね～<br>
+確かに噴水みたいです～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+面白そうな弾幕だけど、実は簡単にできるのよ。<br>
+それじゃあスクリプトの方を見てみよう。<br>
+
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {
+      let px = -22;
+      loop(2) {<font color="red">
+        CreateShot12(GetX+px, GetY-20, rand(-2, 2), rand(-1, -3), 0, 0.05, 0, 10, AQUA11, 0);</font>
+        px += 41;
+      }
+      loop(3) {yield;}
+    }
+  }
+}
+
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+え！？<br>
+弾幕処理の部分ってコレだけなんですか？<br>
+他にtaskとか無いんですか！？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、これだけ。<br>
+噴水弾幕の核になる関数はCreateShot12。<br>
+これだけよ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+普段CreateShot01ばかり使ってますけど、<br>
+他にもこんな関数があるんですね。<br>
+そういえば第１７回にCreateShot02なんてありましたね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+じゃあCreateShot12の説明をしよう。<br>
+まず第１、２引数は他のCreateShot関数と同様に<br>
+弾を出す場所を指定する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen06.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+単純にGetX, GetYってなってませんね。<br>
+もしかしてコレが噴水弾幕の秘密！？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+いやいや、これはただEXルーミアの両手から<br>
+弾を出すようにしたいだけの処理だから。<br>
+別にGetX, GetYにしてボスの中心から弾を出すようにしても<br>
+噴水弾幕は作れるわよ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そ、そうだったんですか･･････<br>
+それじゃあrand関数を使っている引数が<br>
+カギになってるんですかね？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通り。<br>
+それじゃ改めてCreateShot12の引数について説明しよう。<br>
+引数の数は全部で１０個。<br>
+実は東方弾幕風v0.12mの中で一番引数が多い関数だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+でも最初の引数２つは弾が出る場所を指定して、<br>
+最後の引数２つは画像と遅延時間ですよね。<br>
+そこは他のCreateShot関数と一緒ですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、だから真ん中の６つの引数が重要なんだ。<br>
+まず第３引数。<br>
+ここでは『弾のX方向速度』を指定する。<br>
+同様に第４引数では『Y方向速度』を指定する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen01.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+え、えっくすほうこうそくど！？<br>
+そんなの初めて聞きましたけど･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+これまで弾を発射させたいときは、<br>
+『弾の速度』と『弾の発射方向』を決めていた。<br>
+しかしCreateShot12ではX, Y方向の速度を与えて<br>
+その数値から弾の速度と発射方向が決まるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+え～～～っと･･････<br>
+すいません、例をお願いします。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだな、例えばX方向速度を１に、<br>
+そしてY方向速度を０に設定したとしよう。<br>
+X方向は右にいくほどプラスになって、<br>
+Y方向速度は０だから上下方向には動かない。<br>
+ということは？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+あ、その場合は０°方向に飛ぶってコトですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+正解。<br>
+じゃあ今度はX方向速度を０に、<br>
+Y方向の速度をマイナス１にした場合は？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+えっと、Y方向のマイナスは上向きですから、<br>
+２７０°の方向に弾を飛ばすんですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうこと。<br>
+それじゃあX, Y方向の両方が１だった場合は？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ええっ！？<br>
+えっと、間を取って右下･･････？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、右下に飛んでいくわ。<br>
+ちなみに角度で言うと丁度右下、<br>
+４５°の方向に弾が飛ぶのよ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ということは、マイナスとの組み合わせも合わせて<br>
+８方向にしか飛ばせないってコトですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+いや、そんなことはない。<br>
+例えばX方向の速度が２、Y方向の速度が１だと<br>
+やや右よりの方向の角度で飛んでいく。<br>
+X方向とY方向の速度を変えることによって<br>
+中途半端な角度にも飛ばせるんだ。<br>
+ちなみに、この例の弾の速度は√５。<br>
+弾の速度は三平方の定理で求めることができるぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+うーん、なんだか難しい話ですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあこれ以上詳しくは解説しないでおこうか。<br>
+気になるなら『ベクトルの計算』で調べてみてくれ。<br>
+といっても必ず上下左右の４方向しかしないから、<br>
+普通のベクトル計算よりずっと簡単なハズだ。<br>
+むしろ『極座標』の方が参考になるかもしれないな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それで、そのベクトル計算や極座標が<br>
+CreateShot12にどう関わっているんです？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだな、話を戻そう。<br>
+CreateShot12の第５、６引数なんだが、<br>
+ここではそれぞれX方向、Y方向の加速度を設定する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+加速度っていうのは弾がどんどん速くなる<br>
+加速弾を作るときに出た話ですね。<br>
+ココの講座で言うと第１７回にありました。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それで今回の例だと第５引数は０、<br>
+第６引数が０．０５になっている。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ってコトは横方向には加速しないけど、<br>
+下の方向には加速していくのかな？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通り。<br>
+更に第４引数のY速度に注目すると、－１～－３になっている。<br>
+つまり最初は上方向へ飛んでいくようになっているんだが、<br>
+Y方向がプラスの方向に加速していくことによって･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+あ、わかった！<br>
+だから最初上に飛んだ弾がだんだん下に落ちてきて<br>
+噴水みたいになるんだ！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ハイ、正解！<br>
+今回みたいにCreateShot12を使うことによって<br>
+重力に引かれるような弾幕を作れるのよ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+というコトは、逆にX方向だけ加速するようにすれば<br>
+横へ引き寄せられる弾を作れたりするんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうね。<br>
+それともう１つ言っておきましょうか。<br>
+実際にスクリプトを動かしたときの弾をよく見て。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+あ、針弾の向きがちゃんと進行方向に向けて<br>
+グラフィックの向きが変わってますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+CreateShot12では弾の向きも自動で補正してくれるのよ。<br>
+見た目が気になる人も安心ね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ちょっと使い方が難しそうな関数ですけど、<br>
+上手く使えばわざわざオブジェクト弾を使わなくても<br>
+面白い弾幕が作れそうですね！<br>
+それではまた次の講座でお会いしましょう！
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

@@ -1,0 +1,203 @@
+#東方弾幕風
+#Title[文意「思い違いの世界」]
+#Text[]
+#PlayLevel[弾幕風教材用]
+#Image[.\img\study008.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = "script\img\きょーこ.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+		SetLife(2000);
+        SetDamageRate(100,70);
+        CutIn(YOUMU,"文意「思い違いの世界」",0,0,0,0,0);//スペルカード名表示
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+                SetTimer(60);
+/*
+		mainTask;
+		mainTask2;*/
+		mainTask3;
+		mainTask4;
+		mainTask5;
+TMove;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		loop(60) {yield;}
+
+		loop {
+			let speed = 0.1+rand(0.5,0.9);
+			loop(13) {
+             CreateShotA("S1",GetClipMaxX-20, GetClipMinY,10);
+          SetShotDataA("S1",0,speed,90,0,0,5,AQUA01);
+          SetShotDataA("S1",60,0,90,0,0,0,AQUA01);
+          SetShotDataA("S1",80,2,180,0,0,0,AQUA01);
+SetShotDirectionType(PLAYER);
+          SetShotDataA("S1",110,2,0,0,0,0,AQUA01);
+SetShotDirectionType(ABSOLUTE);
+          FireShot("S1");
+				speed += 0.5;
+			}
+			loop(60) {yield;}
+		}
+        }
+	task mainTask2 {
+		loop(60) {yield;}
+
+		loop {
+			let speed = 0.1+rand(0.5,0.9);
+			loop(13) {
+             CreateShotA("S2",GetClipMinX+20, GetClipMinY,10);
+          SetShotDataA("S2",0,speed,90,0,0,5,AQUA01);
+          SetShotDataA("S2",60,0,90,0,0,0,AQUA01);
+          SetShotDataA("S2",80,2,0,0,0,0,AQUA01);
+SetShotDirectionType(PLAYER);
+          SetShotDataA("S2",110,2,0,0,0,0,AQUA01);
+SetShotDirectionType(ABSOLUTE);
+          FireShot("S2");
+				speed += 0.5;
+			}
+			loop(60) {yield;}
+		}
+	}
+	task mainTask3 {
+		loop(60) {yield;}
+
+		loop {
+			let speed = 0.1+rand(0.5,0.9);
+			loop(15) {
+             CreateShotA("S1",GetX-30, GetY,10);
+          SetShotDataA("S1",0,2,90,0,0,5,AQUA02);
+          SetShotDataA("S1",60,2,90,0,0,0,RED03);
+          SetShotDataA("S1",80,2,180,0,0,0,RED03);
+          SetShotDataA_XY("S1",130,rand(-2,2),rand(-1,-3),0,0.02,2,3,AQUA05);
+SetShotDirectionType(PLAYER);
+          SetShotDataA("S1",280,2,0,0,0,0,RED05);
+SetShotDirectionType(ABSOLUTE);
+          FireShot("S1");
+				speed += 0.5;
+			}
+			loop(120) {yield;}
+		}
+	}
+	task mainTask4 {
+		loop(60) {yield;}
+
+		loop {
+			let speed = 0.1+rand(0.5,0.9);
+			loop(30) {
+             CreateShotA("S1",GetX, GetY,10);
+          SetShotDataA("S1",0,2,90,0,0,5,AQUA02);
+          SetShotDataA("S1",60,2,90,0,0,0,RED03);
+          SetShotDataA_XY("S1",80,rand(-2,2),rand(-1,-3),0,0.02,2,3,AQUA01);
+          FireShot("S1");
+				speed += 0.5;
+			}
+			loop(60) {yield;}
+		}
+	}
+	task mainTask5 {
+		loop(60) {yield;}
+
+		loop {
+			let speed = 0.1+rand(0.5,0.9);
+			loop(15) {
+             CreateShotA("S1",GetX+30, GetY,10);
+          SetShotDataA("S1",0,2,90,0,0,5,AQUA02);
+          SetShotDataA("S1",60,2,90,0,0,0,RED03);
+          SetShotDataA("S1",80,2,0,0,0,0,RED03);
+          SetShotDataA_XY("S1",130,rand(-2,2),rand(-1,-3),0,0.02,2,3,AQUA05);
+SetShotDirectionType(PLAYER);
+          SetShotDataA("S1",280,2,0,0,0,0,RED05);
+SetShotDirectionType(ABSOLUTE);
+          FireShot("S1");
+				speed += 0.5;
+			}
+			loop(120) {yield;}
+		}
+	}
+// キャラを移動させるタスク
+    task TMove {
+        yield;
+
+        loop {
+            loop(120) { yield; }
+            moveToPlayer(rand(40, 80), rand(-40, 40), 60,
+                         GetClipMinX + 32, GetClipMinY + 32,
+                         GetClipMaxX - 32, GetClipMinY + 160);
+        }
+    }
+    // なるべくプレイヤーの方向に移動
+    //   xMove  : x 方向の移動量（正の数）
+    //   yAdd   : y 方向の移動量
+    //   frame  : 移動に要するフレーム数
+    //   left   : 以下、可動範囲
+    //   top    :
+    //   right  :
+    //   bottom :
+    function moveToPlayer(xMove, yAdd, frame, left, top, right, bottom) {
+        let x;
+        let y;
+
+        if(GetPlayerX < GetX) {
+            // プレイヤーより右に敵がいれば、敵は左に動きます。
+            x = GetX - xMove;
+
+            // 但し、敵が可動領域の左端よりも左にいくようなら、右に動きます。
+            if(x < left) {
+                x = GetX + xMove;
+            }
+        } else {
+            // さもなくば、敵は右に動きます。
+            x = GetX + xMove;
+
+            // 但し、敵が可動領域の右端よりも右にいくようなら、左に動きます。
+            if(right < x) {
+                x = GetX - xMove;
+            }
+        }
+
+        // 可動領域の外に行く場合は、端っこで止めます。
+        y = GetY + yAdd;
+        if(y < top) {
+            y = top;
+        } else if(bottom < y) {
+            y = bottom;
+        }
+
+        SetMovePosition02(x, y, frame);
+
+
+    }
+
+}

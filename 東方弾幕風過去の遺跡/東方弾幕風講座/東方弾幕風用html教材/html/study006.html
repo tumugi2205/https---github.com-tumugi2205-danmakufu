@@ -1,0 +1,184 @@
+<html>
+<head>
+<title>連弾 (個別狙い)</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第００６回　連弾 (個別狙い)<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さて、今回は連弾の作り方を学ぶ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+連弾って聞き慣れない言葉ですけど、どういう弾幕なんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+聞き慣れないのは当然ね。<br>
+ここの作者が勝手に定義した名前だから。<br>
+連弾とは要するに複数の弾が一列に連結した形を意味することにしているわ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+つまり線のような形で飛んでくる弾幕のことですね。<br>
+だったら線状弾とかそういう名前の方がわかりやすいと思いますが。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+『せんじょう』だと線状なのか扇状なのか口で言ったときにわからないからね。<br>
+扇状の方だと狭角way弾の方を連想するから。<br>
+普通は『おうぎじょう』と呼ぶから区別を付けることができるけれど･･････<br>
+より明確に分かるよう連弾という呼び方をすることにするわ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+連弾の意味がわかったところで、スクリプトを開いてみますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ああ。<br>
+『study006.txt』を開いてくれ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {
+      loop(6) {
+	CreateShot01(GetX, GetY, 2, GetAngleToPlayer, RED01, 0);<font color="red">
+	loop(10) {yield;}</font>
+      }
+      loop(60) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回はloop(6)の中が重要だ。<br>
+前回の3wayの時とは違い、loop(10) {yield;}が入っているな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ということは前回までと違って、ループ間の弾を同時に出すってわけではないんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+つまり、今回は弾を出すときに『待つ』処理があるワケだな。<br>
+そして変数を使った角度の更新もない。<br>
+だから常に自機狙いの弾を撃つことになる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+でもループ間の待ち時間が１０フレーム、約０．１７秒ですからかなり短いですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+だから端から見れば連発して弾を撃っているように見える。<br>
+短いスパンで撃っているから弾と弾が繋がっているような形に見える。<br>
+これで連弾を作ることができたな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+実際に『連弾 (個別狙い)』のスクリプトを起動すると、６連発の弾を撃ってきます～<br>
+でもこの連弾って自機を動かしていると形が崩れますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+CreateShot01の引数がGetAngleToPlayerになっているからな。<br>
+だから弾を撃つ瞬間々々に角度を求めて弾を撃つことになる。<br>
+当然連弾を発射している期間に自機を動かすと弾の形が崩れるな。<br>
+だからこそ (個別狙い) という注釈を付けたワケだが。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen01.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+でも弾幕シューティングだと常に直線の形で弾を撃つものもありますよね？<br>
+その弾幕を撃ちたい場合は今回の例じゃダメってことか～･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+確かに今のままではダメだけど、ちょっとした工夫を付け加えるだけでできるよ。<br>
+次回の講座では常に直線になる弾幕『連弾 (後追い)』を学ぶわ。<br>
+今回の講座にほんのちょっと加えるだけだから自力で方法を見つける方もいるでしょう。<br>
+やり方に見当がついたら是非自力でスクリプトを作ってみてちょうだい。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それじゃあ次回の講座は答えが分かった方は受けなくても問題なさそうですね。<br>
+答えが気になる方だけ次回でお会いしましょう！
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

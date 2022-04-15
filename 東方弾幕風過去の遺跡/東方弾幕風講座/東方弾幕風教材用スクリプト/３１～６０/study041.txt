@@ -1,0 +1,129 @@
+#東方弾幕風
+#Title[４１：組み込みエフェクトの使用例]
+#Text[]
+#PlayLevel[弾幕風教材用]
+#Image[.\img\study041.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		loop(60) {yield;}
+
+		loop {
+			Concentration01(120);
+			loop(120) {yield;}
+			let speed = 2;
+			let angle = rand(0, 360);
+			loop(10) {
+				loop(32) {
+					CreateShot01(GetX, GetY, speed, angle, WHITE22, 0);
+					angle += 360/32;
+				}
+				speed += 0.2;
+				angle += 2;
+			}
+			loop(120) {yield;}
+
+			SetColor(255, 64, 255);
+			Concentration01(120);
+			loop(120) {yield;}
+			let speed = 2;
+			let angle = rand(0, 360);
+			loop(10) {
+				loop(32) {
+					CreateShot01(GetX, GetY, speed, angle, PURPLE22, 0);
+					angle += 360/32;
+				}
+				speed += 0.2;
+				angle -= 4;
+			}
+			loop(120) {yield;}
+
+			Concentration02(75);
+			loop(120) {yield;}
+			let count = 1;
+			loop(15) {
+				let way = count;
+				if(count > 8) {
+					way = 16 - count;
+				}
+				let angle = -5*(way-1)/2;
+				loop(way) {
+					CreateShot01(GetX, GetY, 2+0.3*count, GetAngleToPlayer+angle, BLUE11, 0);
+					angle += 5;
+				}
+				count++;
+			}
+			loop(120) {yield;}
+
+			loop(8) {
+				objectBullet;
+				loop(30) {yield;}
+			}
+			loop(240) {yield;}
+		}
+	}
+
+	task objectBullet {
+		let obj = Obj_Create(OBJ_SHOT);
+		Obj_SetX(obj, GetX);
+		Obj_SetY(obj, GetY);
+		Obj_SetSpeed(obj, 4);
+		Obj_SetAngle(obj, rand(-30, 210));
+		ObjShot_SetGraphic(obj, WHITE03);
+		ObjShot_SetDelay(obj, 0);
+
+		while(!Obj_BeDeleted(obj)) {
+			if((Obj_GetX(obj) < GetClipMinX) || (Obj_GetX(obj) > GetClipMaxX) || (Obj_GetY(obj) < GetClipMinY) || (Obj_GetY(obj) > GetClipMaxY)) {
+				Explosion01(Obj_GetX(obj), Obj_GetY(obj), 8, 0.3, 60);
+				let angle = 0;
+				loop(16) {
+					CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 2, angle, WHITE01, 0);
+					CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 2, angle+2, WHITE01, 0);
+					CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 2, angle+4, WHITE01, 0);
+					angle += 360/16;
+				}
+				Obj_Delete(obj);
+			}
+			yield;
+		}
+	}
+}

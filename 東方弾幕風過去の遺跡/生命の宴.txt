@@ -1,0 +1,278 @@
+#東方弾幕風
+#Title[生命の宴]
+#Text[
+こんな私でも「最後に愛と勇気が勝つ物語」っての、
+そういうの信じて魔法少女になったんだ。
+ははは....笑っちまうだろ？]
+#BackGround[User()]
+#ScriptVersion[2]
+#BGM[bgm\bgm.wav\イマジンブレイク.mp3]
+
+script_enemy_main{
+
+    //グローバル変数
+       let imgBoss   = "script\img\杏子.png";
+	let wIni = 120;
+	let arrayObj = [];
+	
+	///////////////////////////////////////////////////////////
+
+	@Initialize{
+	    LoadGraphic(imgBoss);
+
+        SetMovePosition02(GetCenterX(), GetClipMinY() + 120, wIni);
+        SetLife(4000);
+        SetInvincibility(wIni);
+        SetTimer(60);
+        SetDamageRate(100, 100);
+	   /*
+	    TMain;    */
+	    TNway;  
+	    TNway2;
+	    TNway3;
+	    TNway4;
+	    TNway5;
+	    TNway6;
+	    TNway7;
+	    TNway8;
+     TMove;
+        CutIn(KOUMA,"生命の宴","script\img\きれい.png",0,0,373,397);//スペルカード名表示
+	}
+		
+	@MainLoop{
+		SetCollisionB(GetX(), GetY(), 24);
+	    yield;
+
+	}
+	@DrawLoop{
+	    SetTexture(imgBoss);
+	    SetGraphicRect(1, 1, 64, 64);
+	    DrawGraphic(GetX(), GetY());
+	}
+		
+	@Finalize{
+	    DeleteGraphic(imgBoss);
+	}
+
+
+
+	task TMain{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    
+	    //処理
+	    loop{
+	        ascent(let i in 0..3){
+	            CreateHomingShot(GetX(), GetY(), 2, GetAngleToPlayer() + i*60 + 30, 2, 180, WHITE21, 20);
+	        }
+	        loop(60){ yield; }
+	    }
+	}
+	
+	//////////////////////////////////////////////////////////
+
+    //ホーミング弾の例
+    task CreateHomingShot(let x, let y, let speed,
+                 let angle, let mo, let limit, let graphic, let delay) {
+        
+        //オブジェクト弾の作成
+        let obj = Obj_Create(OBJ_SHOT);
+        
+        //パラメータの設定
+        Obj_SetPosition(obj, x, y);
+        Obj_SetSpeed(obj, speed);
+        Obj_SetAngle(obj, angle);
+        ObjShot_SetGraphic(obj, graphic);
+        ObjShot_SetDelay(obj, delay);
+        
+        Obj_SetCollisionToPlayer(obj,false);
+        loop(delay){ yield; }
+        
+        loop(limit) {
+            if(Obj_BeDeleted(obj)){
+                break;
+            }
+        
+            let angleToPlayer = atan2(GetPlayerY-Obj_GetY(obj), GetPlayerX-Obj_GetX(obj));
+            
+            if(sin(angleToPlayer - Obj_GetAngle(obj))>0){
+                Obj_SetAngle(obj, Obj_GetAngle(obj) + mo);
+            }
+            else{
+                Obj_SetAngle(obj, Obj_GetAngle(obj) - mo);
+            }
+            yield;
+        }
+    }
+
+
+	task TNway{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(40){
+         CreateShot02(GetX,GetY, rand(0.5,2),
+	                rand(0,360),0.1, 5,YELLOW11,150);
+}
+         loop(100){ yield; }
+	}
+ }
+
+	task TNway2{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+         CreateShot02(GetX,GetY,rand(0.5,2),
+	                rand(0,360),0.2, 5,RED31,150);
+}
+         loop(100){ yield; }
+	}
+ }
+
+	task TNway3{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+         CreateShot02(GetX,GetY,rand(0.5,2),
+	                rand(0,360),0.1, 10,RED23,150);
+}
+         loop(100){ yield; }
+	}
+ }
+	task TNway4{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+         CreateShot02(GetX,GetY,rand(0.5,2),
+	                rand(0,360),0.02,5,RED32,150);
+}
+         loop(100){ yield; }
+	}
+ }
+	task TNway5{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+         CreateShot02(GetX,GetY,rand(0.5,2),
+	                rand(0,360),-0.02,-5,AQUA04,150);
+}
+         loop(100){ yield; }
+	}
+ }
+	task TNway6{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+         CreateShot02(GetX,GetY,rand(0.5,2),
+	                rand(0,360),-0.02,-5,RED04,150);
+}
+         loop(100){ yield; }
+	}
+ }
+	task TNway7{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+         CreateShot02(GetX,GetY,rand(0.5,2),
+	                rand(0,360),-0.02,-5,YELLOW04,150);
+}
+         loop(100){ yield; }
+	}
+ }
+	task TNway8{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+         CreateShot02(GetX,GetY,rand(1.5,2),
+	                rand(0,360),-0.05,-5,YELLOW21,150);
+}
+         loop(100){ yield; }
+	}
+ }
+ //////////////////////////////////////////////////////////
+ // キャラを移動させるタスク
+    task TMove {
+        yield;
+
+        loop {
+            loop(120) { yield; }
+            moveToPlayer(rand(40, 80), rand(-40, 40), 60,
+                         GetClipMinX + 32, GetClipMinY + 32,
+                         GetClipMaxX - 32, GetClipMinY + 160);
+        }
+    }
+
+    // なるべくプレイヤーの方向に移動
+    //   xMove  : x 方向の移動量（正の数）
+    //   yAdd   : y 方向の移動量
+    //   frame  : 移動に要するフレーム数
+    //   left   : 以下、可動範囲
+    //   top    :
+    //   right  :
+    //   bottom :
+    function moveToPlayer(xMove, yAdd, frame, left, top, right, bottom) {
+        let x;
+        let y;
+
+        if(GetPlayerX < GetX) {
+            // プレイヤーより右に敵がいれば、敵は左に動きます。
+            x = GetX - xMove;
+
+            // 但し、敵が可動領域の左端よりも左にいくようなら、右に動きます。
+            if(x < left) {
+                x = GetX + xMove;
+            }
+        } else {
+            // さもなくば、敵は右に動きます。
+            x = GetX + xMove;
+
+            // 但し、敵が可動領域の右端よりも右にいくようなら、左に動きます。
+            if(right < x) {
+                x = GetX - xMove;
+            }
+        }
+
+        // 可動領域の外に行く場合は、端っこで止めます。
+        y = GetY + yAdd;
+        if(y < top) {
+            y = top;
+        } else if(bottom < y) {
+            y = bottom;
+        }
+
+        SetMovePosition02(x, y, frame);
+    }
+}

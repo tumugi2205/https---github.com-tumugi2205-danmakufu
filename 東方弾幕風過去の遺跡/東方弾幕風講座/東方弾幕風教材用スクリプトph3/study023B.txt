@@ -1,0 +1,7 @@
+sub shot3way {
+  let angle = GetAngleToPlayer(objEnemy) - 20;
+  loop(3) {
+    CreateShotA1(ObjMove_GetX(objEnemy), ObjMove_GetY(objEnemy), 2, angle, DS_BALL_S_RED, 0);
+    angle += 20;
+  }
+}

@@ -1,0 +1,239 @@
+<html>
+<head>
+<title>加速弾</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０１７回　加速弾<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さて、これまではベーシックな弾ばかりを作ってきたが、<br>
+今回は加速する弾を作ってみるぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+おお～！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+加速弾もCreateShot01と似たようなやりかたで出すことができるのだが、<br>
+普通の弾と比べるとちょっと面倒な書き方になる。<br>
+まあ実際にスクリプトを見てみよう。<br>
+『Study017.txt』を開いてくれ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～<br>
+<br>
+  task mainTask {
+    loop(60) {yield;}
+<font color="red">
+    CreateShot02(GetX, GetY, 0.5, GetAngleToPlayer, 0.05, 8, RED01, 0);
+</font>
+    loop(180) {yield;}
+    let angle = rand(0, 360);
+    let sign = rand_int(0, 1)*2 - 1;
+    loop {
+      CreateShot02(GetX, GetY, 0.5, angle, 0.05, 8, RED01, 0);
+      angle += 12.3*sign;
+      loop(3) {yield;}
+    }
+  }
+}
+
+</font><br>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ちなみに今回から暫く自習枠を設けることにした。<br>
+今回の講座で習うのはスクリプトの上半分だけ解説することにする。<br>
+下の方は自分で解読してみてくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+実際に動かしてどんな弾幕が撃たれるのかをヒントにするとわかりやすいですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+自信があるなら先にスクリプトを解読して、実際の弾幕を見て答え合わせを<br>
+してみる方式にすると良いだろう。<br>
+では話を戻そうか。<br>
+加速弾を作るにはCreateShot02という関数を使う。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+これまでは弾を撃つときにずっとCreateShot01を使ってましたけど、<br>
+今回はCreateShot02なんですね。<br>
+おんなじような名前ですけれど。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあ使い方もほぼ同じだ。<br>
+CreateShot01にあった６つの引数に新しく２つ引数を追加したものが
+CreateShot02関数なんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+じゃあ８つのうち６つはCreateShot01と同じなんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ああ。<br>
+CreateShot02(GetX, GetY, 0.5, GetAngleToPlayer, 0.05, 8, RED01, 0);<br>
+このうち最初の４つと最後の２つの引数がCreateShot01と全く同じだ。<br>
+０．０５と８となっているのが新しい引数だな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+その２つの数字が加速弾に必要なパラメータなんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうこと。<br>
+まず第５引数、０．０５となっているが、これは加速度を設定している。<br>
+ここの数値が大きいほど、短時間で弾の速度が速くなっていく。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+０．０５ってかなり小さい数値だと思うんですが･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+１フレーム毎に加速する量だからね。<br>
+例えば今回の例だと初速が０．５、加速度が０．０５となっているから、<br>
+１秒後の弾速は　０．５＋０．０５×６０　＝　３．５　となり、<br>
+加速度の数値が少なくても結構な速度になるの。<br>
+だから加速度は小数になるのが普通ね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+もし加速度をマイナスにしたらどうなるんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その場合はだんだん減速するようになるね。<br>
+速度が０を超えてマイナスになった場合は、本来進む方向とは<br>
+逆の方向に弾が飛んでいくようになるわ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なるほど～<br>
+では第６引数の８となっているのは･･････？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+こちらは加速によって増える上限を設定する。<br>
+加速するといっても、際限なく加速されると困るだろう？<br>
+だからある数値まで加速したらもうそれ以上加速しないように<br>
+最大速度を決めるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+じゃあ今回の場合は加速しても８を超えることはないってことですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+これでCreateShot02の説明は終わりだ。<br>
+引数が８つと多いが、大体は使い慣れたCreateShot01と同じだからな。<br>
+引数の場所を間違えなければ問題無く加速弾を作れるようになると思う。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+後は自習枠の部分なんですが･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+最初に言ったとおり、自主勉強用として使ってもらうからここでは解説しない。<br>
+ただ１つだけ解説しようか。<br>
+let sign = rand_int(0, 1)*2 - 1 と書かれている行だ。<br>
+これは変数signに１か－１のどちらかをランダムに格納しているんだ。<br>
+ランダムに１か－１を作るというのは、弾幕作りで使う機会が多いと思う。<br>
+だからこの書き方は憶えておいた方が言いと思うぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それでは自習頑張ってくださいね！<br>
+実際にスクリプトを動かしたときの挙動はヒントとしても答え合わせとしても<br>
+好きなように使ってくださいね！
+</p></td>
+</tr>
+
+</table>
+
+</body>
+</html>

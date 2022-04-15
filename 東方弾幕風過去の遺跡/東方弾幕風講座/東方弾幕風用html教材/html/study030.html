@@ -1,0 +1,384 @@
+<html>
+<head>
+<title>オブジェクト弾 (画面枠で反射する弾)</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０３０回　オブジェクト弾 (画面枠で反射する弾)<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回で第３０回。<br>
+大分長く講座を続けてきたな。<br>
+今回学ぶのは画面枠で反射するオブジェクト弾を作成する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+反射弾というと、あの悪魔の妹のスペルカードにもそんなのありましたね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ＱＥＤ「４９５年の波紋」のことだな。<br>
+そうだな、それと同じ性質を持つ弾幕だ。<br>
+難易度はアレよりかなり抑えてあるがな。<br>
+スクリプトの数字を弄れば本家に近い再現弾幕も実現可能だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+おお～！<br>
+それは凄いですね！<br>
+それで今回学ぶスクリプトは『study030.txt』ですね。<br>
+開いてみましょう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {
+      loop(4) {
+        let angle = rand(0, 360);
+        loop(24) {
+          objectBullet(angle);
+          angle += 360/24;
+        }
+        loop(90) {yield;}
+      }
+      loop(180) {yield;}
+
+      SetMovePosition02(GetCenterX, GetCenterY - 40, 60);
+      loop(60) {yield;}
+
+      let sign = rand_int(0, 1)*2 - 1;
+      loop(4) {
+        let angle = rand(0, 360);
+        loop(6) {
+          loop(16) {
+            objectBullet(angle);
+            angle += 360/16;
+          }
+          angle += 0.7*sign;
+          loop(5) {yield;}
+        }
+        sign *= -1;
+        loop(60) {yield;}
+      }
+      loop(180) {yield;}
+
+      SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+      loop(60) {yield;}
+    }
+  }
+
+  task objectBullet (let angle) {
+    let obj = Obj_Create(OBJ_SHOT);
+    Obj_SetX(obj, GetX);
+    Obj_SetY(obj, GetY);
+    Obj_SetSpeed(obj, 2);
+    Obj_SetAngle(obj, angle);
+    ObjShot_SetGraphic(obj, BLUE11);
+    ObjShot_SetDelay(obj, 0);
+
+    while(!Obj_BeDeleted(obj)) {<font color="red">
+      if((Obj_GetX(obj) < GetClipMinX) || (Obj_GetX(obj) > GetClipMaxX)) {</font>
+        CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 2, <font color="red">180-Obj_GetAngle(obj),</font> AQUA11, 0);
+        Obj_Delete(obj);<font color="red">
+      } else if(Obj_GetY(obj) < GetClipMinY) {</font>
+        CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 2, <font color="red">360-Obj_GetAngle(obj),</font> AQUA11, 0);
+        Obj_Delete(obj);<font color="red">
+      }</font>
+      yield;
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回もmainTaskの解説から始めよう。<br>
+loop { } の最初では４回の24way全方位弾を９０フレーム間隔で放つ。<br>
+オブジェクト弾に与える引数は発射角度のデータのみ。<br>
+ここまでは簡単だな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+その後SetMovePosition02を使っていますね。<br>
+画面中央やや上あたりへ、６０フレームかけて動くんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その後はちょっと複雑な３重ループで弾幕を作っている。<br>
+ここでは６発の連弾になっている弾を全方位16wayで放っている。<br>
+この連弾は首振り式で放つようにしている。<br>
+ループの最初で宣言している変数signが、<br>
+連弾を右振りか左振りかどちらで撃つかを決めている。<br>
+全方位弾を撃つたびにsignの値を反転させ、連弾の出し方を変えている。<br>
+それを４回繰り返している。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+loop(4) { } は全方位弾を４回撃つためのループ。<br>
+loop(6) { } は６重弾で撃つためのループ。<br>
+loop(16) { } は全方位16way弾を撃つためのループですね。<br>
+それぞれのループの役目をしっかり掴めれば、<br>
+変数の更新を行う場所もなんとなくわかってくるものですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ここまでしっかり学んでいればこのくらいは自分でも<br>
+できるようになってくるだろう。<br>
+一から自力で学ぶのは難しいが、このように例があると<br>
+少しは理解の助けになるだろう。<br>
+ここの講座にある数々のサンプルスクリプトを有効に使ってくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+mainTaskの最後ではまたSetMovePosition02を使うんですね。<br>
+@InitializeにあるSetMovePosition02と同じ引数ですから、<br>
+最初の位置に戻るってことですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+mainTaskの処理は以上だな。<br>
+ではobjectBulletの説明に移ろう。<br>
+例によってオブジェクト弾の初期設定やwhileループの条件は<br>
+特に見るべきところはない。<br>
+今回も重要なポイントはwhileループの中にあるif分の条件と中身の処理だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+if文の条件は･･････<br>
+((Obj_GetX(obj) &lt; GetClipMinX) || (Obj_GetX(obj) &gt; GetClipMaxX)) ですか。<br>
+結構長いですね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+だが文章で表現すれば簡単だ。<br>
+・オブジェクト弾が画面左端よりも左にいる。<br>
+・オブジェクト弾が画面右端よりも右にいる。<br>
+このどちらかの条件を満たせばif文の処理が実行される。<br>
+要するに前回の『study029』で学んだif文の処理を、<br>
+論理和で２つをまとめた処理なんだ。<br>
+壁反射弾は左端で反射する場合と右端で反射する場合どちらでも<br>
+処理の中身は共通になる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そのif文の処理の中身なんですが、CreateShot01で弾を撃ったあと<br>
+Obj_Deleteで消していますよ？<br>
+これは炸裂弾の類なんじゃないですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあまあ。<br>
+今回重要なのはCreateShot01の発射角度だ。<br>
+180-Obj_GetAngle(obj) となっているだろう？<br>
+１８０からオブジェクト弾の発射角度の値を引くと、<br>
+丁度壁に反射しているように飛ぶんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なんでこの計算式でうまくいくんでしょうね？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ここは深く考えずに、『こうすればうまくいく』と憶えた方が楽よ。<br>
+数学の公式のように理屈で憶えるよりは形で憶えた方がいいでしょう。<br>
+今は数学を学んでいるのではなく、弾幕作りについて学んでいるのだからね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+わかりました。<br>
+そして次のif文なんですが、こちらも前回の条件とほとんど同じですね。<br>
+GetClipMinYとなっていますから、画面上での反射についての処理でしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通りだ。<br>
+上反射の場合も左右反射と同様の処理を行っている。<br>
+こちらの発射角度は 360-Obj_GetAngle(obj) となっているな。<br>
+これも公式だと思って憶えてしまおう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+これでオブジェクト弾の解説は終わりですね。<br>
+このオブジェクト弾は画面下では反射しないんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+画面下で反射すると難易度がかなり上がるからね。<br>
+そういった処置を取る場合も多いわ。<br>
+最初に言ったＱＥＤ「４９５年の波紋」もそうだけど、<br>
+怒首領蜂大往生の５面ボス『黄流』の発狂も画面下では反射しないもの。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+もし画面下でも反射させたい場合は、上反射と同じように<br>
+360-Obj_SetAngle(obj) と書いて大丈夫なんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+大丈夫だ、問題ない。<br>
+いやいや、流行の死亡フラグではなくてだな。<br>
+実際に ((Obj_GetY(obj) &lt; GetClipMinY) || (Obj_GetY(obj) &gt; GetClipMaxY)) と<br>
+書き換えればちゃんと画面下でも反射するぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それから、この弾幕は１回しか反射しないんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+反射とは言っているが、実際は消える間際に普通の弾を撃っている<br>
+だけの処理だからな。<br>
+もし何回も反射させたいなら、CreateShot01とObj_Deleteを消して<br>
+Obj_SetAngle(obj, 180-Obj_GetAngle(obj)) と書けばいい。<br>
+弾を出すのではなく、オブジェクト弾の進行方向自体を変更する。<br>
+これが本来の壁反射弾のあるべき処理だろうな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+では何故最初からそのような書き方にしなかったのですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+単純に上記のやり方にすると、画面下に行かない限りいつまでも弾が<br>
+画面内に残ることになる。<br>
+それでは難易度が必要以上に上がってしまうし、見た目もよくない。<br>
+だから１回弾が反射したあとは普通に消えるようにようにするのが普通だ。<br>
+１回の反射だけならCreateShot01で代用できる。<br>
+そうすればタスクやオブジェクトがすぐに消えるから処理の負荷も少ない。<br>
+だからこういう書き方にしたんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+もし複数回反射させたい場合はどうすればいいんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ふむ。<br>
+壁反射の仕方をObj_SetAngleを用いる方式に変更して、<br>
+さらにwhileループの外に反射回数をカウントするための変数を宣言する。<br>
+そして反射が行われる度にその変数を増やしていくようにする。<br>
+最後に壁反射のif文条件にその変数を使った条件を加えれば、<br>
+複数回反射する弾を実現できるぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+if文の条件がまた複雑になるんですね。<br>
+( ) の対応が間違わないよう、気をつけませんと。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さらに応用として、ある時間になるまでは制限なく壁反射を続け、<br>
+あるタイミングを過ぎたら全ての弾が一斉に壁反射をやめるという弾幕も作れる。<br>
+グローバル変数と呼ばれるものを使えば実現できるぞ。<br>
+『study010』でちょっとだけ触れたヤツだな。<br>
+@MainLoopやmainTaskの更に外で変数を宣言することで、<br>
+mainTaskとobjectBulletの両方から参照できる変数を作れるんだ。<br>
+それをうまく使えば上記の弾幕を作ることができる。<br>
+それ以外にも弾の発射するタイミングに合わせて弾の寿命を示す数値を<br>
+引数として個別に与えれば、グローバル変数を使わなくてもできるぞ。<br>
+もし弾幕作りを更にレベルアップさせたいなら是非とも挑戦してみてくれ。<br>
+では今回の講座はこれで終わりだ。<br>
+また次回に会おう。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

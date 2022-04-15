@@ -1,0 +1,415 @@
+<html>
+<head>
+<title>5way連弾 (後追い)</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０１０回　5way連弾　(後追い)<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さあ記念すべき第１０回目の講座。<br>
+今回は今まで学んだ弾幕を応用し、新しい弾幕を作るぞ。<br>
+3wayを拡張して5wayにし、さらに後追い型の連弾で撃たせてみる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+初めての応用弾幕ですね。<br>
+ちょっと難しそうなカンジがしますが･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今までの基本をしっかり抑えていれば大丈夫。<br>
+ループ処理の流れを間違えなければ難しくはないわ。<br>
+ではスクリプトの中身をみてみましょう。<br>
+『study010.txt』を開いてちょうだい。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {
+      let angle = GetAngleToPlayer - 40;
+      loop(6) {
+	loop(5) {
+	  CreateShot01(GetX, GetY, 2, angle, RED01, 0);
+	  angle += 20;
+	}
+	angle -= 20 * 5;
+	loop(10) {yield;}
+      }
+      loop(60) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+loop { }の中にloop(6) { }があって、そのまた中にloop(5) { }があって･･････<br>
+なんだか複雑になってきましたね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうね。<br>
+でもこういうときこそ１つ１つしっかり見て処理の流れを掴むのが大切よ。<br>
+まずは色分けしたスクリプトを見てみましょう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3"><font color="red">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {
+      let angle = GetAngleToPlayer - 40;
+      loop(6) {</font>
+	loop(5) {<font color="red">
+	  CreateShot01(GetX, GetY, 2, angle, RED01, 0);</font>
+	  angle += 20;
+	}
+	angle -= 20 * 5;<font color="red">
+	loop(10) {yield;}
+      }
+      loop(60) {yield;}
+    }
+  }
+}</font>
+</font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+赤字にした部分はlet angle = GetAngleToPlayer -40の、－４０の部分を除いて<br>
+全て『study007.txt』と同一のなんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ということは、黒字になっているCreateShot01の前後がポイントですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その黒字になっている部分も『study004.txt』の自機狙い3wayとほとんど変わらない。<br>
+だから今回新規に学ぶことは無いと言っていい。<br>
+つまり純粋な応用というワケだな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+じゃあ今回のカギになるのはやっぱりループ処理の流れが重要なんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだな。<br>
+で、今回のループ処理の流れを詳しく説明すると以下のようになる。<br>
+ちなみにloop { } は単純に同じ弾幕を繰り返すためだけのものだから<br>
+省略させてもらうぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"></td>
+<td><p class="main">
+１．変数angleに角度を格納する。<br>
+２．loop(6) { } １回目の処理を開始する。 (連弾の先頭に相当)<br>
+３．loop(5) { } の処理を開始する。 (loop(5)は5way弾を作るための処理)<br>
+４．loop(5) { } の中でCreateShot01と角度更新を５回繰り返す。 (これが5wayになる)<br>
+５．angle -= 20 * 5でangleから１００差し引いて、loop(5) { } 突入前の値に戻す。<br>
+６．loop(10) {yield;}で１０フレーム待つ。<br>
+７．loop(6) { } ２回目の処理を開始する。 (連弾の２段目に相当)<br>
+８．以下、３～７の処理を計６回繰り返し、5way６重弾を作成する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+とまぁこんな流れになる。<br>
+ちなみに５．で出ている『* (アスタリスク)』は、算数の掛け算『×』と同じ意味だ。<br>
+一見複雑に見えるかもしれないが、処理の流れが掴めればなんてことはない。<br>
+最初から難しいと決め付けて読むことを放棄するのが良くない。<br>
+落ち着いて見れば今まで学んだことの組み合わせだったりするからな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+応用弾幕だからちょっと身構えてましたけど、<br>
+構造自体はそこまで複雑ではなかったですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+では実際に撃たれる弾幕がどうなのか見てみよう。<br>
+『5way連弾 (後追い)』を選ぶんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ちゃんと5way６重弾を撃ってきますね。<br>
+弾が一気に増えて弾幕シューティングっぽくなってきました～！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+では今回の宿題だ。<br>
+おそらく今までで一番難しいぞ。<br>
+今回後追い型だった5way連弾を、個別狙い、一斉発射、追い越しのいずれかに<br>
+改変してみるんだ。<br>
+新たに変数を宣言するときは、宣言する場所に注意しなければならないぞ。<br>
+特に変数の寿命に気をつけなければならない。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+変数の寿命？<br>
+そんなものがあるんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういえばまだ説明していなかったな。<br>
+では下の例で解説しよう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+let a = 1;
+(処理A1)
+loop (2) {
+  let b = 2;
+  (処理B1)
+  loop(3) {
+    let c = 3;
+    (処理C)
+  }
+  (処理B2)
+}
+(処理A2)
+</font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+上の例の場合、それぞれ別の場所で変数a, b, cを宣言しているな？<br>
+この例においてそれぞれの変数の寿命がどうなっているか説明する。<br>
+まず変数aだが、この例の場合は処理の最後まで生き残る。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+変数aの中身は消えたりしないってことですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+では次に変数bを飛ばして変数cについてだ。<br>
+変数cは処理Cが終わった後、loop(3) { } の頭に戻ると同時に破棄されている。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+え！？<br>
+ってことは変数cはすぐに寿命が切れるってことですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうことだ。<br>
+もし処理Cの中で変数cを書き換えていたりしても、<br>
+loop(3)の頭に戻ると同時に消えるワケだ。<br>
+まあ再び変数cを宣言しているわけだから、実質初期化だな。<br>
+重要なのは処理B2のときだ。<br>
+<b>この例で処理B2の場所で変数cを書き換えようとしてもダメなんだ。</b><br>
+変数cはloop(3) { } の処理を終えた時点で破棄されている。<br>
+つまり処理B2の時点だと変数cは未定義、つまり宣言されていない状態になっている。<br>
+実際に処理B2の場所でc += 2とか書くと、『cは未定義の識別子です』という<br>
+エラーメッセージが出る。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen01.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なんだか難しくなってきました･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+なに、こう憶えれば簡単だ。<br>
+<b>変数は宣言した場所の { } の中でしか生きられない。</b><br>
+変数cの例で言えば、宣言した場所から一番手前にある { } は<br>
+loop(3)のところの『{』と、処理Cの後の『}』になる。<br>
+だから変数cはこの { } の中を超えたら (正しくは } に達したら) 変数cは死ぬんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ああ！<br>
+そう考えれば変数の寿命の規則がわかりやすいですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+同じことが変数bについても言える。<br>
+変数bを宣言した場所から一番手前の { } はloop(2)のところの『{』と、<br>
+処理B2の後の『}』の間でしか生きられないことになる。<br>
+ちなみに処理B2の手前の『}』は違うぞ。<br>
+何故なら { } はそれぞれ対応するペアになっているからな。<br>
+詳しく色分けすると以下のようになる。
+</p></td>
+</tr>
+
+</table>
+
+<pre>
+let a = 1;
+(処理A1)<font color="red">
+loop (2) {</font>
+  let b = 2;
+  (処理B1)<font color="blue">
+  loop(3) {</font>
+    let c = 3;
+    (処理C)<font color="blue">
+  }</font>
+  (処理B2)<font color="red">
+}</font>
+(処理A2)
+</pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+この例の場合だと変数cは青の { } の中でしか存在することができず、<br>
+変数bは赤の { } の中でしか生き残れないというワケだ。<br>
+変数aは最も外側で宣言されているから、ずっと破棄されないということだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なるほど～<br>
+ということは変数cを処理Cで書き換えた後、さらに処理B2で書き換えた変数cを<br>
+使いたい場合は、変数bを宣言した場所と同じ場所で変数cを宣言すれば良いんですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうことね。<br>
+話が大分逸れたけれど、変数の寿命も大切なことだから憶えておいてね。<br>
+慣れないうちはエラーが出たりするかもしれないけれど、<br>
+そんなときは今回の話を思い出してみてね。<br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そういえば、変数の寿命って全部長くしちゃえば良いんじゃないですか？<br>
+短くするとまた宣言したりしなくちゃいけないですし。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran05.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それはあまり良くないことなんだ。<br>
+例えば処理が終わるまで死なない変数･･････これをグローバル変数というが、<br>
+変数の寿命が長すぎるとエラーの元となったりする。<br>
+何故ならこれから使おうとした変数が別の場所で書き換えられていたりして、<br>
+自分が意図しない挙動をしたりするからだ。<br>
+angleとかspeedとかの名前の変数は頻繁に使うだろうしな。<br>
+とにかく、変数の寿命は可能な限り短くした方が良い。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen01.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ということは変数の寿命にも気を遣わなくちゃいけないんですね。<br>
+なんだか慣れるまで大変そうです･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+自分が宣言した変数の使い道を意識すれば、自ずと宣言すべき場所がわかってくるわ。<br>
+これは理屈より慣れの方が重要かな。<br>
+必ず最適な場所で宣言しなくちゃスクリプトが動かないというワケでもないし。<br>
+今はそこまで深刻に考える必要は無いかな。<br>
+では宿題を頑張って、次回の講座で会うとしましょう。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

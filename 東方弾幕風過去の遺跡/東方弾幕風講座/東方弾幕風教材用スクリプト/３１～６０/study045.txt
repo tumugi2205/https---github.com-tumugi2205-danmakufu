@@ -1,0 +1,96 @@
+#東方弾幕風
+#Title[４５：スペルカード演出 (スペカ用関数色々)]
+#Text[]
+#PlayLevel[弾幕風教材用]
+#Image[.\img\study045.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 160, 120);
+		SetLife(3000);
+
+		SetScore(10000);
+		SetTimer(60);
+		CutIn(KOUMA, "テスト「スペルカード宣言」", 0, 0, 0, 0, 0);
+		SetDurableSpellCard;
+		SetEnemyMarker(false);
+		LastSpell;
+		MagicCircle(false);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		loop(150) {yield;}
+
+		let sign = rand_int(0, 1)*2 - 1;
+		loop {
+			objectBullet(sign);
+			sign *= -1;
+			loop(720) {yield;}
+		}
+	}
+
+	task objectBullet (let sign) {
+		let obj = Obj_Create(OBJ_SHOT);
+		Obj_SetX(obj, GetX);
+		Obj_SetY(obj, GetY);
+		Obj_SetSpeed(obj, 0);
+		Obj_SetAngle(obj, 0);
+		ObjShot_SetGraphic(obj, GREEN04);
+		ObjShot_SetDelay(obj, 0);
+		ObjShot_SetBombResist(obj, true);
+
+		let count = 0;
+		let angle = rand(0, 360);
+		let angleSpeed = 10;
+		loop(300) {
+			Obj_SetX(obj, GetX+0.7*count*cos(angle));
+			Obj_SetY(obj, GetY+0.7*count*sin(angle));
+
+			let bullet = 1;
+			CreateShotA(bullet, Obj_GetX(obj), Obj_GetY(obj), 0);
+			SetShotDataA(bullet, 0, 0, angle, 0, 0, 0, GREEN04);
+			SetShotDataA(bullet, 660-count*2, rand(1, 3), angle+rand(-30, 30)+90*sign, 0, 0, 0, ORANGE11);
+			FireShot(bullet);
+
+			angle += angleSpeed*sign;
+			angleSpeed *= 0.997;
+			count++;
+			yield;
+		}
+		Obj_Delete(obj);
+	}
+}

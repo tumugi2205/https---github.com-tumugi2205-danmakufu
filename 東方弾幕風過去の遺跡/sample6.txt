@@ -1,0 +1,94 @@
+#東方弾幕風
+#Title[ホーミング弾の例]
+#Text[]
+#BackGround[User()]
+#ScriptVersion[2]
+
+script_enemy_main{
+
+    //グローバル変数
+	let imgBoss = GetCurrentScriptDirectory() ~ "ExRumia.png";
+	let wIni = 120;
+	
+	///////////////////////////////////////////////////////////
+
+	@Initialize{
+	    LoadGraphic(imgBoss);
+	    
+        SetMovePosition02(GetCenterX(), GetClipMinY() + 120, wIni);
+        SetLife(4000);
+        SetTimer(60);
+        SetInvincibility(wIni);
+        SetDamageRate(100, 100);
+	    
+	    TMain();
+	}
+		
+	@MainLoop{
+		SetCollisionA(GetX(), GetY(), 32);
+		SetCollisionB(GetX(), GetY(), 24);
+	    yield;
+	}
+	
+	@DrawLoop{
+	    SetTexture(imgBoss);
+	    SetGraphicRect(1, 1, 64, 64);
+	    DrawGraphic(GetX(), GetY());
+	}
+		
+	@Finalize{
+	    DeleteGraphic(imgBoss);
+	}
+	
+	//////////////////////////////////////////////////////////
+	
+	task TMain{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    
+	    //処理
+	    loop{
+	        ascent(let i in 0..6){
+	            CreateHomingShot(GetX(), GetY(), 2, GetAngleToPlayer() + i*60 + 30, 2, 180, WHITE21, 20);
+	        }
+	        loop(60){ yield; }
+	    }
+	}
+	
+	//////////////////////////////////////////////////////////
+
+    //ホーミング弾の例
+    task CreateHomingShot(let x, let y, let speed,
+                 let angle, let mo, let limit, let graphic, let delay) {
+        
+        //オブジェクト弾の作成
+        let obj = Obj_Create(OBJ_SHOT);
+        
+        //パラメータの設定
+        Obj_SetPosition(obj, x, y);
+        Obj_SetSpeed(obj, speed);
+        Obj_SetAngle(obj, angle);
+        ObjShot_SetGraphic(obj, graphic);
+        ObjShot_SetDelay(obj, delay);
+        
+        loop(delay){ yield; }
+        
+        loop(limit) {
+            if(Obj_BeDeleted(obj)){
+                break;
+            }
+        
+            let angleToPlayer = atan2(GetPlayerY-Obj_GetY(obj), GetPlayerX-Obj_GetX(obj));
+            
+            if(sin(angleToPlayer - Obj_GetAngle(obj))>0){
+                Obj_SetAngle(obj, Obj_GetAngle(obj) + mo);
+            }
+            else{
+                Obj_SetAngle(obj, Obj_GetAngle(obj) - mo);
+            }
+            yield;
+        }
+    }
+}

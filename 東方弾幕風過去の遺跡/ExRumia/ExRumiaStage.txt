@@ -1,0 +1,56 @@
+#東方弾幕風[Stage]
+#Title[ExRumiaステージ]
+#Text[ExRumiaステージ]
+#Image[.\img\ExRumia(星符「ミッドナイトレヴァリエ」).png]
+#BackGround[Default]
+#Player[FREE]
+#ScriptVersion[2]
+
+script_stage_main
+{
+	let cx=GetCenterX();//STGシーンの中心x座標を取得
+	let imgEnemy=GetCurrentScriptDirectory~"img\Enemy.png";//Enemy.pngへのパス
+	task StageTask
+	{//ステージタスク
+		function Wait(let frame)
+		{//待機関数
+			loop(frame){yield};
+		}
+		function WaitForZeroEnemy()
+		{//敵数が0になるまで待機する関数
+			while(GetEnemyNum() != 0){yield;}
+		}	
+		Wait(60);//60フレーム待つ
+		//敵をファイルから読みこんで出現
+		CreateEnemyFromFile(GetCurrentScriptDirectory~"Enemy01.txt",cx,0,0,0,0);
+		WaitForZeroEnemy();//敵が消えるまで停止
+		Wait(240);//240フレーム待つ
+		//ExRumia出現
+		CreateEnemyBossFromFile(GetCurrentScriptDirectory~"ExRumia.txt",cx,0,0,0,0);
+		WaitForZeroEnemy();//敵が消えるまで停止
+		Wait(60);//60フレーム待つ
+		Clear();//ステージクリア
+	}
+	@Initialize()
+	{
+		LoadGraphic(imgEnemy);//敵画像読みこみ
+		StageTask();//ステージタスク起動
+	}
+	
+	@MainLoop()
+	{
+		yield;//毎フレームタスク復帰
+	}
+	
+	@Finalize()
+	{
+		DeleteGraphic(imgEnemy);
+	}
+/*
+	@BackGround()
+	{
+	 //@BackGroundが存在すると
+	 //#BackGround[Default]より優先されて描画される
+	}
+*/	
+}

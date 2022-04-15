@@ -1,0 +1,94 @@
+#“Œ•û’e–‹•—
+#Title[‚S‚UFŽ©‹@‚Ì‹z‚¢Šñ‚¹]
+#Text[]
+#PlayLevel[’e–‹•—‹³Þ—p]
+#Image[.\img\study046.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetCenterY, 180);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		SetInvincibility(180);
+		loop(180) {yield;}
+
+		SetColor(64, 64, 255);
+		Concentration01(120);
+		SetColor(255, 255, 255);
+		loop(60) {yield;}
+
+		SetShotAutoDeleteClip(160, 100, 160, 100);
+		subTask(1);
+		subTask(-1);
+		loop {
+			SetPlayerX(GetPlayerX-1.5*cos(GetAngleToPlayer));
+			SetPlayerY(GetPlayerY-1.5*sin(GetAngleToPlayer));
+			yield;
+		}
+	}
+
+	task subTask (let sign) {
+		let px = GetX - 22;
+		if(sign == 1) {
+			px += 41;
+		}
+		let py = GetY - 15;
+		let angle = 0;
+		let graphic = BLUE11;
+		if(sign == 1) {
+			graphic = AQUA11;
+		}
+		let count = 0;
+		loop {
+			if((count%3 == 0) && (count%50 < 20)) {
+				loop(8) {
+					let bullet = 1;
+					CreateShotA(bullet, px+300*cos(angle), py+300*sin(angle), 0);
+					SetShotDataA(bullet, 0, 2, angle+180, 0, 0, 2, graphic);
+					SetShotKillTime(bullet, 150);
+					FireShot(bullet);
+					angle += 360/8;
+				}
+			}
+			angle = (angle+0.6*sign+360) % 360;
+			count++;
+			yield;
+		}
+	}
+}

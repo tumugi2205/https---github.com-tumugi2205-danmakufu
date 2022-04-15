@@ -1,0 +1,458 @@
+<html>
+<head>
+<title>組み込みエフェクトの使用例</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０４１回　組み込みエフェクトの使用例<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さて、今回はエフェクトについて学んでいく。<br>
+ただ弾幕を撃つだけなら使わなくてもいいのだが、<br>
+見栄えを良くしたいなら上手く活用していきたいところだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+弾幕とは全然関係ないことを学ぶんですね。<br>
+ということはスクリプトの書き方も全然違うんでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+いいや、今回は弾幕風が標準で用意している<br>
+関数を使うからそこまで難しい話じゃないわ。<br>
+エフェクトに懲りだすと自分でエフェクトを作るようになるから<br>
+そうなると大変なんだけどね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+じゃあこれまで通りのやり方でできるんですね。<br>
+ちょっと安心しました。<br>
+今回のスクリプトは『study041.txt』です。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {<font color="red">
+      Concentration01(120);</font>
+      loop(120) {yield;}
+      let speed = 2;
+      let angle = rand(0, 360);
+      loop(10) {
+        loop(32) {
+          CreateShot01(GetX, GetY, speed, angle, WHITE22, 0);
+          angle += 360/32;
+        }
+        speed += 0.2;
+        angle += 2;
+      }
+      loop(120) {yield;}
+<font color="red">
+      SetColor(255, 64, 255);
+      Concentration01(120);</font>
+      loop(120) {yield;}
+      let speed = 2;
+      let angle = rand(0, 360);
+      loop(10) {
+        loop(32) {
+          CreateShot01(GetX, GetY, speed, angle, PURPLE22, 0);
+          angle += 360/32;
+        }
+        speed += 0.2;
+        angle -= 4;
+      }
+      loop(120) {yield;}
+<font color="red">
+      Concentration02(75);</font>
+      loop(120) {yield;}
+      let count = 1;
+      loop(15) {
+        let way = count;
+        if(count > 8) {
+          way = 16 - count;
+        }
+        let angle = -5*(way-1)/2;
+        loop(way) {
+          CreateShot01(GetX, GetY, 2+0.3*count, GetAngleToPlayer+angle, BLUE11, 0);
+          angle += 5;
+        }
+        count++;
+      }
+      loop(120) {yield;}
+
+      loop(8) {
+        objectBullet;
+        loop(30) {yield;}
+      }
+      loop(240) {yield;}
+    }
+  }
+
+  task objectBullet {
+    let obj = Obj_Create(OBJ_SHOT);
+    Obj_SetX(obj, GetX);
+    Obj_SetY(obj, GetY);
+    Obj_SetSpeed(obj, 4);
+    Obj_SetAngle(obj, rand(-30, 210));
+    ObjShot_SetGraphic(obj, WHITE03);
+    ObjShot_SetDelay(obj, 0);
+
+    while(!Obj_BeDeleted(obj)) {
+      if((Obj_GetX(obj) < GetClipMinX) || (Obj_GetX(obj) > GetClipMaxX) || (Obj_GetY(obj) < GetClipMinY) || (Obj_GetY(obj) > GetClipMaxY)) {<font color="red">
+        Explosion01(Obj_GetX(obj), Obj_GetY(obj), 8, 0.3, 60);</font>
+        let angle = 0;
+        loop(24) {
+          CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 2, angle, WHITE01, 0);
+          CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 2, angle+2, WHITE01, 0);
+          CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 2, angle+4, WHITE01, 0);
+          angle += 360/24;
+        }
+        Obj_Delete(obj);
+      }
+      yield;
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なっっっっっがいですね～･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあ確かに長いが、エフェクト用として使っている関数は<br>
+赤字で書いてあるものだけだ。<br>
+ただエフェクトを使うだけじゃあスクリプトとしてはつまらないから<br>
+適当に弾幕を撃つ処理を書いておいた。<br>
+興味があったら中身を読み取ってみてくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+えーっと、このスクリプトで新しく出てきた関数は、<br>
+Concentration01, SetColor, Concentration02, Explosion01<br>
+この４つですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まずは順番に説明しておこう。<br>
+Concentration01関数は光のようなエフェクトを<br>
+ボスに向けて集中するようなエフェクトを発生させる関数だ。<br>
+ちなみにConcentrationは和訳すると『集中』だな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+実際に見てみるとチカラを集めているカンジがして<br>
+如何にもこれから激しい攻撃するぞ～って印象がありますね。<br>
+でも必要な引数は１つだけなんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+Concentration01に必要な引数は、<br>
+『エフェクトを発生させる時間』だ。<br>
+単位はこれまで通りフレーム。<br>
+今回は１２０としているから２秒間エフェクトが出るワケだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+簡単に派手な演出ができるのは良いですね～<br>
+次はSetColor関数ですけど、コレは？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+SetColor関数はその名前からもわかるように、<br>
+色をセットしたいときに使う関数だ。<br>
+この関数を使うことによってConcentration01の<br>
+エフェクトカラーを変えることができるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+でも、色ってどうやって指定するんでしょう？<br>
+色を指定するための関数なのに、<br>
+引数が３つもあってどれも数値みたいだし･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+橙、『光の三原色』って知ってる？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ぅえっ！？<br>
+え～～～っと･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+光の三原色とは、『赤』『緑』『青』の３色のことよ。<br>
+この３つの色を様々な比率で混ぜることによって<br>
+ほぼ全ての色を表現できるという概念なの。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それはわかりましたけど、それがSetColor関数にどう関係が･･････<br>
+あ、引数が３つってコトはもしかして。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、SetColor関数は光の三原色である<br>
+赤、緑、青の色の強さを指定することで<br>
+好きな色を作ることができるんだ。<br>
+ちなみにこの３色の数値のことをRGB値という。<br>
+RはRED、GはGREEN、BはBLUEの略称となっている。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+このスクリプトだと255, 64, 255ってなってますね。<br>
+ってコトは赤と青が２５５で、緑色が６４？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、数値が大きいほどその色が強いという意味で、<br>
+２５５が最大の数値となっている。<br>
+この例だと赤と青の色が強く、緑色は少ししかないから、<br>
+だいたい紫色になるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+確かに実際にスクリプトを動かしてみると、<br>
+同じConcentration01関数なのに紫色になってますね。<br>
+でもSetColor関数の変更をそのままにしていいんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+実はSetColor関数の効果は『実行した１フレームだけ』なんだ。<br>
+だからわざわざもう一度SetColorを使う必要は無い。<br>
+気になるなら試しにSetColorとConcentration01の間に<br>
+yieldを加えてみるといい。<br>
+エフェクトが１つ前のと同じで白くなるハズだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+へー、１フレームしか効果が無いんですね。<br>
+えっと次の関数はConcentration02関数ですね。<br>
+名前や引数から考えて、01とほとんど同じなんですかね？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだな、基本は同じだ。<br>
+02の場合は雪の結晶のようなエフェクトを<br>
+ボスに向けて集中させるようなエフェクトとなっている。<br>
+なお、この関数に対してもSetColor関数を適用させることができるぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+でもこちらは最初から水色っぽい色が付いてますね。<br>
+雪のイメージに合ってるから別に色は変えなくていいかもですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さて、今回最後のエフェクト用関数はずっと先、<br>
+オブジェクト弾用のタスクの中にあるExplorion01関数だ。<br>
+Explosionとは『爆発』という意味だが、<br>
+その意味通り爆発したかのような白い波紋が発生するエフェクトを出せる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+こちらは今までと違って引数が５つもありますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+最初の引数２つについては見当が付くかもしれないな。<br>
+第１，２引数はエフェクトを出すX, Y座標を指定する。<br>
+今回はObj_GetX, Obj_GetYを使っているから、<br>
+オブジェクト弾のある場所から発生することになる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+でも残り３つの引数の意味がわからないですね。<br>
+３つとも数値を入れてますけれど･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+第３引数はα値の減少速度を指定するんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+『あるふぁーち』って、なんでしたっけ？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+第３２回講座にObj_SetAlpha関数ってのがあったでしょ？<br>
+そのときのα値と同じで、『透明度』を意味しているわ。<br>
+２５５が最大で値が小さくなると透明に近づいていき、<br>
+０になると完全に透明になるの。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そのα値の減少速度を指定するんでしたっけ？<br>
+というコトはこの数値が大きければ大きいほど<br>
+早く透明になるんですかね？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通り。<br>
+例えば５に設定したら１フレーム毎にα値が５ずつ減り、<br>
+５１フレーム後には０になって見えなくなるというワケだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+第４引数は０．３となっていますが、こちらは？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+これは爆発が大きくなる速さだな。<br>
+当然数値が大きいほど速くなる。<br>
+ただこの速度はかなり小さい値にしないと遅くならないみたいだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+最後の引数は６０となってますね。<br>
+Concentration01の引数から考えると、エフェクトの時間ですかね？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+はい、正解。<br>
+第５引数はエフェクトが発生している時間よ。<br>
+単位はこれまで通りフレームね。<br>
+ちなみにα値が０になる前にこのタイムリミットを迎えた場合は<br>
+透明になり切る前に一瞬で消えてしまうから、<br>
+見栄えが気になるならα値の減少速度との兼ね合いを考えないとね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+実際にスクリプトを動かしてみると、<br>
+オブジェクト弾が画面端で炸裂するときにエフェクトがありますね。<br>
+第２９回講座のオブジェクト弾と大体同じ弾幕ですけど、<br>
+エフェクトがあると見栄えが良くなりますね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+標準にある関数だけでも上手く使えば結構派手になるぞ。<br>
+弾幕処理だけのスクリプトに物足りなくなったら<br>
+こういったエフェクトを使うのも良いかもしれないな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+エフェクトの匙具合はなかなかセンスが必要そうですけど、<br>
+余裕があったら色々考えてみたいですね。<br>
+それではまた次回で！
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>
+

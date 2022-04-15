@@ -1,0 +1,190 @@
+#東方弾幕風
+#Title[盲遺「鎖縛決壊」]
+#Text[縫い止められし運命から
+逃れることは不可である。]
+#ScriptVersion[2]
+
+script_enemy_main {
+       let imgBoss   = "script\img\杏子.png";
+       let frame     = 0;
+       let angleBase = 90;
+
+    @Initialize {
+       SetX(GetCenterX);
+       SetY(GetClipMinY + 120);
+       SetLife(7000);
+
+       LoadGraphic(imgBoss);
+       SetTexture(imgBoss);
+       SetGraphicRect(0,0,63,63);
+        SetScore(100000);
+        CutIn(KOUMA,"盲遺「鎖縛決壊」",0,0,0,0,0);//スペルカード名表示
+    }
+
+    @MainLoop {
+       SetCollisionA(GetX,GetY,24);
+       SetCollisionB(GetX,GetY,24);
+
+       frame++;
+       if(frame == 1) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX-160,GetY-175,1,GetAngleToPlayer,RED32,0);
+               angle += 5;
+           }
+      }else  if(frame == 2) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX+160,GetY+375,1,GetAngleToPlayer+180,RED32,0);
+               angle += 60;
+           }
+      }else  if(frame == 3) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX+80,GetY+375,1,GetAngleToPlayer+180,AQUA32,0);
+               angle += 60;
+           }
+      }else  if(frame == 4) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX-80,GetY-175,1,GetAngleToPlayer,AQUA32,0);
+               angle += 60;
+           }
+      }else  if(frame == 5) {
+           let angle = angleBase - 10;
+           loop(10) {
+               CreateShot01(GetX+rand(160,-160),GetY-175,rand(0,5),rand(0,360),RED23,0);
+               angle += 60;
+           }
+      }else  if(frame == 6) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX+160,GetY+75,1,GetAngleToPlayer+90,RED32,0);
+               angle += 60;
+           }
+      }else  if(frame == 7) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX-160,GetY+25,1,GetAngleToPlayer-90,RED32,0);
+               angle += 60;
+           }
+      }else  if(frame == 8) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX-120,GetY+375,1,GetAngleToPlayer+180,RED32,0);
+               angle += 60;
+           }
+      }else  if(frame == 9) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX+120,GetY-175,1,GetAngleToPlayer,RED32,0);
+               angle += 60;
+           }
+      }else  if(frame == 10) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX-160,GetY+125,1,GetAngleToPlayer-90,RED32,0);
+               angle += 60;
+           }
+      }else  if(frame == 11) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX+160,GetY+225,1,GetAngleToPlayer+90,RED32,0);
+               angle += 60;
+           }
+      }else  if(frame == 12) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX-160,GetY+325,1,GetAngleToPlayer-90,RED32,0);
+               angle += 60;
+           }
+      }else  if(frame == 13) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX+160,GetY+175,1,GetAngleToPlayer+90,RED32,0);
+               angle += 60;
+           }
+      }else  if(frame == 14) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX-160,GetY+275,1,GetAngleToPlayer-90,RED32,0);
+               angle += 60;
+           }
+      }else  if(frame == 15) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX+160,GetY+375,1,GetAngleToPlayer+90,RED32,0);
+               angle += 60;
+           }
+      }else  if(frame == 16) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX-40,GetY-175,1,GetAngleToPlayer+90,AQUA32,0);
+               angle += 60;
+           }
+      }else  if(frame == 17) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX+40,GetY+375,1,GetAngleToPlayer+180,AQUA32,0);
+               angle += 60;
+           }
+      }else  if(frame == 18) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX+rand(160,-160),GetY+rand(-50,-175),0,rand(0,360),RED03,0);
+               angle += 60;
+           }
+      }else  if(frame == 19) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX,GetY-175,0.5,GetAngleToPlayer,AQUA32,0);
+               angle += 60;
+           }
+      }else  if(frame == 20) {
+           let angle = angleBase - 10;
+           loop(10) {
+               CreateShot01(GetX+rand(160,-160),GetY-175,rand(0,5),rand(0,360),AQUA23,0);
+               angle += 60;
+           }
+      }else  if(frame == 21) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX+20,GetY+375,0.2,-90,AQUA23,0);
+               angle += 60;
+           }
+      }else  if(frame == 22) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX-20,GetY+375,0.2,-90,AQUA23,0);
+               angle += 60;
+           }
+      }else  if(frame == 23) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX-20,GetY-175,0.2,90,AQUA23,0);
+               angle += 60;
+           }
+      }else  if(frame == 24) {
+           let angle = angleBase - 10;
+           loop(1) {
+               CreateShot01(GetX+20,GetY-175,0.2,90,AQUA23,0);
+               angle += 60;
+           }
+      }else  if(frame == 25) {
+           let angle = angleBase - 10;
+           loop(10) {
+               CreateShot01(GetX+rand(160,-160),GetY-175,rand(0,2),rand(0,360),AQUA03,0);
+               angle += 60;
+           }
+           angleBase += 50;
+           frame = 0;
+       }
+    }
+
+    @DrawLoop {
+       DrawGraphic(GetX,GetY);
+    }
+    @Finalize {
+       DeleteGraphic(imgBoss);
+    }
+}

@@ -1,0 +1,69 @@
+#東方弾幕風
+#Title[幻符「影縫い」]
+#Text[見えぬものに怯え、
+現実から逃れる者を縫いし影]
+#ScriptVersion[2]
+
+script_enemy_main {
+       let imgBoss   = "script\img\杏子.png";
+       let frame     = 0;
+       let angleBase = 90;
+
+    @Initialize {
+       SetX(GetCenterX);
+       SetY(GetClipMinY + 120);
+       SetLife(2000);
+
+       LoadGraphic(imgBoss);
+       SetTexture(imgBoss);
+       SetGraphicRect(0,0,63,63);
+
+        SetScore(1000);
+        SetDamageRate(90,50);
+   CutIn(KOUMA,"幻符「影縫い」",0,0,0,0,0);//スペルカード名表示
+    }
+
+    @MainLoop {
+       SetCollisionA(GetX,GetY,24);
+       SetCollisionB(GetX,GetY,24);
+
+       frame++;
+       if(frame == 5) {
+           let angle = angleBase + 120;
+           loop(3) {
+               CreateShot01(GetX,GetY,20,-angle,RED03,0);
+               angle += 120;
+           }
+           angleBase += 8;
+       }else  if(frame == 10) {
+           let angle = angleBase - 10;
+           loop(30) {
+               CreateShot01(GetX,GetY,1,angle,WHITE01,0);
+               angle += 5;
+           }
+           angleBase += 8;
+      }else  if(frame == 20) {
+           let angle = angleBase - 10;
+           loop(5) {
+               CreateShot01(GetX,GetY,10,angle,AQUA22,0);
+               angle += 5;
+           }
+           angleBase += 50;      
+      }else  if(frame == 30) {
+           let angle = angleBase - 10;
+           loop(90) {
+               CreateShot01(GetX+50,GetY,0.5,rand(0,360),AQUA23,0);
+               angle += 5;
+           }
+           angleBase += 50;
+           frame = 0;
+       }
+    }
+
+    @DrawLoop {
+       DrawGraphic(GetX,GetY);
+    }
+    @Finalize {
+       DeleteGraphic(imgBoss);
+    }
+}

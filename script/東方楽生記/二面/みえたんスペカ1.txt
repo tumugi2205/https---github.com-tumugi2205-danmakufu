@@ -1,0 +1,78 @@
+#東方弾幕風
+#Title[陰線「限られた線引き」]
+#Text[]
+#PlayLevel[弾幕風教材用]
+#Image[.\img\study001.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = "script\img\きょーこ.png";
+
+
+	@Initialize {
+
+    SetX(GetCenterX);
+    SetY(GetClipMinY + 120);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+        CutIn(YOUMU,"陰線「限られた線引き」",0,0,0,0,0);//スペルカード名表示
+
+
+                SetTimer(60);
+	mainTask2;
+	mainTask3;
+
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+yield;
+
+
+
+	}
+	@DrawLoop {
+	    DrawGraphic(GetX(), GetY());
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+
+	task mainTask2 {
+	
+		loop(60) {yield;}
+		loop {
+			loop(9) {
+				CreateLaserA("L1",GetCenterX+rand(300,-300) ,GetClipMinY,500,10,RED03, 100);
+				SetLaserDataA("L1",0, 90,0, 0, 0, 90);
+				SetLaserDataA("L1",rand(60,120), 90, 0, 5, 4,90);
+				FireShot("L1");
+			loop(10) {yield;}
+
+			}
+			loop(150) {yield;}
+		}
+	}
+	task mainTask3 {
+	
+		loop(60) {yield;}
+		loop {
+			loop(5) {
+				CreateLaserA("L2",GetCenterX+rand(300,-300) ,GetClipMinY,500,10,RED03, 100);
+SetShotDirectionType(PLAYER);
+				SetLaserDataA("L2",0, 0,0, 0, 0, 0);
+				SetLaserDataA("L2",120, NULL, 0, 5, 4,NULL);
+SetShotDirectionType(ABSOLUTE);
+				FireShot("L2");
+			}
+			loop(150) {yield;}
+		}
+	}
+}

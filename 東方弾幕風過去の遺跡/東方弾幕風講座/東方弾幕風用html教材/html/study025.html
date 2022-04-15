@@ -1,0 +1,483 @@
+<html>
+<head>
+<title>マイクロスレッド</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０２５回　マイクロスレッド<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+第２５回、今回学ぶのはマイクロスレッドだ。<br>
+今回の内容なんだが･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+？<br>
+どうかしたんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+実は･･････知らず知らずのうちにもう使っていたんだよ！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+にゃ、にゃんだって～～～！？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+とまあ、マイクロスレッドはこれまでずっと使い続けていたんだ。<br>
+初回の講座で大部分の説明を後回しにしていたワケだが、<br>
+マイクロスレッドはその大部分の中の一つだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+弾幕作りにだんだん慣れてきたところで学ぶんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回のスクリプトは『study025.txt』よ。<br>
+マイクロスレッドは弾幕作りに必要不可欠といってもいいくらい重要だから<br>
+特に気合を入れて臨んでほしいわね。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+<font color="red">
+  task study009 {</font>
+    loop(60) {yield;}
+
+    loop {
+      let speed = 1;
+      loop(6) {
+        CreateShot01(GetX, GetY, speed, GetAngleToPlayer, RED01, 0);
+        speed += 0.5;
+        loop(10) {yield;}
+      }
+      loop(60) {yield;}
+    }<font color="red">
+  }</font>
+<font color="red">
+  task study012 {</font>
+    loop(60) {yield;}
+
+    loop {
+      let angle = rand(0, 360);
+      loop(16) {
+        CreateShot01(GetX, GetY, 2, angle, RED01, 0);
+        angle += 360/16;
+      }
+      loop(60) {yield;}
+    }<font color="red">
+  }</font>
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+あれ？<br>
+今回はmainTaskじゃなくてstudy009とstudy012ってなっていますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今まで使っていたtask mainTaskが、まさにマイクロスレッドそのものだったんだ。<br>
+が、マイクロスレッドの説明はもう少し後にしよう。<br>
+最初に言っておくと、task study009は『study009.txt』のmainTaskと全く同じ内容で、<br>
+task study012は『study012.txt』のmainTaskと同じだ。<br>
+それを踏まえて、実際にスクリプトを動かしてみよう。<br>
+選ぶスクリプトは『マイクロスレッド』だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ああっ！<br>
+『study009』の追い越し連弾と『study012』の全方位弾を同時に撃ってきました！<br>
+２種類の弾幕を同時に撃ってくるのは初めてですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+察しが良い方はわかるだろうが、このスクリプトはtask study009の中身と<br>
+task study012の中身を (見かけ上) 同時に動かしている。<br>
+この同時に平行して動かせるというのがマイクロスレッドの大きな特徴なんだ。<br>
+と、ここでスクリプトの最初の方を見てみよう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  @Initialize {
+    SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+    SetLife(3000);
+
+    LoadGraphic(imgExRumia);
+    SetTexture(imgExRumia);
+    SetGraphicRect(1, 1, 64, 64);
+<font color="red">
+    study009;
+    study012;</font>
+  }
+
+～　後略　～
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+『study013』で少し話した@Initializeのことを憶えているかな？<br>
+スクリプトが始まってまず最初に１度だけ実行される部分だな。<br>
+その中にstudy009とstudy012と書いている部分がある。<br>
+このときにtask study009とtask study012を起動しているんだ。<br>
+起動の仕方はサブルーチンのように自分でつけた名前を書けばOKだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+改めて見返すと、これまでずっと作業していたmainTaskはマイクロスレッドで、<br>
+そのmainTaskは@Initializeで真っ先に起動していたんですね。<br>
+でもなんでわざわざ最初からマイクロスレッドを使わせていたんですか？<br>
+使わなくても弾幕作りはできるんですよね？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+もちろんできるが、普通に作るよりマイクロスレッドの方がわかりやすいし、<br>
+いずれマイクロスレッドは通らなければならない話だろうからな。<br>
+そうなる理由はマイクロスレッドの仕組みと合わせて説明しよう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+お願いします！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ではマイクロスレッドの説明をするために、<br>
+もう１つ説明しなければならないものがある。<br>
+それが@MainLoopなんだ。<br>
+今回のスクリプトの@MainLoopを見てみよう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+<font color="red">
+  @MainLoop {</font>
+    SetCollisionA(GetX, GetY, 24);
+    SetCollisionB(GetX, GetY, 24);<font color="red">
+    yield;
+  }</font>
+
+～　後略　～
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なんだかSetCollisionAとBという初めて見る関数がありますけれど？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回の話と直接的に関係ないからあまり詳しく語らないが･･････<br>
+この２つの関数はボスの当たり判定を設定する関数だ。<br>
+Aがこちらのショットが当たる判定を作り、Bは自機が衝突してミスする判定を作る。<br>
+詳しくは弾幕風付属のヘルプを参照してくれ。<br>
+では話を@MainLoopに戻そう。<br>
+この@MainLoopとは、毎フレームこの@MainLoop内の処理を実行する部分だ。<br>
+普通はこの@MainLoopの中にCreateShot01やらを書いて弾幕を作る。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+でもここに弾を撃つ処理を書くのは初心者向けではないって話でしたよね。<br>
+それは何故なんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+毎フレーム１度だけ実行される@MainLoopだが、裏を返せば『毎フレーム１度だけ<br>
+実行されるという制限に縛られる』ということ。<br>
+いやでも@MainLoopの中身全体が毎フレーム網羅されるということになる。<br>
+するとこれまで使ってきた<br>
+(処理A)<br>
+loop(60) {yield;}<br>
+(処理B)<br>
+といったような書き方ができなくなってしまうんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+その例みたいに『処理Aが終わった後は６０フレーム待って、<br>
+その後処理Bを行う』という流れが単純に上から下へ<br>
+見ていくワケにはいかなくなるってことですよね？<br>
+それだと確かにプログラミング初心者だと流れが掴みにくいですね。<br>
+もし@MainLoopだけで同じ処理をやろうとするとどうなるんでしょう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その場合、以下のような形になるのが基本だ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+let count = 0;
+@MainLoop {
+  if(count == 0) {
+    (処理A)
+  } else if(count == 60) {
+    (処理B)
+  }
+  count++;
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ちなみに、この形は最もシンプルな場合だ。<br>
+もし (処理A) の中身がこれまで習ったyieldを使った記述だった場合は<br>
+もっと複雑になるぞ。<br>
+@MainLoop内だけで処理を完結させようとするならyieldは使えないからな。<br>
+@MainLoop内の<b>全体が毎フレーム１度実行される</b>ことを常に頭に入れて<br>
+スクリプトを作らなくてはならないんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そ、それは大変ですね･･････<br>
+それじゃ最初の弾幕作りの段階で変数 (count) の宣言、if文の仕組み、<br>
+分岐処理判定で使う比較式、あと++の意味･･････<br>
+かなり最初の段階から色々なことを学ばなくてはならなくなりますね。<br>
+だから今まで@MainLoopでは弾幕に関わる処理を書かなかったんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+だから単純な弾幕でもマイクロスレッドを使った方が理解しやすい<br>
+形式になるのではないかと思ってね。<br>
+あと今後マイクロスレッドはよく使うから、<br>
+最初から自然に慣らせるという意図もあったのよ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なるほど～<br>
+それでマイクロスレッド自体の説明は･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ああ、だが最初に言っておくと「仕組みなんて興味ない。動けばいい」と<br>
+思っている方は正直それでも構わない。<br>
+同時にマイクロスレッドが動いているという認識でも弾幕作りには<br>
+大した問題ではないからな。<br>
+無駄なことを憶えたくないならばここで引き返すもよし。<br>
+詳しく知りたいならば話を聞いていってくれ。<br>
+ではマイクロスレッドがあるときの処理の流れを説明しよう。<br>
+@Initializeの処理が終わった後、まず１回目の@MainLoop内の処理が行われる。<br>
+その中に見慣れたyieldの処理があるな。<br>
+そしてそのyieldの処理が終わると既に展開されているマイクロスレッド、<br>
+つまり@Initializeで呼んだ『study009』の処理が始まる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+@MainLoopでyieldまでたどり着いたら次のマイクロスレッドへ飛ぶんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+『study009』の処理は当然上から順に始まる。<br>
+そこまでは良いが、yieldの処理に行き着くと<b>その場で処理を一旦止めて、<br>
+次のマイクロスレッドの処理を始める</b>んだ。<br>
+今回の例だと『study009』の他に『study012』もあるから、<br>
+今度は『study012』の処理が始まるワケだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+一旦止めるってところがポイントなんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そして『study012』の方もyieldまでたどり着いたらその時点で処理が止まる。<br>
+これで現在動いているマイクロスレッドを１度は動かしたから、<br>
+<b>ここで始めてゲームが１フレーム分進む</b>ということになるんだ。<br>
+処理自体は１つ１つ順番に行っているだけなのだが、<br>
+ゲームが１フレーム進むまでに処理を全部済ませてあるから、<br>
+あたかも同時に処理をしているように見える。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+これが複数の処理を同時にしている (ように見える) 秘密だったんですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+最後のマイクロスレッドが終わって１フレーム経過した後は<br>
+また@MainLoopの処理が行われる。<br>
+そしてまたyieldまで行ったら『study009』の処理を始める。<br>
+このとき『study009』の処理が始まる場所は<b>前回処理を止めた場所から再開する。</b><br>
+これも非常に重要なポイントだ。<br>
+マイクロスレッドの利点は複数並列処理できるだけでなく、<br>
+処理を一旦止めて再び再開することができることもある。<br>
+毎回全体が実行される@MainLoopと違ってプログラムの流れが格段に読みやすくなる。<br>
+こういった間接的なメリットもあるな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+再び処理を始めた『study009』がまたyieldまで行ったら今度はまた『study012』の<br>
+処理を途中から再開するんですね。<br>
+そして『study012』もyieldまで行ったらその時点で２フレーム目が経過する･･････<br>
+そういった流れになるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうことだ。<br>
+まとめると以下のようになるな。<br>
+<br>
+１．@MainLoopの処理をyieldにたどり着くまで順に処理する。<br>
+２．@MainLoopでyieldまで着いたら現在起動しているマイクロスレッド (Aとする) の処理を行う。<br>
+３．マイクロスレッドAの処理がyieldまで行ったらその場で一旦処理中断する。<br>
+４．中断したら別のマイクロスレッドをyieldに着くまで処理し、中断する。<br>
+５．３～４の流れを、現在起動しているマイクロスレッド全てに対して行う。<br>
+６．全てのマイクロスレッドがyieldに行ったらゲームが１フレーム経過する。<br>
+７．１～６の処理を繰り返す。　但しマイクロスレッドの処理は途中から再開する。<br>
+<br>
+これがマイクロスレッドの処理の正体だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+文章にすると中々に長くなって難しそうに思えます･･････<br>
+やっぱりよくわからなかったという方は『とにかく同時に処理することができるのが<br>
+マイクロスレッドだ』って思っておけばいいかもですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+難しいと思ったなら、プログラミングに慣れて理解に余裕が出てきてからでもいい。<br>
+とりあえず<b>今は</b>動けばいいということにしよう。<br>
+そうそう、『study003』のときにyieldは本来『譲る』、『明け渡す』という<br>
+意味だと行ったが、要するに処理を行う順を他のマイクロスレッドに譲るという<br>
+ことを意味していたということだ。<br>
+それからもしマイクロスレッドが { } の最後まで行った場合はその時点で<br>
+そのマイクロスレッドは御役御免となり、破棄される。<br>
+だから今後は再び呼び出さない限り破棄されたマイクロスレッドに<br>
+処理が譲られることはなくなるんだ。<br>
+今回の例では両方のマイクロスレッドにloop { }があるから終わることがないのだが。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+これでマイクロスレッドについては終わりですね。<br>
+複数の処理を同時に起動できることで様々な表現ができるようになりそうですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうね、今回で憶えたマイクロスレッドと次回の講座で憶える<br>
+『オブジェクト弾』を併用することで、弾幕表現の幅が一気に拡がるわ。<br>
+一風変わったトリッキーな弾幕も作れるようになれるのよ。<br>
+では、次回の講座で会うとしましょう。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

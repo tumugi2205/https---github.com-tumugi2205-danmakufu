@@ -1,0 +1,163 @@
+#東方弾幕風
+#Title[囲い「箱の中の死活線」]
+#Text[]
+#PlayLevel[弾幕風教材用]
+#Image[.\img\study008.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = "script\img\きょーこ.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+		SetLife(3000);
+        SetDamageRate(70,50);
+        SetInvincibility(240);
+        CutIn(YOUMU,"囲い「箱の中の死活線」",0,0,0,0,0);//スペルカード名表示
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+                SetTimer(60);
+
+		mainTask;
+TMove;
+	}
+
+	@MainLoop {
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+	
+			let t = rand(10,110) ;
+                        let ag = 0;
+                        let agk = 1;
+                                    let ang = 0;
+                        let speed = 1;
+                        let speed2 = -1;
+		loop(3) {yield;}
+		loop {
+                        let S = 8+agk*2;
+			loop(S) {
+				CreateLaserA("L1",GetClipMinX ,GetCenterY,500,10,RED03, 100);
+				SetLaserDataA("L1",0, ang, 1, 0, 0, 30);
+				SetLaserDataA("L1",80, NULL, 0, 0, 0, 0);
+				SetLaserDataA("L1",100, NULL, 0, -5, 0, 0);
+				SetLaserDataA("L1",300, NULL, 0, -10, 1000,0);
+				FireShot("L1");
+				CreateLaserA("L2",GetClipMaxX ,GetCenterY,500,10,RED03, 100);
+				SetLaserDataA("L2",0, ang, -1, 0, 0, 30);
+				SetLaserDataA("L1",80, NULL, 0, 0, 0, 0);
+				SetLaserDataA("L2",100, NULL, 0, -5, 0, 0);
+				SetLaserDataA("L2",300, NULL, 0, -10, 1000,0);
+				FireShot("L2");
+				CreateLaserA("L3",GetCenterX ,GetClipMinY,500,10,RED03, 100);
+				SetLaserDataA("L3",0, ang, 1, 0, 0, 30);
+				SetLaserDataA("L1",80, NULL, 0, 0, 0, 0);
+				SetLaserDataA("L3",100, NULL, 0, -5, 0, 0);
+				SetLaserDataA("L3",300, NULL, 0, -10, 1000,0);
+				FireShot("L3");
+				CreateLaserA("L4",GetCenterX ,GetClipMinY,500,10,RED03, 100);
+				SetLaserDataA("L4",0, ang, -1, 0, 0, 30);
+				SetLaserDataA("L1",80, NULL, 0, 0, 0, 0);
+				SetLaserDataA("L4",100, NULL, 0, -5, 0, 0);
+				SetLaserDataA("L4",300, NULL, 0, -10, 1000,0);
+				FireShot("L4");
+				CreateLaserA("L5",GetClipMaxX ,GetClipMinY,500,10,RED03, 100);
+				SetLaserDataA("L5",0, ang, -1, 0, 0, 30);
+				SetLaserDataA("L1",80, NULL, 0, 0, 0, 0);
+				SetLaserDataA("L5",100, NULL, 0, -5, 0, 0);
+				SetLaserDataA("L5",300, NULL, 0, -10, 1000,0);
+				FireShot("L5");
+				CreateLaserA("L6",GetClipMinX ,GetClipMinY,500,10,RED03, 100);
+				SetLaserDataA("L6",0,ang, 1, 0, 0, 30);
+				SetLaserDataA("L1",80, NULL, 0, 0, 0, 0);
+				SetLaserDataA("L6",100, NULL, 0, -5, 0, 0);
+				SetLaserDataA("L6",300, NULL, 0, -10, 10000,0);
+				FireShot("L6");  
+                       ang += 360/S;
+speed--;
+speed2++;
+            ag++;
+			}
+			loop(300) {yield;}
+            t++;
+             agk++;
+		}
+	}
+// キャラを移動させるタスク
+    task TMove {
+        yield;
+
+        loop {
+            loop(120) { yield; }
+            moveToPlayer(rand(40, 80), rand(-40, 40), 60,
+                         GetClipMinX + 32, GetClipMinY + 32,
+                         GetClipMaxX - 32, GetClipMinY + 160);
+        }
+    }
+    // なるべくプレイヤーの方向に移動
+    //   xMove  : x 方向の移動量（正の数）
+    //   yAdd   : y 方向の移動量
+    //   frame  : 移動に要するフレーム数
+    //   left   : 以下、可動範囲
+    //   top    :
+    //   right  :
+    //   bottom :
+    function moveToPlayer(xMove, yAdd, frame, left, top, right, bottom) {
+        let x;
+        let y;
+
+        if(GetPlayerX < GetX) {
+            // プレイヤーより右に敵がいれば、敵は左に動きます。
+            x = GetX - xMove;
+
+            // 但し、敵が可動領域の左端よりも左にいくようなら、右に動きます。
+            if(x < left) {
+                x = GetX + xMove;
+            }
+        } else {
+            // さもなくば、敵は右に動きます。
+            x = GetX + xMove;
+
+            // 但し、敵が可動領域の右端よりも右にいくようなら、左に動きます。
+            if(right < x) {
+                x = GetX - xMove;
+            }
+        }
+
+        // 可動領域の外に行く場合は、端っこで止めます。
+        y = GetY + yAdd;
+        if(y < top) {
+            y = top;
+        } else if(bottom < y) {
+            y = bottom;
+        }
+
+        SetMovePosition02(x, y, frame);
+
+
+    }
+}
+
+}

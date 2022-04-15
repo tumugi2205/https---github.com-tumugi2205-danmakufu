@@ -1,0 +1,313 @@
+#東方弾幕風
+#Title[因縁「執拗な悪夢」]
+#Text[自らのトラウマとなった悪夢は
+自分から離れることはない]
+#BackGround[User()]
+#ScriptVersion[2]
+
+script_enemy_main{
+
+    //グローバル変数
+       let imgBoss   = "script\img\杏子.png";
+ let wIni = 120;
+ 
+ ///////////////////////////////////////////////////////////
+
+ @Initialize{
+     LoadGraphic(imgBoss);
+     
+        SetMovePosition02(GetCenterX(), GetClipMinY() + 120, wIni);
+        SetLife(4000);
+        SetTimer(60);
+        SetInvincibility(wIni);
+        SetDamageRate(100, 100);
+     
+     TMain1;
+     TNway6;
+     TNway2;
+     TNway3;
+     TNway4;
+     TNway5;
+TNway7;
+     TMove;
+        CutIn(YOUMU,"因縁「執拗な悪夢」",0,0,0,0,0);//スペルカード名表示
+ }
+  
+ @MainLoop{
+  SetCollisionA(GetX(), GetY(), 32);
+  SetCollisionB(GetX(), GetY(), 24);
+     yield;
+ }
+ 
+ @DrawLoop{
+     SetTexture(imgBoss);
+     SetGraphicRect(1, 1, 64, 64);
+     DrawGraphic(GetX(), GetY());
+ }
+  
+ @Finalize{
+     DeleteGraphic(imgBoss);
+ }
+ 
+ //////////////////////////////////////////////////////////
+ 
+ task TMain1{
+     //初期化
+     
+     yield;
+     loop(wIni){ yield; }
+     
+     //処理
+     loop{
+     
+         loop(10){
+             CreateObjShot(GetX(), GetY(), 3, GetAngleToPlayer, RED21, 10);
+             loop(10){ yield; }
+         }
+         loop(60){ yield; }
+
+         ascent(let i in 0..36){
+             CreateObjShot(GetX(), GetY(), 3, GetAngleToPlayer() + i*10, WHITE01, 10);
+             
+         }
+         loop(30){ yield; }
+         
+         loop(3){
+             CreateObjLaser(GetX(), GetY(), GetAngleToPlayer(), 500, 20, WHITE01, 60, 60);
+             loop(60){ yield; }
+         }
+         loop(30){ yield; }
+         
+         ascent(let i in 0..6){
+   //(x,y,Angle,Length,Width,Color,radius,frame)
+             CreateSinuateLaser(GetX, GetY(), i*60, 30, 20, RED03, 300, 200);
+         }
+         loop(120){ yield; }
+     }
+ }
+
+task TNway6{
+     //初期化
+     
+     yield;
+     loop(wIni){ yield; }
+     
+     //処理
+     loop{
+    
+         
+         ascent(let i in 0..2){
+   //(x,y,Angle,Length,Width,Color,radius,frame)
+             CreateSinuateLaser(GetX+50, GetY(), i*180, 30, 20, YELLOW01, 300, 200);
+         }
+         loop(120){ yield; }
+     }
+ }
+task TNway7{
+     //初期化
+     
+     yield;
+     loop(wIni){ yield; }
+     
+     //処理
+     loop{
+    
+         
+         ascent(let i in 0..2){
+   //(x,y,Angle,Length,Width,Color,radius,frame)
+             CreateSinuateLaser(GetX-50, GetY(), i*180, 30, 20, YELLOW01, 300, 200);
+         }
+         loop(180){ yield; }
+     }
+ }
+
+ 
+ //////////////////////////////////////////////////////////
+ 
+ //オブジェクト弾の例
+ task CreateObjShot(let x, let y, let speed,
+             let angle, let graphic, let delay) {
+    
+        //オブジェクト弾の作成
+        let obj = Obj_Create(OBJ_SHOT);
+        
+        //パラメータの設定
+        Obj_SetPosition(obj, x, y);
+        Obj_SetSpeed(obj, speed);
+        Obj_SetAngle(obj, angle);
+        ObjShot_SetGraphic(obj, graphic);
+        ObjShot_SetDelay(obj, delay);
+        
+        loop(delay){ yield; }
+        
+        while(!Obj_BeDeleted(obj)) {
+            //軌道の変化はここに記述
+            yield;
+        }
+    }
+
+    //設置型オブジェクトレーザーの例
+    task CreateObjLaser(let x, let y, let angle, let length,
+                   let width, let graphic, let delay, let time) {
+        
+        //オブジェクト弾の作成
+        let obj = Obj_Create(OBJ_LASER);
+        
+        //パラメータの設定
+        Obj_SetPosition(obj, x, y);
+        Obj_SetSpeed(obj, 0);
+        Obj_SetAngle(obj, angle);
+        ObjShot_SetGraphic(obj, graphic);
+        ObjShot_SetDelay(obj, delay);
+        ObjLaser_SetLength(obj, length);
+        ObjLaser_SetWidth(obj, width);
+        ObjLaser_SetSource(obj, true);
+        
+        loop(delay + time){ yield; }
+        
+        Obj_Delete(obj);
+    }
+    
+    //へにょりオブジェクトレーザーの例
+task CreateSinuateLaser(x,y,Angle,Length,Width,Color,radius,frame){
+ //x   X座標
+ //y   Y座標
+ //Angle   発射角度
+ //Length  レーザーの長さ(30～40程度)
+ //Width   レーザーの太さ
+ //Color   弾の色
+ //radius  広がるサイズ
+ //frame   目的地までの到達時間
+ let obj = Obj_Create(OBJ_SINUATE_LASER);
+ let t = 0;
+ let x1 = x + cos(Angle)*radius;
+ let y1 = y + sin(Angle)*radius;
+ let x2 = GetPlayerX;//目的地X座標
+ let y2 = GetPlayerY;//目的地Y座標
+ let X;
+ let Y;
+ Obj_SetPosition(obj, x, y);
+ Obj_SetSpeed(obj, 0);
+ Obj_SetAngle(obj, Angle);
+ ObjShot_SetGraphic(obj, Color);
+ ObjShot_SetDelay(obj, 0);
+ ObjSinuateLaser_SetLength(obj, Length);
+ ObjSinuateLaser_SetWidth(obj, Width);    
+ loop(frame)
+ {
+  X = (t^2*x2+2*t*(1-t)*x1+(1-t)^2*x);
+  Y = (t^2*y2+2*t*(1-t)*y1+(1-t)^2*y);
+  Obj_SetPosition(obj, X, Y);
+  t+=1/frame;
+  yield;
+ }
+ loop(25){yield;}
+
+}
+
+    task TNway2 {
+     yield;
+     
+     //処理
+     loop{
+         loop(20){
+             CreateObjShot(GetX(), GetY(), 3, GetAngleToPlayer+10, RED21, 10);
+             loop(10){ yield; }
+         }
+         loop(60){ yield; }
+     }
+    }
+    task TNway3 {
+     yield;
+     
+     //処理
+     loop{
+         loop(20){
+             CreateObjShot(GetX(), GetY(), 3, GetAngleToPlayer-10, RED21, 10);
+             loop(10){ yield; }
+         }
+         loop(60){ yield; }
+     }
+    }
+    task TNway4 {
+     yield;
+     
+     //処理
+     loop{
+         loop(20){
+             CreateObjShot(GetX(), GetY(), 3, GetAngleToPlayer+20, RED21, 10);
+             loop(10){ yield; }
+         }
+         loop(60){ yield; }
+     }
+    }
+    task TNway5 {
+     yield;
+     
+     //処理
+     loop{
+         loop(20){
+             CreateObjShot(GetX(), GetY(), 3, GetAngleToPlayer-20, RED21, 10);
+             loop(10){ yield; }
+         }
+         loop(60){ yield; }
+     }
+    }
+
+ 
+
+
+
+// キャラを移動させるタスク
+    task TMove {
+        yield;
+
+        loop {
+            loop(120) { yield; }
+            moveToPlayer(rand(40, 80), rand(-40, 40), 60,
+                         GetClipMinX + 32, GetClipMinY + 32,
+                         GetClipMaxX - 32, GetClipMinY + 160);
+        }
+    }
+
+    // なるべくプレイヤーの方向に移動
+    //   xMove  : x 方向の移動量（正の数）
+    //   yAdd   : y 方向の移動量
+    //   frame  : 移動に要するフレーム数
+    //   left   : 以下、可動範囲
+    //   top    :
+    //   right  :
+    //   bottom :
+    function moveToPlayer(xMove, yAdd, frame, left, top, right, bottom) {
+        let x;
+        let y;
+
+        if(GetPlayerX < GetX) {
+            // プレイヤーより右に敵がいれば、敵は左に動きます。
+            x = GetX - xMove;
+
+            // 但し、敵が可動領域の左端よりも左にいくようなら、右に動きます。
+            if(x < left) {
+                x = GetX + xMove;
+            }
+        } else {
+            // さもなくば、敵は右に動きます。
+            x = GetX + xMove;
+
+            // 但し、敵が可動領域の右端よりも右にいくようなら、左に動きます。
+            if(right < x) {
+                x = GetX - xMove;
+            }
+        }
+
+        // 可動領域の外に行く場合は、端っこで止めます。
+        y = GetY + yAdd;
+        if(y < top) {
+            y = top;
+        } else if(bottom < y) {
+            y = bottom;
+        }
+
+        SetMovePosition02(x, y, frame);
+    }
+}

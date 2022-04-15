@@ -1,0 +1,163 @@
+<html>
+<head>
+<title>コメントアウトについて</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.yukari{text-align : left;
+        font-family : sans-serif;
+        font-size : 14pt;
+        line-height : 150%;
+        color : #ff00ff}
+-->
+</style>
+</head>
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+閑話休題　コメントアウトについて<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/yukari03.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br>
+あらいらっしゃい。<br>
+此処では弾幕作成とは直接的に関係ない話をさせてもらうわ。<br>
+まあそんなに気張らなくても大丈夫よ。
+<br><br><br>
+</p></td>
+</tr>
+
+<tr align="left">
+<td width="120"><img src="./../icon/yukari04.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+さて、今回のお話はコメントアウトについて。<br>
+コメントアウトとは、プログラムに直接影響せずに好き勝手書けるようにできるものよ。<br>
+厳密な定義とは違うけれど、使い道としてはそんな認識でいいわ。<br>
+じゃあコメントアウトの使用例を見てみましょう。<br>
+まずは『study003.txt』の自機狙いを絶えず撃つスクリプトを使って説明しましょう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {
+      CreateShot01(GetX, GetY, 2, GetAngleToPlayer, RED01, 0);
+      loop(60) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/yukari02.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+上の例はまだコメントアウトを使っていない状態ね。<br>
+じゃあ適当にコメントアウトを使ってみましょう。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+/*『study003.txt』のメイン処理よ
+  基本中の基本の処理ね*/
+  task mainTask {
+    loop(60) {yield;}	//１秒待つ処理よ
+
+    loop {	//無限ループのはじまりはじまり～
+      CreateShot01(GetX, GetY, 2, GetAngleToPlayer, RED01, 0);	//自機狙いの弾を撃つわ
+      loop(60) {yield;}	//ここも１秒待つ処理ね
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/yukari04.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br><br>
+さて、スクリプト中に適当なコメントを書いてみたわ。<br>
+普通に全角文字を書くと、エラーが出て動かないわね。<br>
+でもこのスクリプトだったらちゃんと動くわ。<br>
+コメントアウトをしているからね。<br>
+ではコメントアウトのやり方の説明をしましょう。<br>
+コメントアウトのやり方には２種類の方法があるわ。
+<br><br><br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/yukari04.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br><br><br>
+では１つめの方法。<br>
+『/*』と『*/』で括る方法よ。<br>
+/*と*/の間に書かれている記述は、プログラム処理で全て無視されるわ。<br>
+この間になにを書いても問題なしってワケ。<br>
+だから<b>プログラムがどんな処理をしているのかメモすることもできるわ。</b><br>
+これが主なコメントアウトの使用目的ね。<br>
+で、２つめの方法、『//』を使う方法。<br>
+//から、行の最後までの間がコメントアウト対象になるわ。<br>
+短いコメントだったら//の方が使い勝手が良いでしょうね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/yukari03.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br>
+それでコメントアウトの使用目的だけど、さっき言ったとおりメモがメインよ。<br>
+スクリプトがどんな動きをするのかわかりにくい部分は積極的に使った方が良いでしょう。<br>
+またスクリプトが大規模になってきたなら区切りの良さそうなところにも<br>
+メモを置いた方が後々の助けになるでしょう。<br>
+他にも自分が好きなようにコメントアウトを使いなさいな。<br>
+でもある程度他人に見てもらうことを意識して書きなさいね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/yukari04.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br>
+他の使い方といったら、スクリプト文を一時的に退避させたい場合かしらね。<br>
+スクリプトを改変したいけど、もしかしたら元に戻せないかもしれない･･････<br>
+そんな不安があるときは、書き換えるところの文をコピーして貼り付けて、<br>
+片方をコメントアウトすればいいわ。<br>
+比較しながら作業できるし、修復も楽だし、問題なくスクリプトを動作させることができるし。<br>
+まあ他にもうまい使い方が思いついたら好きな使い方をするといいわ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/yukari03.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br>
+じゃあ、今回はこんなところかしらね。<br>
+コメントアウトを使わなくてもスクリプトは使えるけど、使った方が色々と便利よ。<br>
+自分で作ったスクリプトでも、ちょっと時間が経っただけで忘れてしまったりするからね。<br>
+他人に見せる場合は勿論あった方が良いに決まっているし。<br>
+では、また別の場所でお会いしましょう。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

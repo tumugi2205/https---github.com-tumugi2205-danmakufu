@@ -1,0 +1,261 @@
+#東方弾幕風
+#Title[最後の審判]
+#Text[大丈夫だよ。安心していいんだよ。
+もう、お前は一人ぼっちなんかじゃない。
+いいよ....私が一緒にいてやるよ。]
+#BackGround[User()]
+#ScriptVersion[2]
+#BGM[bgm\bgm.wav\イマジンブレイク.mp3]
+
+script_enemy_main{
+
+    //グローバル変数
+       let imgBoss   = "script\img\杏子.png";
+	let count2 =0;
+	let wIni = 120;
+	let arrayObj = [];
+	
+	///////////////////////////////////////////////////////////
+
+	@Initialize{
+	    LoadGraphic(imgBoss);
+
+        SetMovePosition02(GetCenterX(), GetClipMinY() + 120, wIni);
+        SetLife(4000);
+        SetInvincibility(wIni);
+        SetTimer(60);
+        SetDamageRate(100, 100);
+	   
+	    TMain;  
+	    TNway;  
+	    TNway2;
+	    TNway3;
+	    TNway4;
+	    TNway5;
+	    TNway6;
+	    TNway7;
+     TMove;
+        CutIn(YOUMU,"最後の審判","script\img\画像 098.png",0,0,373,397);//スペルカード名表示
+	}
+		
+	@MainLoop{
+		SetCollisionA(GetX(), GetY(), 32);
+		SetCollisionB(GetX(), GetY(), 24);
+	    yield;
+
+	}
+	@DrawLoop{
+	    SetTexture(imgBoss);
+	    SetGraphicRect(1, 1, 64, 64);
+	    DrawGraphic(GetX(), GetY());
+	}
+		
+	@Finalize{
+	    DeleteGraphic(imgBoss);
+	}/*
+
+
+	task TMain{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    
+	    //処理
+     loop{
+     
+         loop(1){
+             CreateObjLaser(GetX, GetY, GetAngleToPlayer,4000,150, RED01, 100,2000) ;
+             loop(1){ yield; }
+         }
+         loop(350){ yield; }
+}
+ }*/
+        let L1 = Obj_Create(OBJ_LASER); 
+	task TMain{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    
+	    //処理
+     loop{
+     
+         loop(1){
+        SetShotKillTime(L1,400);
+SetShotDirectionType(PLAYER);
+CreateLaserA(L1,GetX, GetY,4000,150, RED01, 150);
+SetLaserDataA(L1,5,GetAngleToPlayer,1,0,0,0);
+          FireShot(L1);
+             loop(1){ yield; }
+         }
+         loop(350){ yield; }
+}
+}
+
+        let S1 = Obj_Create(OBJ_SHOT);
+    task TNway {
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+             CreateShotA(S1,GetPlayerX, GetGetPlayerY,150);
+          SetShotDataA(S1,0,rand(0.5,2),rand(0,360),0,0.01,5,YELLOW11);
+          FireShot(S1);
+}
+         loop(350){ yield; }
+	}
+ }
+
+	task TNway2{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+        let S1 = Obj_Create(OBJ_SHOT);
+             CreateShotA(S1,GetPlayerX, GetGetPlayerY,150);
+          SetShotDataA(S1,0,rand(0.5,2),rand(0,360),0,0.02,5,RED02);
+          FireShot(S1);
+}
+         loop(350){ yield; }
+	}
+ }
+
+	task TNway3{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+        let S1 = Obj_Create(OBJ_SHOT);
+             CreateShotA(S1,GetPlayerX, GetGetPlayerY,150);
+          SetShotDataA(S1,0,rand(0.5,2),rand(0,360),0,0.1,10,RED23);
+          FireShot(S1);
+}
+         loop(350){ yield; }
+	}
+ }
+	task TNway4{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+        let S1 = Obj_Create(OBJ_SHOT);
+             CreateShotA(S1,GetPlayerX, GetGetPlayerY,150);
+          SetShotDataA(S1,0,rand(0.5,2),rand(0,360),0,0.02,10,RED32);
+          FireShot(S1);
+}
+         loop(350){ yield; }
+	}
+ }
+	task TNway5{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+        let S1 = Obj_Create(OBJ_SHOT);
+             CreateShotA(S1,GetPlayerX, GetGetPlayerY,150);
+          SetShotDataA(S1,0,rand(0.5,2),rand(0,360),0,-0.02,-5,AQUA04);
+          FireShot(S1);
+}
+         loop(350){ yield; }
+	}
+ }
+	task TNway6{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+        let S1 = Obj_Create(OBJ_SHOT);
+             CreateShotA(S1,GetPlayerX, GetGetPlayerY,150);
+          SetShotDataA(S1,0,rand(0.5,2),rand(0,360),0,-0.02,-5,RED04);
+          FireShot(S1);
+}
+         loop(350){ yield; }
+	}
+ }
+	task TNway7{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    loop{
+
+	    loop(30){
+        let S1 = Obj_Create(OBJ_SHOT);
+             CreateShotA(S1,GetPlayerX, GetGetPlayerY,150);
+          SetShotDataA(S1,0,rand(0.5,2),rand(0,360),0,-0.02,-5,YELLOW04);
+          FireShot(S1);
+}
+         loop(350){ yield; }
+	}
+ }
+ //////////////////////////////////////////////////////////
+ // キャラを移動させるタスク
+    task TMove {
+        yield;
+
+        loop {
+            loop(120) { yield; }
+            moveToPlayer(rand(40, 80), rand(-40, 40), 60,
+                         GetClipMinX + 32, GetClipMinY + 32,
+                         GetClipMaxX - 32, GetClipMinY + 160);
+        }
+    }
+
+    // なるべくプレイヤーの方向に移動
+    //   xMove  : x 方向の移動量（正の数）
+    //   yAdd   : y 方向の移動量
+    //   frame  : 移動に要するフレーム数
+    //   left   : 以下、可動範囲
+    //   top    :
+    //   right  :
+    //   bottom :
+    function moveToPlayer(xMove, yAdd, frame, left, top, right, bottom) {
+        let x;
+        let y;
+
+        if(GetPlayerX < GetX) {
+            // プレイヤーより右に敵がいれば、敵は左に動きます。
+            x = GetX - xMove;
+
+            // 但し、敵が可動領域の左端よりも左にいくようなら、右に動きます。
+            if(x < left) {
+                x = GetX + xMove;
+            }
+        } else {
+            // さもなくば、敵は右に動きます。
+            x = GetX + xMove;
+
+            // 但し、敵が可動領域の右端よりも右にいくようなら、左に動きます。
+            if(right < x) {
+                x = GetX - xMove;
+            }
+        }
+
+        // 可動領域の外に行く場合は、端っこで止めます。
+        y = GetY + yAdd;
+        if(y < top) {
+            y = top;
+        } else if(bottom < y) {
+            y = bottom;
+        }
+
+        SetMovePosition02(x, y, frame);
+    }
+}

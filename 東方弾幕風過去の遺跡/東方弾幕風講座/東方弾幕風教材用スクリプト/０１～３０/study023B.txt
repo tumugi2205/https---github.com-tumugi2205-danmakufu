@@ -1,0 +1,8 @@
+sub shot3way {
+	let angle;
+	angle = GetAngleToPlayer - 20;
+	loop(3) {
+		CreateShot01(GetX, GetY, 2, angle, RED01, 0);
+		angle = angle + 20;
+	}
+}

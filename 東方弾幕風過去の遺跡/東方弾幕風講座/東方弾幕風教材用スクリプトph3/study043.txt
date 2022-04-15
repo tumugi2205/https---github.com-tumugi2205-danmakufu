@@ -1,0 +1,81 @@
+#“Œ•û’e–‹•—[Single]
+#ScriptVersion[3]
+#Title["•Û—¯"]
+#Text["ŽžŠÔ’âŽ~‚ª–¢ŽÀ‘•‚È‚½‚ß[r]Œ»Ý‚Ì’†g‚Ístudy037‚Æ“¯‚¶"]
+#Image[""]
+#System["/script/default_system/Default_System.txt"]
+#Background["script/default_system/Default_Background_IceMountain.txt"]
+#BGM[DEFAULT]
+#Player[DEFAULT]
+
+#include "script/default_system/Default_ShotConst.txt"
+
+let objEnemy;
+
+@Event {
+  alternative(GetEventType)
+  case(EV_REQUEST_LIFE) {
+    SetScriptResult(2000);
+  }
+}
+
+@Initialize {
+  objEnemy = ObjEnemy_Create(OBJ_ENEMY_BOSS);
+  ObjEnemy_Regist(objEnemy);
+
+  let imgExRumia = GetCurrentScriptDirectory ~ "img/ExRumia.png";
+  ObjPrim_SetTexture(objEnemy, imgExRumia);
+  ObjSprite2D_SetSourceRect(objEnemy, 64, 1, 127, 64);
+  ObjSprite2D_SetDestCenter(objEnemy);
+
+  let cx = GetStgFrameWidth / 2;
+  ObjMove_SetDestAtFrame(objEnemy, cx, 60, 58);
+
+  mainTask;
+  endProcess;
+}
+
+@MainLoop {
+  ObjEnemy_SetIntersectionCircleToShot(objEnemy, ObjMove_GetX(objEnemy), ObjMove_GetY(objEnemy), 32);
+  ObjEnemy_SetIntersectionCircleToPlayer(objEnemy, ObjMove_GetX(objEnemy), ObjMove_GetY(objEnemy), 24);
+  yield;
+}
+
+task mainTask {
+  loop(60) {yield;}
+  let count = 0;
+  loop {
+    if(count%60 == 0) {
+      let angle = GetAngleToPlayer(objEnemy) - 90;
+      loop(97) {
+	CreateShotA1(ObjMove_GetX(objEnemy), ObjMove_GetY(objEnemy), 1, angle, DS_BUTTERFLY_RED, 0);
+	angle += 180/96;
+      }
+    }
+    if(count%150 == 135) {
+      objectBullet;
+    }
+    count++;
+    yield;
+  }
+}
+
+task objectBullet {
+  let obj = CreateShotA1(ObjMove_GetX(objEnemy), ObjMove_GetY(objEnemy), 3, GetAngleToPlayer(objEnemy), DS_BALL_M_RED, 0);
+  ObjShot_SetSpellResist(obj, true);
+
+  while(!Obj_IsDeleted(obj)) {
+    DeleteShotInCircle(TYPE_SHOT, TYPE_FADE, ObjMove_GetX(obj), ObjMove_GetY(obj), 12);
+    yield;
+  }
+}
+
+task endProcess {
+  while(ObjEnemy_GetInfo(objEnemy, INFO_LIFE) > 0) {yield;}
+  Obj_Delete(objEnemy);
+  DeleteShotAll(TYPE_ALL, TYPE_FADE);
+  CloseScript(GetOwnScriptID);
+  return;
+}
+
+#include "./function.txt"

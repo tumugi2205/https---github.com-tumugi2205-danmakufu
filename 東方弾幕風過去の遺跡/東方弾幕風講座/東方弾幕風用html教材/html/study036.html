@@ -1,0 +1,230 @@
+<html>
+<head>
+<title>オブジェクト弾 (再帰タスク)</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０３６回　オブジェクト弾 (再帰タスク)<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回は再帰を利用した弾幕を作ってみる。<br>
+まあ弾幕風では再帰を使う機会はあまり無いとは思うが、<br>
+こんなやり方もあるということで紹介しておこう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+再帰ってなんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+再帰とは、関数などが自分自身を呼び出すことだな。<br>
+たとえば『A』というタスクがあったとしたら、<br>
+『A』のタスクの中に『A』を呼び出す処理が含まれている。<br>
+そんな処理をすることを再帰と呼ぶんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それって『A』のタスクがずっと『A』を呼び出し続けて<br>
+無限ループになってしまうんじゃ･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+確かに何も考えず再帰をしてしまっては無限に繰り返されてしまう。<br>
+だからどうやって再帰にピリオドを打つか、それが重要な課題となる。<br>
+ではスクリプトの例を見ていこう。<br>
+『study036.txt』を開いてくれ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    let sign = rand_int(0, 1)*2 - 1;
+    loop {
+      objectBullet(sign, GetX, GetY, rand(80, 100)-100*sign, 20);
+      sign *= -1;
+      loop(30) {yield;}
+    }
+  }
+
+  task objectBullet (let sign, let px, let py, let angle1, let angle2) {
+    let obj = Obj_Create(OBJ_SHOT);
+    Obj_SetX(obj, px);
+    Obj_SetY(obj, py);
+    Obj_SetSpeed(obj, 2);
+    Obj_SetAngle(obj, angle1);
+    ObjShot_SetGraphic(obj, RED01);
+    ObjShot_SetDelay(obj, 0);
+
+    loop(3) {yield;}<font color="red">
+    if(!Obj_BeDeleted(obj)) {
+      objectBullet(sign, Obj_GetX(obj), Obj_GetY(obj), angle1+angle2*sign, angle2*0.96);
+    }</font>
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+mainTaskの処理は３０フレームおきにオブジェクト弾を<br>
+発射しているくらいで目立つところはないな。<br>
+ということでobjectBulletの方を見ていこう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+今回のオブジェクト弾の処理は･･････<br>
+えっと、３フレーム待った後、<br>
+もしオブジェクト弾が消えていなかったら･･････<br>
+あっ、objectBulletのタスクを呼び出す処理がありますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それが今回の肝となる再帰の部分だな。<br>
+objectBulletタスクの中にobjectBulletを呼び出す処理がある。<br>
+これで再帰が実現できるワケだ。<br>
+このオブジェクト弾は撃たれた後にさらにオブジェクト弾を撃ち、<br>
+その撃たれたオブジェクト弾が再びオブジェクト弾を発射し･･････<br>
+それの繰り返しをする弾幕となっている。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+撃った弾からまた弾が出ることを繰り返していると、<br>
+やっぱり無限ループしてしまう気がするんですが。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それを防ぐためにObj_BeDeletedを使ったif文を利用している。<br>
+弾が発射されてから３フレーム待つ間に<br>
+画面外へ行ったりボムで消されたりすると、<br>
+if文の条件を満たさなくなり次のオブジェクト弾を発射しなくなる。<br>
+そうなった時点で再帰処理が終了することになるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+だから再帰タスクが無限ループすることがないんですね。<br>
+それはわかりましたけど、どんな弾幕になっているのか<br>
+全然想像できません～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+引数が５つと多く、角度に関する変数が２つもあるからな。<br>
+これは実際にスクリプトを動かしてみた方がいいかもしれない。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+赤弾がグルッとカーブしながら弾を撒き散らしていって、<br>
+最後の方は凄い密度の弾を出しながら下りてくる弾幕ですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+引数の意味を説明していこうか。<br>
+signは左回りか右回りどちらで回転するかを決める変数。<br>
+px, pyはオブジェクト弾から弾が出るようにするために使う弾の座標だ。<br>
+angle1はオブジェクト弾の発射角度だな。<br>
+重要なのはangle2で、次に撃つ弾の発射角度をどれだけズラして<br>
+撃つかを決める数値だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+このangle2だけ０．９６倍するようになっていますが？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+発射角度のズレが一定のままだと、<br>
+同じところをグルグル回り続けることになってしまうからな。<br>
+だから発射角度のズレをだんだん小さくしていくことによって<br>
+カーブを緩くし、画面外へ消えるようにしているんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+弾幕だけを見ると結構複雑なように見えるんですけど、<br>
+再帰を使うと割とシンプルなスクリプトになるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+でも再帰処理は自分自身を呼び出すという特殊な処理をするものだから、<br>
+スクリプトの理解も難しく、適用範囲も限られてくるね。<br>
+だから弾幕風では再帰を使う機会は少ないわ。<br>
+けれどその再帰を上手く使えば一風変わった面白い弾幕ができるかも。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+再帰の終了条件に気をつければ再帰処理も面白いかもですね。<br>
+それではまた次の講座で会いましょう！
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

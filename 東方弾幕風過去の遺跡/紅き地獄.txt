@@ -1,0 +1,11 @@
+#東方弾幕風[Plural]
+#Title[ブラッティーワールド]
+#Text[赤き地獄に存在しうるものなど皆無]
+#ScriptVersion[2]
+#BGM[bgm\bgm.wav\イマジンブレイク.mp3]
+
+
+#ScriptPathData
+   #ScriptPath[\script\梢滅「ブラット・リボーン」.txt]
+    #ScriptPath[\script\盲遺「鎖縛決壊」.txt]
+#EndScriptPathData

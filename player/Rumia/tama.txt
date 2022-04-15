@@ -1,0 +1,21 @@
+#PlayerShotData
+
+ShotImage = ".\–³‘è9.png"
+
+ShotData
+{
+	id = 1 //ID
+	rect = (1,1,65,65) //•`‰æŒ³‹éŒ`
+	render = ADD //•`‰æ•û–@
+	alpha=60
+	angular_velocity = 0 //‰æ‘œ‚Ì‰ñ“]‘¬“x
+}
+
+ShotData
+{
+	id = 2 //ID
+	rect = (1,32,48,80) //•`‰æŒ³‹éŒ`
+	render = ADD //•`‰æ•û–@
+	alpha=64
+	angular_velocity = 3 //‰æ‘œ‚Ì‰ñ“]‘¬“x
+}

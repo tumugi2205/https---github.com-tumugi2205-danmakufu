@@ -1,0 +1,12 @@
+#東方弾幕風[Plural]
+#Title[ブラッティーワールド]
+#Text[赤き地獄に存在しうるものなど皆無]
+#ScriptVersion[2]
+#BGM[bgm\bgm.wav\イマジンブレイク.mp3]
+
+
+#ScriptPathData
+   #ScriptPath[\script\縫威「鎖縛結界」.txt]
+   #ScriptPath[\script\対マミ戦闘練習.txt]
+    #ScriptPath[\script\最後の審判.txt]
+#EndScriptPathData

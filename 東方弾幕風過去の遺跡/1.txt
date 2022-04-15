@@ -1,0 +1,19 @@
+ascent(a in 1){
+SetShotDirectionType(PLAYER);
+CreateShotA(id,GetX,GetY,0);
+SetShotDataA(id,0,2,a*(360/15),0,0,00,RED03);
+SetShotKillTime(id,60);
+
+SetShotDirectionType(ABSOLUTE);
+ascent(a in 0..5){
+CreateShotA(id2,GetX,GetY,0);
+SetShotDataA(id2,0,2,rand(0,360)+a*(360/5),0,0,00,RED03);
+SetShotKillTime(id2,60);
+AddShot(59,id,id2,0);
+}
+FireShot(id);
+}
+
+ + i*60 + 30
+	        ascent(let i in 1..1){
+SetShotDirectionType(SEQUENSE);

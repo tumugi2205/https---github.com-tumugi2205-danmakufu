@@ -1,0 +1,290 @@
+<html>
+<head>
+<title>ファイルの取り込み</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０２３回　ファイルの取り込み<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回学ぶのはファイルの取り込みだ。<br>
+正直初心者にはまだ必要なくても問題ないレベルの話だから、<br>
+いっそのこと飛ばしてくれても構わない。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+簡単な弾幕を作るだけなら、今回の講座は不要ってことですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+弾幕自体とは関係ないプログラミングの話になるからね。<br>
+ファイルの取り込みが必要になってから今回の講座を見る方がいいかもね。<br>
+というワケで、話を本筋に戻しましょう。<br>
+まずは色々話すよりスクリプトの中身を見ましょう。<br>
+『study023A.txt』を開いて。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+はいっ！<br>
+･･････って、A？
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {
+      shot3way;
+      loop(60) {yield;}
+    }
+  }
+<font color="red">
+  #include_function ".\study023B.txt"</font>
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+『ファイルの取り込み』という意味通り、あるファイルが別のファイルを<br>
+取り込んで１つのファイルになるということだ。<br>
+ちなみに弾幕自体は『study005』と『study022』のものと同じだ。<br>
+それと、できれば『study022.txt』も合わせて開いてほしい。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+スクリプトのmainTaskは『study022.txt』のものと全く同じなんですね。<br>
+そしてサブルーチンがあった場所がたった１行だけになってます～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その１行が今回の肝になる。<br>
+#include_function ".\study023B.txt"　がファイルの取り込みを行う処理だ。<br>
+ちなみにincludeとは英語で『含む』という意味。<br>
+こうすることで他のファイルを取り込むことができる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+見たところ#include_functionがファイルの取り込みに必要な記述ですかね。<br>
+それで次の『"』で囲まれた文が読み込ませるファイルになるんでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうそう。<br>
+そして読み込ませるファイルの指定の仕方に少し注意が必要だ。<br>
+今回の例だと".\study023B.txt"になっているな。<br>
+まず頭にある『.\』だが、これは<b>読み込み元となるファイル (study023A.txt) と<br>
+同じフォルダからファイルを探し始める</b>という意味になる。<br>
+ちょっと言葉だとわかりにくいが、実際に『study023A.txt』があるフォルダを<br>
+開いてみてくれ。<br>
+要は『今見ているフォルダからより下位のフォルダをクリックして先へ進んだり、<br>
+１つ前のscriptフォルダに戻ったりするのと同じことをする』ということ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+普段パソコンでフォルダの移動をすることと同じ要領だと思えば良いんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そして今回読み込みたいファイルは『study023B.txt』なんだが、<br>
+先ほど言ったフォルダを見てみよう。<br>
+『study023A.txt』と『study023B.txt』は同じフォルダにあることがわかる。<br>
+だから『study023A.txt』のあるフォルダ (.\) から探して『study023B.txt』を<br>
+指定するには、".\study023B.txt"という記述になる。<br>
+この指定のために書いた『"』で囲まれた文を『パス』と呼ぶ。<br>
+そして読み込み先の『study023B.txt』の中身を開いてみると･･････
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+sub shot3way {
+  let angle;
+  angle = GetAngleToPlayer - 20;
+  loop(3) {
+    CreateShot01(GetX, GetY, 2, angle, RED01, 0);
+    angle = angle + 20;
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+これは前回の『study022.txt』のサブルーチン部分そのままですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+#includeの実質的な処理は<b>取り込み先のファイルの内容を、丸々#includeが<br>
+あった場所に持ってくる</b>ということだ。<br>
+今回の場合ファイル取り込み後のスクリプトの中身は、<br>
+前回の『study022.txt』と寸分違わない内容になるということになる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ファイルを取り込むなんてこともできるんですね～<br>
+今回の例では同じフォルダにあったファイルを取り込みましたが、<br>
+もし別のフォルダにあるファイルを取り込みたかった場合はどうするのでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ふむ。<br>
+では仮に『study023A.txt』にあるフォルダの、『img』フォルダの中に<br>
+『study023B.txt』があったとしよう。<br>
+その場合は『読み込み元のファイルがあるフォルダ (.\) から見て、<br>
+まず『img』フォルダの中に入って、『study023B.txt』を指定する』から･･････<br>
+<font color="black">#include_function ".\img\study023B.txt"</font><br>
+と書けばＯＫだ。<br>
+更に深いフォルダの中にあるファイルを指定したかったら、<br>
+<font color="black">"include_function ".\img\(フォルダA)\(フォルダB)\study023B.txt"</font><br>
+といったように書けば大丈夫。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+では逆に１つ前のフォルダにあるファイルを指定したかった場合は？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その場合は『..』を使えば１つ前のフォルダへ移動することができる。<br>
+もし『study023B.txt』が１つ前、つまり上位のフォルダにあった場合は、<br>
+<font color="black">#include_function ".\..\study023B.txt"</font><br>
+と書けば指定することができるぞ。<br>
+１つ前のフォルダの更に別のフォルダに目的のファイルがある場合は、<br>
+<font color="black">#include_function ".\..\(フォルダA)\study023B.txt"</font><br>
+と書けば問題無い。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なるほど～<br>
+それにしても、わざわざ複数のファイルに分けて後で取り込むのは面倒な気がします。<br>
+何かメリットはあるんでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+複数のスクリプトを作っていると、時々それぞれのスクリプトで<br>
+全く同じ部分があったりする。<br>
+その場合は１つのサブルーチンとしてまとめてしまい、<br>
+別の１つのファイルにサブルーチンを書く。<br>
+そして他のスクリプトそれぞれでサブルーチンがあるファイルを取り込む。<br>
+そうすれば先ほどいった『全く同じ部分』が１行のサブルーチン呼び出しだけで済む。<br>
+これはかなりのメリットであるといえる。<br>
+１つのサブルーチンを複数のスクリプトで共有することができる。<br>
+これはプログラミング的にスマートで美しい書き方であるといえるな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+共有ですか～<br>
+それは確かに便利そうですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあやや玄人向けな表現ではあるかもしれないけれど。<br>
+あとスクリプトが大規模になってくると、１つのスクリプトが１０００行を越えたりして<br>
+見たり読んだりするのが大変になるわ。<br>
+そういう場合もキリがいい部分を別のファイルに移動して後で取り込む方が<br>
+わかりやすくなるでしょう。<br>
+また大規模なスクリプト･･････ステージスクリプトなどを作ることもあるでしょう。<br>
+その場合はサブルーチンではなく、敵スクリプトそのものを取り込むケースが出てくるわ。<br>
+そのときは#include_functionではなく、#include_scriptを使いましょう。<br>
+どちらが何を読み込めるのかの詳細を知りたかったらヘルプを参照してね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+今回の講座も毛色の違う内容で憶えるのが大変でした～<br>
+ではまた次回の講座で！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+っと、ごめん。<br>
+まだ１つ言うことがあったわ。<br>
+#includeを書く場所だけど、<b>なるべくスクリプトの最後に書いた方が良いわ。</b><br>
+何故ならエラーが発生したときの誤った場所を示す行数がズレるから。<br>
+そこで最後に#includeを書くようにすれば、読み込み元のスクリプトで<br>
+エラーの行数が表示されても問題ないというワケよ。<br>
+C言語など他のプログラミング言語に慣れている方はそこを注意してね。<br>
+それではまた。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

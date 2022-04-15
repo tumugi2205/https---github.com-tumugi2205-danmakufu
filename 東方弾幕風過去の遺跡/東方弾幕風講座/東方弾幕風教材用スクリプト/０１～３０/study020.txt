@@ -1,0 +1,85 @@
+#“Œ•û’e–‹•—
+#Title[‚Q‚OF’e“f‚«’e]
+#Text[]
+#PlayLevel[’e–‹•—‹³Þ—p]
+#Image[.\img\study020.png]
+#BackGround[Default]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = GetCurrentScriptDirectory ~ "img\ExRumia.png";
+
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 60, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+		loop(60) {yield;}
+
+		CreateShotA("vomit", GetX, GetY, 0);
+		SetShotDataA("vomit", 0, 3, GetAngleToPlayer-20, 0, 0, 0, RED01);
+
+		let vomited = 1;
+		CreateShotA(vomited, 0, 0, 0);
+		SetShotDirectionType(PLAYER);
+		SetShotDataA(vomited, 0, 2, 0, 0, 0, 0, RED11);
+		SetShotDirectionType(ABSOLUTE);
+
+		AddShot(30, "vomit", vomited, 0);
+		FireShot("vomit");
+
+		loop(180) {yield;}
+
+		loop {
+			let shotTime = 90;
+			loop(30) {
+				CreateShotA("vomit", GetX, GetY, 0);
+				SetShotDataA("vomit", 0, rand(2, 3), GetAngleToPlayer+rand(-45, 45), 0, 0, 0, RED01);
+
+				let vomited = 1;
+				CreateShotA(vomited, 0, 0, 0);
+				SetShotDirectionType(PLAYER);
+				SetShotDataA(vomited, 0, 1, 0, 0, 0, 0, RED11);
+				SetShotDirectionType(ABSOLUTE);
+
+				AddShot(shotTime, "vomit", vomited, 0);
+				FireShot("vomit");
+
+				shotTime -= 2;
+				loop(2) {yield;}
+			}
+			loop(120) {yield;}
+		}
+	}
+}

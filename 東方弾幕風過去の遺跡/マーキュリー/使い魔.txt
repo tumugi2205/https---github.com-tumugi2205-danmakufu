@@ -1,0 +1,187 @@
+#東方弾幕風
+#Title[３４：オブジェクト弾 (回転ビット　その２)]
+#Text[]
+#PlayLevel[弾幕風教材用]
+#Image[.\img\study034.png]
+#BackGround[User]
+#ScriptVersion[2]
+
+script_enemy_main {
+	let imgExRumia = "script\img\マーキュリー.png";
+	@Initialize {
+		SetMovePosition02(GetCenterX, GetClipMinY + 100, 60);
+		SetLife(3000);
+
+		LoadGraphic(imgExRumia);
+		SetTexture(imgExRumia);
+		SetGraphicRect(1, 1, 64, 64);
+
+		mainTask;
+		mainTask1;
+
+		mainTask3;
+		mainTask2;
+	}
+
+	@MainLoop {
+		SetCollisionA(GetX, GetY, 24);
+		SetCollisionB(GetX, GetY, 24);
+		yield;
+	}
+
+	@DrawLoop {
+		SetColor(255,255,255);
+		SetRenderState(ALPHA);
+		SetTexture(imgExRumia);
+		if(GetSpeedX == 0) {
+			SetGraphicRect(64, 1, 127, 64);
+		} else if(GetSpeedX > 0) {
+			SetGraphicRect(192, 1, 255, 64);
+		} else if(GetSpeedX < 0) {
+			SetGraphicRect(128, 1, 191, 64);
+		}
+		DrawGraphic(GetX, GetY);
+	}
+
+	@Finalize  {
+		DeleteGraphic(imgExRumia);
+	}
+
+	task mainTask {
+       SetShotAutoDeleteClip(1000,1000,1000,1000);
+		let count2 = 0;
+		loop(60) {yield;}
+                let color;
+		let angle = rand(0, 360);
+		loop(6) {
+			count2++;
+			if((count2 >= 120) && (count2%360 == 0)) {
+                          color = RED02;
+                        }else{  color = BLUE02;}
+			objectBullet(angle,color);
+			angle += 360/6;
+		}
+	}
+
+	task objectBullet (let angle,color) {
+       SetShotAutoDeleteClip(1000,1000,1000,1000);
+		let obj = Obj_Create(OBJ_SHOT);
+		Obj_SetX(obj, GetPlayerX);
+		Obj_SetY(obj, GetPlayerY);
+		Obj_SetSpeed(obj, 0);
+		Obj_SetAngle(obj, angle);
+		ObjShot_SetGraphic(obj, color);
+		ObjShot_SetDelay(obj, 0);
+		ObjShot_SetBombResist(obj, true);
+
+		let count = 0;
+		let radiusX = 0;
+		let radiusY = 0;
+		let angularVelocity = 2.2;
+		while(!Obj_BeDeleted(obj)) {
+			Obj_SetX(obj, GetPlayerX+radiusX*cos(angle));
+			Obj_SetY(obj, GetPlayerY+radiusY*sin(angle));
+			if((count >= 120) && (count%6 == 0)) {
+				CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 1.5, angle, RED01, 0);
+			}
+			if((count >= 120) && (count%360 == 0)) {
+
+			}
+
+			if(count < 60) {
+                        Obj_SetCollisionToPlayer(obj, false);
+				radiusX += 100/60;
+				radiusY += 60/60;
+			} else if((count%600 >= 240) && (count%600 < 300)) {
+				radiusX -= 40/60;
+				radiusY += 60/60;
+			} else if(count%600 >= 540) {
+				radiusX += 40/60;
+				radiusY -= 60/60;
+			}
+
+			if((count%720 >= 240) && (count%720 < 360)) {
+				angularVelocity -= 4.4/120;
+			} else if(count%720 >= 600) {
+				angularVelocity += 4.4/120;
+			}
+
+			angle += angularVelocity;
+			count++;
+			yield;
+		}
+	}
+	task mainTask2 {
+		SetShotAutoDeleteClip(12, 12, 12, 12);
+		loop(60) {yield;}
+
+		objectBullet1;
+		loop(240) {yield;}
+	}
+
+	task objectBullet1 {
+		let obj = Obj_Create(OBJ_SHOT);
+		Obj_SetX(obj, GetX);
+		Obj_SetY(obj, GetY);
+		Obj_SetSpeed(obj, 1);
+		Obj_SetAngle(obj, 90);
+		ObjShot_SetGraphic(obj, RED02);
+		ObjShot_SetDelay(obj, 0);
+		ObjShot_SetBombResist(obj, true);
+
+		while(!Obj_BeDeleted(obj)) {
+			Obj_SetAngle(obj, atan2(GetPlayerY-Obj_GetY(obj), GetPlayerX-Obj_GetX(obj)));
+			yield;
+		}
+	}
+
+
+ // キャラを移動させるタスク
+	task mainTask3{
+		loop(120) {yield;}
+
+		loop {
+			SetSpeed(1);
+			SetAngle(90);
+			loop(60) {yield;}
+			SetSpeed(0);
+
+			loop(60) {yield;}
+
+			SetMovePosition03(GetPlayerX, GetPlayerY, 20, 4);
+
+			loop(120) {yield;}
+
+			SetMovePosition03(GetPlayerX, GetPlayerY, 20, 4);
+
+			loop(120) {yield;}
+
+			SetMovePosition03(GetPlayerX, GetPlayerY, 20, 4);
+
+			loop(120) {yield;}
+		}
+	}
+
+	task mainTask1 {
+		loop(10) {yield;}
+       SetShotAutoDeleteClip(100,100,100,100);
+
+		loop {
+			let angle = rand(0, 360);
+			loop(6) {
+                loop(16){
+				CreateShotA("S1",GetX, GetY, 20);
+                                SetShotDataA("S1",0,2.5,angle,2,-0.02,0,RED22);
+                                SetShotDataA("S1",120,NULL,NULL,0,0.02,5,BLUE22);
+                                FireShot("S1");
+				angle += 360/16;
+			}
+			loop(10) {yield;}
+                        }
+			loop(60) {yield;}
+		}
+	}
+}
+
+
+

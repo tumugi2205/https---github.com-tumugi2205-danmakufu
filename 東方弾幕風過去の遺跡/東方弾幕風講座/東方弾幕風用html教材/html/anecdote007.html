@@ -1,0 +1,183 @@
+<html>
+<head>
+<title>スクリプトは動くのに･･････</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.yukari{text-align : left;
+        font-family : sans-serif;
+        font-size : 14pt;
+        line-height : 150%;
+        color : #ff00ff}
+-->
+</style>
+</head>
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+閑話休題　スクリプトは動くのに･･････<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/yukari01.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+もう、藍ったらあんなに怒ることもないでしょうに。<br>
+え？
+いえいえ、こっちの話よ。<br>
+それでは今回の話をしましょうか。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/yukari04.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br><br>
+今回の話は前回の続きでもあるわ。<br>
+エラーに関する話の続きね。<br>
+実際にスクリプトを動かしてみると、<br>
+スクリプトは動くけれど思い通りの挙動をしてくれないこともあるわ。<br>
+そういう場合って普通のエラーより性質が悪いときもあるのよね。<br>
+エラーメッセージも出ないからそれも参考にできないしね。
+<br><br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/yukari02.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br><br>
+こうなったときはエラーが起きたときの対処のように、<br>
+コメントアウトを使う方法は有効よ。<br>
+でもエラーのときとは違った新しい対処法があるわ。<br>
+それはスクリプトを動かすときに変数がどう動いているのか調べるの。<br>
+正しい挙動をしない原因になりそうな変数をピックアップして<br>
+その変数の中身がリアルタイムでどう動いているのかチェックする方法よ。<br>
+一応スクリプトが動くからこそできる芸当ね。
+<br><br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/yukari03.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br>
+ではどうやったら変数の動きを見ることができるのか？<br>
+それが今回の話のポイントね。<br>
+ではスクリプトを見てみましょう。
+<br><br>
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+<font color="red">
+    CreateDebugWindow;</font>
+    loop {<font color="red">
+      OutputDebugString(0, "自機狙いの角度", GetAngleToPlayer);</font>
+      CreateShot01(GetX, GetY, 2, GetAngleToPlayer, RED01, 0);
+      loop(60) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/yukari04.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br><br><br>
+このスクリプトは『study003.txt』のスクリプトに<br>
+赤字の２行を追加したものとなっているわ。<br>
+まず最初の赤い１行の方。<br>
+CreateDebufWindow関数は文字通りデバッグウインドウを作る関数よ。<br>
+デバッグウインドウに表示される情報を見ることでデバッグの参考になるわけね。<br>
+見れる情報はLog, Info, Texture, Sound, Scriptの５つのタブよ。<br>
+今回はInfoタブの情報だけに注目することにしましょう。
+<br><br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/yukari02.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br><br>
+Infoタブに最初から表示されている情報はfpsと敵の弾の数だけ。<br>
+fpsはもともと弾幕風の右下に表示されているし、<br>
+弾数もデバッグにはまず役に立たないわよね。<br>
+だからここに新しい情報を表示させることにするわ。<br>
+それをするための関数が２つ目の赤字になっている行、<br>
+OutputDebugString関数ね。
+<br><br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/yukari04.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br><br><br><br>
+第１引数はデバッグウインドウに表示させる位置ね。<br>
+０にするとInfoタグの３段目、つまり弾の数の１段下に表示されるわ。<br>
+１にするとさらに１段下に表示される･･････以下同様ね。<br>
+第２引数はデバッグウインドウに表示させたい文字を書くのね。<br>
+今回は自機への角度を表示させるつもりだから、<br>
+そのまんま『自機狙いの角度』と表示するようにしているわ。<br>
+文字列を書くわけだからダブルクォーテーションで括ることを忘れずにね。<br>
+そして第３引数に表示させたい数値や変数を書けばいいワケね。<br>
+今回はGetAngleToPlayerを直接入れているけれど、<br>
+デバッグに使いたいときはここに変数を入れればＯＫよ。
+<br><br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/yukari03.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br><br><br>
+さて実際にこのスクリプトを起動してみましょう。<br>
+今回のスクリプトは用意していないから、<br>
+『study003.txt』にコピペして確認してみてね。<br>
+でスクリプトを起動すると弾を撃つ前にまずデバッグウインドウが表示されるわ。<br>
+そこでInfoタブを表示させるようにすると新たに自機狙いの角度という<br>
+表示がされるようになっていると思うわ。<br>
+そして実際に自機を色々動かして弾の狙いを変えるようにすると<br>
+デバッグウインドウに表示される角度も随時変わるのがわかると思うわ。<br>
+これで処理中の変数が見えるようになったわね。。
+<br><br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/yukari04.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br>
+他にもスクリプトが思い通りの処理をしなかったときは、<br>
+if文とwhile文の条件をまず真っ先に疑うべきね。<br>
+普通のループの間違いは大抵エラーになって動かないからね。<br>
+そんなときはif文とwhile文の条件で使われている変数を<br>
+デバッグウインドウに表示させると原因がわかるかもしれないわ。
+<br><br>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/yukari03.png" align="left" width="120" height="120"></td>
+<td><p class="yukari">
+<br><br>
+と、今回はデバッグウインドウの使い方について触れてみたわ。<br>
+いちいちデバッグウインドウの設定するのが面倒かもしれないけれど、<br>
+デバッグの手段の１つとして覚えておいて損はないでしょう。<br>
+貴方がデバッグで悩むことが少しでも少なくなれば幸いよ。<br>
+では、また今度の機会に会いましょうね。
+<br><br>
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

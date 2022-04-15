@@ -1,0 +1,130 @@
+#東方弾幕風
+#Title[弾同士の当たり判定の例]
+#Text[]
+#BackGround[User()]
+#ScriptVersion[2]
+
+script_enemy_main{
+
+    //グローバル変数
+	let imgBoss = GetCurrentScriptDirectory() ~ "ExRumia.png";
+	let wIni = 120;
+	let arrayObj = [];
+	
+	///////////////////////////////////////////////////////////
+
+	@Initialize{
+	    LoadGraphic(imgBoss);
+        SetLife(4000);
+        SetTimer(60);
+        SetDamageRate(100, 100);
+	    
+	    TNway();
+	}
+		
+	@MainLoop{
+		SetCollisionA(GetX(), GetY(), 32);
+		SetCollisionB(GetX(), GetY(), 24);
+	    yield;
+	}
+	
+	@DrawLoop{
+	    SetTexture(imgBoss);
+	    SetGraphicRect(1, 1, 64, 64);
+	    DrawGraphic(GetX(), GetY());
+	}
+		
+	@Finalize{
+	    DeleteGraphic(imgBoss);
+	}
+	
+	//////////////////////////////////////////////////////////
+	
+	task TNway{
+	    //初期化
+	    
+	    yield;
+	    loop(wIni){ yield; }
+	    
+	    //処理
+	    loop{
+	        CreateImpactingShot(rand(GetClipMinX(), GetClipMaxX()),
+	                rand(GetClipMinY(), GetClipMinY() + 50), rand(1,2),
+	                rand(45, 135), WHITE03, WHITE05, 20);
+	        loop(20){ yield; }
+	    }
+	}
+	
+
+
+
+	//////////////////////////////////////////////////////////
+
+    //弾同士の当たり判定の例
+    
+    //当たり判定をとるためオブジェクトIDはグローバル変数にする
+    arrayObj = [];
+    
+    //衝突するとはじける弾
+    task CreateImpactingShot(let x, let y, let speed,
+                 let angle, let graphic1, let graphic2, let delay) {
+        
+
+        //オブジェクト弾の作成
+        let obj = Obj_Create(OBJ_SHOT);
+        
+        //パラメータの設定
+        Obj_SetPosition(obj, x, y);
+        Obj_SetSpeed(obj, speed);
+        Obj_SetAngle(obj, angle);
+        ObjShot_SetGraphic(obj, graphic1);
+        ObjShot_SetDelay(obj, delay);
+        
+
+
+        
+        //オブジェクトIDの登録
+        arrayObj = arrayObj ~ [obj];
+        
+        while(!Obj_BeDeleted(obj)) {
+            ascent(let i in 0..length(arrayObj)){
+            
+                //自分以外との当たり判定を調べる
+                if(obj!=arrayObj[i]){
+                    //衝突していたら弾を発射して自身と衝突相手を削除する
+                    if(Collision_Obj_Obj(obj, arrayObj[i])){
+                    
+                        //衝突地点(弾同士の中点)
+                        let impactX = (Obj_GetX(obj) + Obj_GetX(arrayObj[i]))/2;
+                        let impactY = (Obj_GetY(obj) + Obj_GetY(arrayObj[i]))/2;
+                        
+                        loop{
+                        CreateImpactingShot(impactX,impactY, rand(1,2),
+	                rand(0,360), YELLOW02, WHITE05, 20);
+                       
+                        Obj_Delete(obj);
+                        Obj_Delete(arrayObj[i]);
+break;}
+        loop{ yield; }
+break;
+                        
+                    }
+                        
+                }
+            }
+            yield;
+        }
+        
+        //オブジェクトIDの削除
+        ascent(let i in 0..length(arrayObj)){
+            if(obj==arrayObj[i]){
+                arrayObj = erase(arrayObj, i);
+                break;
+            }
+        }
+    }
+}
+
+CreateLaserA(obj2,0,0,400,10,RED04,0);
+                           
+SetLaserDataA(obj2,0,GetAngleToPlayer,0,-5,0,0);

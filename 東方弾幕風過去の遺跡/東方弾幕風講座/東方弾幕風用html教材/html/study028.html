@@ -1,0 +1,338 @@
+<html>
+<head>
+<title>オブジェクト弾 (自機の位置に反応する)</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０２８回　オブジェクト弾 (自機の位置に反応する)<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回は自機の位置に反応して何らかのアクションをする<br>
+オブジェクト弾を作ってみる。
+常にどのように動くかわからないプレイヤーの位置に反応するのは<br>
+CreateShotAだと表現できない弾だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+オブジェクト弾の本領発揮し始めるカンジですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ではいつも通りスクリプトを開いてみよう。<br>
+『study028.txt』だ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    let count = 0;
+    loop {
+      if(count%10 == 0) {
+        CreateShot01(GetX, GetY, rand(2, 4), GetAngleToPlayer+rand(-30, 30), BLUE01, 0);
+      }
+      if(count%60 == 0) {
+        objectBullet;
+      }
+      count++;
+      yield;
+    }
+  }
+
+  task objectBullet {
+    let obj = Obj_Create(OBJ_SHOT);
+    Obj_SetX(obj, GetX);
+    Obj_SetY(obj, GetY);
+    Obj_SetSpeed(obj, 3);
+    Obj_SetAngle(obj, GetAngleToPlayer+rand(-15, 15));
+    ObjShot_SetGraphic(obj, BLUE04);
+    ObjShot_SetDelay(obj, 0);
+
+    while(!Obj_BeDeleted(obj)) {<font color="red">
+      if(Obj_GetY(obj) >= GetPlayerY) {
+        Obj_SetSpeed(obj, 0);
+        ObjShot_SetGraphic(obj, RED04);</font>
+        loop(30) {yield;}
+
+        CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 2, 0, RED11, 0);
+        CreateShot01(Obj_GetX(obj), Obj_GetY(obj), 2, 180, RED11, 0);<font color="red">
+        Obj_Delete(obj);
+      }</font>
+      yield;
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+例によってmainTaskの中はサラッと解説しよう。<br>
+今回は変数countを使った形式のプログラムになっている。<br>
+countの数値を１０で割ったときに余りが０になるとき、<br>
+即ち１０フレーム間隔で弾を撃っている。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+CreateShot01の中身を見ると弾速がランダムで、<br>
+発射角度が自機狙いにランダムを混ぜた形になっていますね。<br>
+これは『study011』で学んだばら撒き弾の形ですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだな、ここではばら撒き弾の処理をしてる。<br>
+そしてそれとは別のif文がある。<br>
+こちらの条件は count%60 == 0 となっており、<br>
+６０フレームおきにオブジェクト弾を発射するようにしている。<br>
+ここで呼び出されるオブジェクト弾用のタスクが今回のキーになる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+objectBulletのタスクを見てみると、最初の方は特に目新しいものは<br>
+無いみたいですね。<br>
+Obj_SetAngleでばら撒き弾の形式になるようにしているくらいですかね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+重要なのはwhile文の中身だな。<br>
+ここの条件は前回で習ったように、『オブジェクト弾が消えるまでループする』だな。<br>
+ループの中身はif文の中身以外だとyieldしかないから、<br>
+if文の条件を満たすまでは普通の弾となんら変わらないことになる。<br>
+それでそのif文の条件なんだが･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+Obj_GetY(obj) >= GetPlayerY ってなっていますね。<br>
+GetPlayerYっていう関数は始めてですね。<br>
+でも関数の名前から察するに･･････<br>
+プレイヤーのY座標を取得する関数なんでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通り。<br>
+つまりここの条件文は、『オブジェクト弾のY座標が自機の位置のY座標よりも<br>
+大きいか同じであれば』ということになる。<br>
+Y座標を示す数値は画面の下に行くほど大きくなるのだから、<br>
+オブジェクト弾が自機よりも下に行くとif文の条件を満たすわけだ。<br>
+ちなみに自機のX座標を取得するGetPlayerXという関数もあるぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+if文の中の処理は･･････<br>
+あれ、またObj_SetSpeedがありますね。<br>
+その下にはObjShot_SetGraphicまで･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+objectBulletタスクの初期設定で使っている関数は、<br>
+別に１回しか使えないというワケではない。<br>
+今回のように同じオブジェクト弾に対して何回実行しても問題ない。<br>
+if文のObj_SetSpeedでは第２引数を０にしているから、弾を止める処理を行う。<br>
+ObjShot_SetGraphicではRED04に変更している。<br>
+弾の色を変えるのはあまり意味がないように見えるが、<br>
+プレイヤーに対してこのような形で警告を与えることで、<br>
+初見殺しの要素を抑えることができる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+実際に弾幕を避ける側に立った配慮も必要なんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まあ今回のスクリプトだとあまり意味がないかもしれないがな。<br>
+こういった表現もできるということも憶えておいてくれ。<br>
+ではその次の処理だ。<br>
+loop(30) {yield;}となっているから、<br>
+オブジェクト弾は３０フレーム処理を待つことになる。<br>
+前に弾速を０にしたから３０フレームの間、弾が静止することになるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+３０フレーム待った後には２つのCreateShot01がありますね。<br>
+発射角度がそれぞれ０と１８０になっていますから、<br>
+真横に２方向に弾を撃つんですね。<br>
+それで最後の処理が･･････Obj_Delete？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+Obj_Delete関数は、プログラム側から強制的にオブジェクトを消去したい<br>
+ときに使う関数だ。<br>
+これを使って消さないと、弾を撃ち終わったオブジェクト弾が<br>
+弾速０の状態でいつまでも画面に残ることになってしまう。<br>
+それはマズイということで、Obj_Deleteを使って消しているんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なるほど～<br>
+それにObj_Deleteでオブジェクト弾が消えた後はwhileループの条件を<br>
+満たさなくなりますから、役目を終えたタスクも自動的に終わるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そういうことだ。<br>
+今回は自機の位置に反応して処理が変わる弾を作ったが、<br>
+プレイヤー側から見ると弾が別の弾を撃った後に自らが消えるタイプの弾だ。<br>
+これは弾吐き弾の派生版とも言える『炸裂弾』タイプの弾だな。<br>
+炸裂弾タイプの弾を作るときは、最後の弾を撃ち終えた時点で<br>
+Obj_Deleteを使って自ら消えるようにするのが基本だ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+実際にこのスクリプトを動かしてみると結構難しいですね。<br>
+なにか避けるコツはあるのでしょうか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+まず真横から針弾が飛んでくるのが厄介だから、<br>
+上下の移動をメインにして避けるようにしましょう。<br>
+針弾は大体一定間隔で飛んでくるから、そのうち慣れるでしょう。<br>
+あと稀に横に動かないとボスから出る弾に当たる場合があるから、<br>
+そのときは横に動いても針弾に当たらないように横に避けましょう。<br>
+またこの弾幕を避けるときはほんの少しの移動、<br>
+いわゆるチョン避けで避けるようにした方がいいわ。<br>
+大きく避けると混乱しやすいからね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+う～ん、あんまり難しい弾幕を作るのも考え物ですね。<br>
+プレイヤーの気持ちになって弾幕を作るのも難しいなあ･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうそう、このスクリプトには１つ問題があるの。<br>
+試しに自機をボスより上へ移動させてみると･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen01.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ああっ！<br>
+オブジェクト弾がボスの場所から針を出して消えてしまっています！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+if文の条件から、自機がボスよりも上にいると即座に条件を満たしてしまって、<br>
+真横から針を撃たせたいという狙いを達成できなくなってしまうの。<br>
+ボスより上にいるとばら撒き弾が避けにくくなったり、<br>
+ボスにダメージを与えられないというプレイヤー側の問題もあるけれど、<br>
+こういった避け方をされるのは弾幕作者からすれば不本意でしょうね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+ではどうしたらいいんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そこは自分で考えてみてほしいわね。<br>
+if文をもっと使えば達成できるでしょう。<br>
+邪道な方法ではあるけれど、ボスを画面上ギリギリの位置で弾を撃たせたり、<br>
+ボスの上へ移動した場合はペナルティ弾として絶対避けられないような<br>
+弾を撃つようにする方法もあるわ。<br>
+根本的な解決にはなっていないけど、どうしても修正の仕方がわからない場合は<br>
+このような手を使うのもアリでしょうね。<br>
+あるいはいっそそのままにして、楽に避けられる方法として<br>
+あえて残しておくのも悪くないわ。<br>
+むしろボスの上で避けるのが理想の避け方になるような<br>
+弾幕に変えてみるのも面白いかもしれないね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そういったところからも新しい弾幕のネタが出てきたりするんですね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+弾幕作りに慣れてくると、今度は弾幕のネタを探すのに苦労するから。<br>
+色々なところから弾幕のアイディアを探しにいかないといけないわ。<br>
+ではまた次回の講座で会うとしましょう。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

@@ -1,0 +1,349 @@
+<html>
+<head>
+<title>変数を使用した自機狙い3way</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第００５回　変数を使用した自機狙い3way<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回学ぶ弾幕は前回と同じ自機狙い3way弾だが、スクリプトの中身が違う。<br>
+プログラミングの上で欠かせない『変数』を使うぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+いよいよ本格的なスクリプト作成になってきたってカンジですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そうだな。<br>
+ではいつも通りスクリプトの中身を見てみるか。<br>
+『study005.txt』を開いてくれ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {<font color="red">
+      let angle;
+      angle = GetAngleToPlayer - 20;
+      loop(3) {</font>
+	CreateShot01(GetX, GetY, 2, <font color="red">angle</font>, RED01, 0);<font color="red">
+	angle = angle + 20;
+      }</font>
+      loop(60) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="5" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なんだか前回のスクリプトと大分形が変わっていますけど、<br>
+本当に前回と同じ弾幕を撃つんですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+信じられないなら実際に弾幕風で実行してみるといい。<br>
+『変数を用いた自機狙い3way』を選んで実行してみるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+じゃあやってみます！<br>
+･･････<br>
+ん～、やっぱり全く同じですね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+全く同じ挙動をするスクリプトでも、スクリプトの中身が全く違っていたりする。<br>
+つまり答えは１つではないということだな。<br>
+それがプログラミングの面白いところでもある。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+最初に let angle っていう新しい記述がありますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+これが今回の肝となる『変数』だ。<br>
+変数とは、要するに数字を保存しておくための入れ物だと考えてくれ。<br>
+また変数を使うためには『宣言』をする必要がある。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+宣言ですか？<br>
+「これから変数を使いますよー！」っていうことですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+全くもってその通りの意味だ。<br>
+宣言とは自分が変数を使うことをコンピュータに伝えること。<br>
+let というのが、変数を宣言することを意味している。<br>
+その次の angle というのが宣言された変数の名前だ。<br>
+変数の名前は基本的に自分で自由に付けることができる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen06.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+名前を自分で付けられるんですか！？<br>
+それは面白そうですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ただし、以下の『予約語』と呼ばれる単語は変数の名前としては使えない。<br>
+それ以外の半角文字列 (数字だけはダメ) なら自由に付けられるはずだ。
+</p></td>
+</tr>
+
+</table>
+
+<p class="main"><br><br><br>
+alternative、ascend、break、case、decend、else、function、
+if、in、local、loop、real、return、let、others、
+sub、task、times、while、yield、
+add、append、compare、concatenate、divide、false、
+index、length、multiply、not、negative、pi、power、
+predecessor、remainder、result、slice、
+successor、subtract、true 
+<br><br><br></p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+この中ではadd, lengthあたりが変数名として使ってしまいがちかな。<br>
+また変数の名前は自由に付けられるといっても、用途が分かるように名付けるのが基本だ。<br>
+今回の場合は変数に角度を表す数値を入れるので、『angle』という名前を付けている。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+宣言の次の行に angle = GetAngleToPlayer - 20; ってありますね。<br>
+これはどういう意味なんだろ？<br>
+angleはGetAngleToPlayer-20とイコール？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さて、ここでプログラミングに慣れていない人に大切な話がある。<br>
+<b>プログラミングの世界だと『＝』は左の式と右の式が一緒であることを<br>
+意味しているワケではない。</b>
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そうなんですか？<br>
+算数や数学のイコールとは意味が違うってことですか？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通り。<br>
+プログラミングの『＝』は代入を意味する。<br>
+今回の例にある angle = GetAngleToPlayer - 20 の場合だと、<br>
+<b>GetAngleToPlayerで求められた数値から２０を引いた値を、変数 angle に格納する</b><br>
+という意味になる。<br>
+格納するという言葉は代入する、保持させるといった言葉に置き換えてもいい。<br>
+まあ格納するという言い方が一般的かな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+それじゃ今回の式で変数angleに数値が入っている状態になってるってことですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ちなみに今回の例の記述の仕方である<br>
+<font color="black">let angle;<br>
+angle = GetAngleToPlayer - 20;</font><br>
+という書き方を、<br>
+<font color="black">let angle = GetAngleToPlayer - 20;</font><br>
+にしても同じ意味になる。<br>
+今後は下の方の書き方でスクリプトを紹介するので気をつけてくれ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+変数の格納が終わった後はループに入るんですね。<br>
+その後にCreateShot01を実行するんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+CreateShot01の４番目の引数に angle とあるだろう？<br>
+ここで先ほど宣言した変数であるangleを使うワケだ。<br>
+現在angleの中身はGetAngleToPlayer-20の値が入っているから、<br>
+その数値が角度に反映される。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+このときのCreateShot01で出される弾は自機狙いの角度から－方向に２０°ずれた<br>
+角度で発射されるってことになるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その次に angle = angle + 20 という式がある。<br>
+これは算数の見方だと間違っているが、プログラムではよく見る形だ。<br>
+この場合<b>今のangleの値に２０を足した数値が新しいangleの値になる</b>という意味だ。<br>
+ちなみにこの式も別の書き方があり、<br>
+<font color="black">angle += 20;</font><br>
+とも表現できる。<br>
+こちらも今後下の方の表現をスクリプトで使うことにする。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+この式の前のangleはGetAngleToPlayer-20で、それに２０を足すワケだから、<br>
+ただのGetAngleToPlayerの数値になるってことか～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+変数の更新が終わった後はループが１回終了する。<br>
+後は同じ要領で２回ループすることになるな。<br>
+これらの流れを詳細を書くと以下のようになる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"></td>
+<td><p class="main">
+１．変数angleを宣言する。<br>
+２．変数angleにGetAngleToPlayer-20の数値を格納する。(以下GetAngleToPlayerをGATPとする)<br>
+３－１．CreateShot01で弾をGATP-20の方向に撃つ。<br>
+４－１．angleに+20した値を新たなangleの値とする。 (angleの中身がGATPになる)<br>
+３－２．CreateShot01で弾をGATPの方向に撃つ。<br>
+４－２．angleに+20した値を新たなangleの値とする。 (angleの中身がGATP+20になる)<br>
+３－３．CreateShot01で弾をGATP+20の方向に撃つ。<br>
+４－３．angleに+20した値を新たなangleの値とする。 (angleの中身がGATP+40になる)<br>
+５．ループを抜けて終了する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+このように前回の講座と同じ方向に弾を撃つ処理になることがわかるわ。<br>
+最後にangleの中身がGetAngleToPlayer+40になっているけれど、<br>
+使われずに終わっているから特に問題はないわね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+１つのCreateShot01で3wayを撃たせることができましたね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回の講座まででCreateShot01, loop, yield, そして変数を学んだけれど、<br>
+この４つが使いこなせれば基本的な弾幕のほとんどを作れるといっても過言じゃないわ。<br>
+今後も基本的な弾幕の仕組みや作り方を学んでいくけれど、<br>
+もし自分で新しい弾幕の作り方が思いつけたら是非独力で試行錯誤してみて。<br>
+その方が絶対良い勉強になるからね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+教えてもらっているだけでは何時まで経っても一人前になれない世界ですからね。<br>
+自分で頑張れるところは自力でやらないと。<br>
+私も頑張ります！！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+ではやる気を出してもらったところで今回の宿題だ。<br>
+今回の例に少し手を加えて5wayの自機狙い弾にしてみてくれ。<br>
+綺麗な5wayを出すためには２箇所書き換えなくてはならない。<br>
+１箇所はすぐ見当が付くだろうがもう１箇所には気づくかな？<br>
+ちなみ今のway弾間隔のまま5wayにする方法と、<br>
+狭い間隔で5wayにする方法の２つの解法がある。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+答えは自分で見つけてくださいね！<br>
+それではまた次の講座で！
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

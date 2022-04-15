@@ -1,0 +1,424 @@
+<html>
+<head>
+<title>首振りワインダー</title>
+<style type="text/css">
+<!--
+.main{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;}
+.chen{text-align : left;
+      font-family : sans-serif;
+      font-size : 14pt;
+      line-height : 150%;
+      color : #ff6347}
+.ran{text-align : left;
+     font-family : sans-serif;
+     font-size : 14pt;
+     line-height : 150%;
+     color : #4b0082}
+
+-->
+</style>
+</head>
+
+<body topmargin="30" leftmargin="10" rightmargin="80"
+      bgcolor="#ccccff" text="black" link="blue" vlink="blue" alink="red">
+<p class="main">
+第０１６回　首振りワインダー<br>
+<br>
+</p>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+さて今回の講座だが。<br>
+最初に断っておくと、今回の内容は今まで習った内容の応用を、<br>
+さらに複数組み合わせたスクリプトになっている。<br>
+今までのスクリプトと比べて、理解の難易度もスクリプトの規模も一段上のレベルだ。<br>
+心して講座に臨むように。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+はいっ！
+私頑張りますっ！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その意気や良し。<br>
+まずワインダーという弾幕についての説明だな。<br>
+ワインダーとは、極めて高密度な連弾によって自機の移動を強く制限する弾幕だ。<br>
+モノによってはワインダーを動かして自機の移動を強制させたり、<br>
+高密度のワインダーを潜らせるような弾幕もある。<br>
+傾向としては弾幕を発生させている時間が長めで、<br>
+無駄に広範囲に弾を出すケースが多いかな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+見た目の派手さを重視した、いかにもゲームチックな弾幕ですよね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そのワインダーを今回学ぶワケだが･･････<br>
+まずはどんな弾幕を撃ってくるかを先に見ておこう。<br>
+弾幕風で『首振りワインダー』を選んでみよう。<br>
+今回は特に弾幕の詳細を事細かに注視した方が良いぞ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+え～～～っと･･････<br>
+２本のワインダーが一気に狭まった後、左側にワインダーを振ってきて、<br>
+その後右側に振ってまた左に戻って、最後に元に戻って終了ですかね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その弾幕の一連の流れをしっかり憶えておくように。<br>
+その方がスクリプトの理解がしやすくなるだろう。<br>
+では、スクリプトの中身を見てみよう。<br>
+『study016.txt』だ。
+</p></td>
+</tr>
+
+</table>
+
+<pre><font size="3">
+～　前略　～
+
+  task mainTask {
+    loop(60) {yield;}
+
+    loop {
+      let angle1 = GetAngleToPlayer;
+      let angle2 = 180;<font color="red">
+      let count = 0;
+      while(count < 480) {</font>
+        CreateShot01(GetX, GetY, 8, angle1+angle2, RED01, 0);
+        CreateShot01(GetX, GetY, 8, angle1-angle2, RED01, 0);<font color="red">
+        if(count < 120) {
+          angle2 -= 165/120;
+        } else if((count >= 180) && (count < 240)) {
+          angle1 += 25/60;
+        } else if((count >= 240) && (count < 360)) {
+          angle1 -= 50/120;
+        } else if((count >= 360) && (count < 420)) {
+          angle1 += 25/60;
+        }
+        count++;</font>
+        yield;<font color="red">
+      }</font>
+      loop(120) {yield;}
+    }
+  }
+}
+</font></pre>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+今回のスクリプトはかなり長いですね～
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+長いスクリプトこそ、最初から順を追って見ていくことが重要だ。<br>
+ではまず最初、変数の宣言をしているな。<br>
+３つの変数を宣言しているが、今回重要なのは最後の『count』だ。<br>
+言うまでもないが、名前が重要なのではなく役目が重要なんだ。<br>
+その後、whileループに突入する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+whileっていうのは初めて出てきましたね。<br>
+これはどういう意味なんでしょう？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+whileはloopと同じでループ処理をするときに用いる。<br>
+loopの場合はループする回数を指定するタイプの処理だったのだが、<br>
+whileループは<b>一定の条件を満たすまでずっとループする</b>というものだ。<br>
+そうそう、whileループを作ったときは<b>真っ先に中にyieldを書いて<br>
+無限ループになるのを回避することを勧める。</b><br>
+今回の例では while(count &lt; 480) { } となっている。<br>
+これは後で説明するとしよう。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+whileループの中にはCreateShot01関数が２つあって･･････<br>
+その次に随分複雑なif文処理がありますね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そのif文処理は後回しにしよう。<br>
+重要なのはその次の count++ だ。<br>
+これはインクリメントを意味していて、現在の値から＋１する処理のことだ。<br>
+別の書き方をするなら、count = count + 1 や count += 1 となるな。<br>
+ちなみに count-- という書き方でデクリメントになる。<br>
+意味は予想できると思うが、現在の値から－１する処理を意味する。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+その次がyieldだから、このwhileループでは１フレーム経過する毎に<br>
+countの値が１ずつ増えていくんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+それが変数countの重要な役目となるんだ。<br>
+これはつまり、<b>countがループ処理が始まってから経過した時間を示す数値</b>になる。<br>
+経過時間がわかるとそれだけで処理がだいぶやりやすくなるんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+if文の条件でcountが使われていますから、経過時間が条件分岐のカギになるんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+その通りだがif文についてはもう少し後で説明する。<br>
+まず２つのCreateShot01だが、whileの中を見ると<br>
+１フレーム間隔で撃っていることがわかる。<br>
+つまり１秒間で６０発ずつ撃つというすさまじいペースで弾を撃っているんだ。<br>
+ワインダーは基本的に潜らせてはいけない弾幕だから今回はこうしている。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen04.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+発射角度がangle1+angle2とangle1-angle2ってなっていますね。<br>
+宣言したときの値はangle1が自機への角度で、angle2が１８０固定ですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+angle1は基準位置を示す変数として使っている。<br>
+だからGetAngleToPlayerを初期値としている。<br>
+ちなみにこれはwhileループの外で宣言しているから、後追い型連弾のように<br>
+最初の瞬間だけの角度しか取得していないから後で自機を動かしても弾幕は崩れないぞ。<br>
+そしてangle2は基準位置からどれだけズレた角度に撃つかを意味している。<br>
+＋方向のズレと－方向のズレの２つに撃っているから、<br>
+それぞれが１本のワインダーになるワケだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+この２つの変数をいろいろ書き換えてワインダーを動かすんですね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そのいろいろ書き換える処理をするところがif文のところだ。<br>
+まず１つめのif文条件。<br>
+count &lt; 120 となっているな。<br>
+先ほどcountは時間を意味しているといったから、<br>
+ループが始まって120フレーム未満であるときに<br>
+この部分の処理が行われるということだな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+行われる処理は angle2 -= 165/120 ってなっていますね。<br>
+angle2は基準角度からのズレを意味しているから、この値が小さくなると･･････<br>
+だからここの処理は弾幕の最初にやったワインダーを狭く閉じるところに<br>
+相当するんですね！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+正解。<br>
+ちなみに 165/120 となっているのは『１２０フレームかけて１６５°分閉じる』<br>
+ということをわかりやすくするために書いている。<br>
+angle2の初期値が１８０になっていて、最終的には１５になるから、<br>
+基準位置の±１５°の狭さのワインダーに収束するようになっているんだな。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+次の条件分岐は･･････論理積を意味する && がありますね。<br>
+ってことは２つの条件を両方満たさないといけないんですね。<br>
+count &gt;= 180 かつ count &lt; 240 でないといけないのか･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+この条件は『ループ処理が始まって１８０フレーム以上かつ２４０フレーム未満』<br>
+ということになるな。<br>
+で、処理の中身が angle1 += 25/60 となっている。<br>
+これは基準位置であるangle1そのものを書き換えているな。<br>
+だからワインダーの狭さ (angle2) はそのままに、２本まとめて同じ方向に動かすワケだ。<br>
+以降のif文は同じような処理だから、以下の表にまとめることにする。
+</p></td>
+</tr>
+
+</table>
+
+<br><br><br>
+<table cellspacing="1" cellpadding="10" border="1">
+<tr>
+<td>ループが始まってからの<br>経過時間 (f)</td>
+<td>行われる処理</td>
+</tr>
+<tr>
+<td>０～１２０</td>
+<td>ワインダーを閉じる</td>
+</tr>
+<tr>
+<td>１２０～１８０</td>
+<td>角度は変化なし (弾を撃つだけ)</td>
+</tr>
+<tr>
+<td>１８０～２４０</td>
+<td>時計回り方向にワインダーを振る</td>
+</tr>
+<tr>
+<td>２４０～３６０</td>
+<td>反時計回り方向にワインダーを振る</td>
+</tr>
+<tr>
+<td>３６０～４２０</td>
+<td>時計回り方向にワインダーを振る</td>
+</tr>
+<tr>
+<td>４２０～４８０</td>
+<td>角度は変化なし (弾を撃つだけ)</td>
+</tr>
+
+</table>
+<br><br><br>
+
+<table cellspacing="1" cellpadding="10" border="0">
+
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そして最後。<br>
+countが４８０になるとwhileループの条件を満たさなくなり、whileループを脱出する。<br>
+そしてloop(120) {yield;}の待ち時間を挟んで、またワインダーの最初に戻る。<br>
+これで弾幕の流れが１回終了することになる。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+いやあ今回は色々と大変でしたね～<br>
+今までの応用だけでなく、新しく憶えなくちゃいけないものもあったり。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran07.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+でもゲームとして通用するような本格的な弾幕を作ろうとすると、<br>
+このスクリプトよりも何倍もの量のスクリプトを作らなくちゃいけないわ。<br>
+ボス１体分の弾幕を作ると何十倍、ステージ丸ごと作ろうとするとさらに増えるし。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen01.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+なんだか気が遠くなるような話です･･････<br>
+でもここで諦めたら何も始まりませんものね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+そう、千里の道も一歩からということね。<br>
+ところで橙、問題なんだが。<br>
+今回の弾は１フレームに１回というペースで弾を出しているが、<br>
+もし弾幕の流れをそのままに２フレームに１回のペースで<br>
+弾を撃たせたかった場合はどうする？
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen03.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+う～ん･･････<br>
+whileループの中のyieldをloop(2) {yield;}にすればいいと思います！
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran02.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+残念ながら、それだけでは不正解だ。<br>
+何故ならwhileループ全体が２フレームに１回しか行われなくなるからだ。<br>
+そうなるとcountも２フレームに１回しか増えないし、if文の条件判定も<br>
+２フレームに１回しか行われない。<br>
+つまりワインダーの収束や首振りも半分のペースになってしまうんだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen07.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+そっか･･････<br>
+じゃあそれに合わせて倍の早さで角度が変わるように、っていうのも面倒ですよね。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran04.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+適切な答えは『２つのCreateShot01をif文で括る』だな。<br>
+で、if文の条件は (count%2 == 0) とするんだ。<br>
+これはcountが２で割ったときの余りが０、つまり偶数のときだけ条件を満たす。<br>
+これで２フレームに１回のペースで弾を撃つようになるワケだ。
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/chen02.png" align="left" width="120" height="120"></td>
+<td><p class="chen">
+剰余は盲点でした･･････
+</p></td>
+</tr>
+<tr align="left">
+<td width="120"><img src="./../icon/ran03.png" align="left" width="120" height="120"></td>
+<td><p class="ran">
+今回のようなcountを使った処理における条件分岐は、大小比較と剰余の利用が頻出ね。<br>
+またcountを使わない場合でも剰余はプログラミングにおいて便利な演算子なのよ。<br>
+うまく使うと綺麗なスクリプトが書けたり面白い弾幕が作れたりするの。<br>
+日常生活では剰余に縁が無いことが多いと思うけど、<br>
+弾幕風では積極的に使ってみてね。<br>
+ではまた次回の講座で会いましょう。
+</p></td>
+</tr>
+
+</table>
+
+
+</body>
+</html>

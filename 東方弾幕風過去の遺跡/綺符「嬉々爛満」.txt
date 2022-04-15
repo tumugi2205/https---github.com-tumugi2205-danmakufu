@@ -1,0 +1,67 @@
+#東方弾幕風
+#Title[綺符「嬉々爛満」]
+#Text[咲き乱れ、散り行く桜今見れば、儚き命今に散り行く]
+#ScriptVersion[2]
+
+script_enemy_main {
+       let imgBoss   = "script\img\杏子.png";
+       let frame     = 0;
+       let angleBase = 90;
+
+    @Initialize {
+       SetX(GetCenterX);
+       SetY(GetClipMinY + 120);
+       SetLife(2000);
+
+       LoadGraphic(imgBoss);
+       SetTexture(imgBoss);
+       SetGraphicRect(0,0,63,63);
+        SetScore(3000);
+        SetDamageRate(70,50);
+   CutIn(KOUMA,"綺符「嬉々爛満」",0,0,0,0,0);//スペルカード名表示
+    }
+
+    @MainLoop {
+       SetCollisionA(GetX,GetY,24);
+       SetCollisionB(GetX,GetY,24);
+
+       frame++;
+       if(frame == 5) {
+           let angle = angleBase + 120;
+           loop(20) {
+               CreateShot01(GetX-50,GetY,0.5,rand(0,360),RED23,0);
+               angle += 120;
+           }
+           angleBase += 8;
+       }else  if(frame == 10) {
+           let angle = angleBase - 10;
+           loop(30) {
+               CreateShot01(GetX,GetY,1,angle,WHITE01,0);
+               angle += 5;
+           }
+           angleBase += 8;
+      }else  if(frame == 20) {
+           let angle = angleBase - 10;
+           loop(20) {
+               CreateShot01(GetX,GetY-80,1,rand(0,360),AQUA22,0);
+               angle += 5;
+           }
+           angleBase += 50;      
+      }else  if(frame == 30) {
+           let angle = angleBase - 10;
+           loop(20) {
+               CreateShot01(GetX+50,GetY,0.5,rand(0,360),AQUA23,0);
+               angle += 5;
+           }
+           angleBase += 50;
+           frame = 0;
+       }
+    }
+
+    @DrawLoop {
+       DrawGraphic(GetX,GetY);
+    }
+    @Finalize {
+       DeleteGraphic(imgBoss);
+    }
+}
